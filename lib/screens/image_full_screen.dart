@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:share_plus/share_plus.dart';
 
 class ImageFullScreenWrapperWidget extends StatelessWidget {
   final Image child;
   final bool dark;
+  final String path;
 
-  ImageFullScreenWrapperWidget({
-    required this.child,
-    this.dark = true,
-  });
+  const ImageFullScreenWrapperWidget(
+      {required this.child, this.dark = true, required this.path});
 
   @override
   Widget build(BuildContext context) {
@@ -23,6 +23,7 @@ class ImageFullScreenWrapperWidget extends StatelessWidget {
               return FullScreenPage(
                 child: child,
                 dark: dark,
+                path: path,
               );
             },
           ),
@@ -34,12 +35,11 @@ class ImageFullScreenWrapperWidget extends StatelessWidget {
 }
 
 class FullScreenPage extends StatefulWidget {
-  FullScreenPage({
-    required this.child,
-    required this.dark,
-  });
+  const FullScreenPage(
+      {required this.child, required this.dark, required this.path});
 
   final Image child;
+  final String path;
   final bool dark;
 
   @override
@@ -68,8 +68,8 @@ class _FullScreenPageState extends State<FullScreenPage> {
   void dispose() {
     SystemChrome.setEnabledSystemUIOverlays(SystemUiOverlay.values);
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-      // Restore your settings here...
-    ));
+        // Restore your settings here...
+        ));
     super.dispose();
   }
 
@@ -116,6 +116,31 @@ class _FullScreenPageState extends State<FullScreenPage> {
                   borderRadius: BorderRadius.circular(100),
                 ),
                 onPressed: () => Navigator.of(context).pop(),
+              ),
+            ),
+          ),
+          SafeArea(
+            child: Align(
+              alignment: Alignment.topRight,
+              child: MaterialButton(
+                padding: const EdgeInsets.all(15),
+                elevation: 0,
+                child: Icon(
+                  Icons.share,
+                  color: widget.dark ? Colors.white : Colors.black,
+                  size: 25,
+                ),
+                color: widget.dark ? Colors.black12 : Colors.white70,
+                highlightElevation: 0,
+                minWidth: double.minPositive,
+                height: double.minPositive,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(100),
+                ),
+                onPressed: () async {
+                  await Share.shareFiles([widget.path],
+                      text: 'Shared via Data Manager');
+                },
               ),
             ),
           ),

@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:camera/camera.dart';
+import 'package:facebook_audience_network/facebook_audience_network.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:passmanager/constants/storage.dart';
@@ -24,9 +25,12 @@ class AddData extends StatefulWidget {
 class _DataScreenState extends State<AddData> {
   late final Directory _photoDir = Directory(
       '/storage/emulated/0/Android/data/com.semikolan.datamanager.passmanager/files/');
-  final TextEditingController titleController = TextEditingController(text: Add.title);
-  final TextEditingController descriptionController = TextEditingController(text: Add.description);
-  final TextEditingController idController = TextEditingController(text: Add.id);
+  final TextEditingController titleController =
+      TextEditingController(text: Add.title);
+  final TextEditingController descriptionController =
+      TextEditingController(text: Add.description);
+  final TextEditingController idController =
+      TextEditingController(text: Add.id);
   // final LocalStorage storage = LocalStorage(Storage.storageName);
   String date = '';
   late final List<String> imgPath = Add.imgUrl;
@@ -138,56 +142,68 @@ class _DataScreenState extends State<AddData> {
     }
 
     return Scaffold(
-        appBar: AppBar(),
-        body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              TextFormField(
-                controller: titleController,
-                decoration: const InputDecoration(
-                  labelText: 'Title',
-                ),
+      appBar: AppBar(),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            TextFormField(
+              controller: titleController,
+              decoration: const InputDecoration(
+                labelText: 'Title',
               ),
-              TextFormField(
-                controller: descriptionController,
-                decoration: const InputDecoration(
-                  labelText: 'Description',
-                ),
+            ),
+            TextFormField(
+              controller: descriptionController,
+              decoration: const InputDecoration(
+                labelText: 'Description',
               ),
-              TextFormField(
-                controller: idController,
-                decoration: const InputDecoration(
-                  labelText: 'ID',
-                ),
+            ),
+            TextFormField(
+              controller: idController,
+              decoration: const InputDecoration(
+                labelText: 'ID',
               ),
-              IconButton(
-                  onPressed: () => _showChoiceDialog(context),
-                  icon: const Icon(Icons.add_a_photo)),
-              TextButton(
-                  onPressed: () {
-                    // if(date=='') return;
-                    Add.description = '';
-                    Add.title = '';
-                    Add.imgUrl = [];
-                    Add.date = '';
-                    Add.id = '';
-                    addItem(titleController.text, descriptionController.text,
-                        idController.text, date);
-                    Navigator.pushNamedAndRemoveUntil(
-                        context, MyHomePage.routeName, (route) => false);
-                  },
-                  child: const Text('Submit')),
-              Expanded(
-                  child: ImageGrid(
-                directory: _photoDir,
-                date: date,
-                imgPath: imgPath,
-              )),
-            ],
-          ),
-        ) // This trailing comma makes auto-formatting nicer for build methods.
-        );
+            ),
+            IconButton(
+                onPressed: () => _showChoiceDialog(context),
+                icon: const Icon(Icons.add_a_photo)),
+            TextButton(
+                onPressed: () {
+                  // if(date=='') return;
+                  Add.description = '';
+                  Add.title = '';
+                  Add.imgUrl = [];
+                  Add.date = '';
+                  Add.id = '';
+                  addItem(titleController.text, descriptionController.text,
+                      idController.text, date);
+                  Navigator.pushNamedAndRemoveUntil(
+                      context, MyHomePage.routeName, (route) => false);
+                  FacebookInterstitialAd.loadInterstitialAd(
+                    placementId: "328150579086879_328163679085569",
+                    listener: (result, value) {
+                      if (result == InterstitialAdResult.LOADED) {
+                        FacebookInterstitialAd.showInterstitialAd();
+                      }
+                    },
+                  );
+                },
+                child: const Text('Submit')),
+            Expanded(
+                child: ImageGrid(
+              directory: _photoDir,
+              date: date,
+              imgPath: imgPath,
+            )),
+          ],
+        ),
+      ),
+      bottomNavigationBar: FacebookBannerAd(
+        placementId: '328150579086879_328154279086509',
+        bannerSize: BannerSize.STANDARD,
+      ), // This trailing comma makes auto-formatting nicer for build methods.
+    );
   }
 }
 

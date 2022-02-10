@@ -1,14 +1,19 @@
 import 'dart:io';
 
+import 'package:facebook_audience_network/facebook_audience_network.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:passmanager/models/additem.dart';
 import 'package:passmanager/models/dataitem.dart';
+import 'package:passmanager/screens/homepage.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:share_plus/share_plus.dart';
 
-import 'imageFullScreen.dart';
+import 'image_full_screen.dart';
+import 'sharedpref.dart';
 
 class DataScreen extends StatefulWidget {
   const DataScreen({Key? key}) : super(key: key);
@@ -22,30 +27,12 @@ class _DataScreenState extends State<DataScreen> {
   late final Directory _photoDir = Directory(
       '/storage/emulated/0/Android/data/com.semikolan.datamanager.passmanager/files/');
   final TextEditingController inputController = TextEditingController();
-
-  _saveImages() async {
-    final pickedImage =
-        await ImagePicker().getImage(source: ImageSource.camera);
-    if (pickedImage == null) return null;
-
-    try {
-      final directory = await getExternalStorageDirectory();
-      print(directory!.path);
-      setState(() {});
-      if (directory != null) {
-        return File(pickedImage.path).copy(
-            '${directory.path}/${DateTime.now().toUtc().toIso8601String()}.png');
-      }
-      ;
-    } catch (e) {
-      return null;
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
+    final DataItem list =
+        ModalRoute.of(context)!.settings.arguments as DataItem;
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(title: Text(list.title)),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -53,6 +40,10 @@ class _DataScreenState extends State<DataScreen> {
             Expanded(child: ImageGrid(directory: _photoDir)),
           ],
         ),
+      ),
+      bottomNavigationBar: FacebookBannerAd(
+        placementId: '328150579086879_328154279086509',
+        bannerSize: BannerSize.STANDARD,
       ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
@@ -67,7 +58,7 @@ class ImageGrid extends StatelessWidget {
   Widget build(BuildContext context) {
     final DataItem list =
         ModalRoute.of(context)!.settings.arguments as DataItem;
-    var imageList = list.imgUrl;
+    List imageList = list.imgUrl;
     // var imageList = directory
     //     .listSync()
     //     .map((item) => item.path)
@@ -85,13 +76,35 @@ class ImageGrid extends StatelessWidget {
                 Clipboard.setData(ClipboardData(text: list.id.toString()));
                 Fluttertoast.showToast(msg: 'Copied ${list.id.toString()}');
               },
-              icon: const Icon(Icons.copy)),
+              icon: const Icon(Icons.copy))
         ],
       ),
-      Expanded(
+      IconButton(
+          onPressed: () async {
+            String? data = await SharedPref.read('data');
+            print("SHARED DATA $data");
+            if (data == null) {
+              return;
+            } else {
+              List<DataItem> lst = DataItem.decode(data);
+              print("Decoded lst $lst");
+              // lst.remove(list);
+              lst.removeWhere((item) => item.date == list.date);
+              print("Decoded lst afer remove $lst");
+               await SharedPref.save('data', DataItem.encode(lst));
+               Navigator.pushNamedAndRemoveUntil(context, MyHomePage.routeName, (route) => false);
+            }
+          },
+          icon: const Icon(Icons.delete)),
+          Add.imgUrl.isNotEmpty?IconButton(onPressed: () async{
+            await Share.shareFiles(Add.imgUrl,
+                      text: '${list.title}\n${list.description}\n${list.id}\nShared via Data Manager',
+                      subject: list.title);
+          }, icon: const Icon(Icons.share)):Container(),
+            Expanded(
         child: GridView.builder(
           itemCount: list.imgUrl.length,
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 3, childAspectRatio: 3.0 / 4.6),
           itemBuilder: (context, index) {
             return Card(
@@ -108,7 +121,9 @@ class ImageGrid extends StatelessWidget {
                       pageBuilder: (BuildContext context, _, __) {
                         return FullScreenPage(
                             dark: true,
-                            child: Image.file(File(imageList[index])));
+                            path: imageList[index],
+                            child: Image.file(File(imageList[index])
+                            ));
                       },
                     ),
                   ),

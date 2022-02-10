@@ -1,7 +1,9 @@
 import 'dart:io';
 
+import 'package:facebook_audience_network/facebook_audience_network.dart';
 import 'package:flutter/material.dart';
 import 'package:passmanager/constants/storage.dart';
+import 'package:passmanager/models/additem.dart';
 import 'package:passmanager/models/dataitem.dart';
 import 'package:passmanager/screens/sharedpref.dart';
 
@@ -30,6 +32,7 @@ class _MyHomePageState extends State<MyHomePage> {
     else {
       list = DataItem.decode(data);
       print("Decoded lst $list");
+      Add.dataList = list;
     }
   }
 
@@ -57,17 +60,27 @@ class _MyHomePageState extends State<MyHomePage> {
                 fit: BoxFit.fill,
               ).image,
             ):null,
-            onTap: () => Navigator.pushNamed(context, DataScreen.routeName,
-                arguments: list[index]),
+            onTap:(){
+              Add.imgUrl.clear();
+              for (var img in list[index].imgUrl) {
+                Add.imgUrl.add(img.toString());
+              }
+              Navigator.pushNamed(context, DataScreen.routeName,
+                arguments: list[index]);},
           ),
           itemCount: list.length,
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () =>
-            Navigator.pushNamed(context, AddData.routeName, arguments: list),
+        onPressed: (){
+          Add.imgUrl.clear();
+            Navigator.pushNamed(context, AddData.routeName, arguments: list);},
         tooltip: 'Increment',
         child: const Icon(Icons.add),
+      ),
+      bottomNavigationBar: FacebookBannerAd(
+        placementId: '328150579086879_328154279086509',
+        bannerSize: BannerSize.STANDARD,
       ),
     );
   }

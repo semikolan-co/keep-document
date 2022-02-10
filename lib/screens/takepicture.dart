@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:camera/camera.dart';
+import 'package:facebook_audience_network/facebook_audience_network.dart';
 import 'package:flutter/material.dart';
 import 'package:passmanager/models/additem.dart';
 import 'package:passmanager/screens/adddata.dart';
@@ -138,6 +139,10 @@ class DisplayPictureScreen extends StatelessWidget {
             ],
           )
         ],
+      ),
+      bottomNavigationBar: FacebookBannerAd(
+        placementId: '328150579086879_328154279086509',
+        bannerSize: BannerSize.STANDARD,
       ),
     );
   }

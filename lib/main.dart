@@ -1,9 +1,10 @@
 import 'dart:io';
 
+import 'package:facebook_audience_network/facebook_audience_network.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:passmanager/screens/datascreen.dart';
-import 'package:passmanager/screens/imageFullScreen.dart';
+import 'package:passmanager/screens/image_full_screen.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -14,6 +15,7 @@ import 'screens/homepage.dart';
 Future<void> main() async{
   WidgetsFlutterBinding.ensureInitialized();
   SharedPreferences.getInstance();
+  FacebookAudienceNetwork.init();
   runApp(const MyApp());
 }
 class MyApp extends StatelessWidget {
