@@ -67,7 +67,7 @@ class _FullScreenPageState extends State<FullScreenPage> {
   @override
   void dispose() {
     SystemChrome.setEnabledSystemUIOverlays(SystemUiOverlay.values);
-    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
         // Restore your settings here...
         ));
     super.dispose();
@@ -82,7 +82,7 @@ class _FullScreenPageState extends State<FullScreenPage> {
           Stack(
             children: [
               AnimatedPositioned(
-                duration: Duration(milliseconds: 333),
+                duration: const Duration(milliseconds: 333),
                 curve: Curves.fastOutSlowIn,
                 top: 0,
                 bottom: 0,

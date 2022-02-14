@@ -38,6 +38,8 @@ dependencies:
   image_picker: ^0.8.4+8
   fluttertoast: ^8.0.8
   shared_preferences: ^2.0.13
+  animations: ^2.0.2
+  glassmorphism: ^3.0.0
   # camera:
   #   git:
   #     url: https://github.com/flutter/plugins

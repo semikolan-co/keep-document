@@ -12,6 +12,7 @@ import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 
+import '../constants/colors.dart';
 import 'image_full_screen.dart';
 import 'sharedpref.dart';
 
@@ -32,11 +33,68 @@ class _DataScreenState extends State<DataScreen> {
     final DataItem list =
         ModalRoute.of(context)!.settings.arguments as DataItem;
     return Scaffold(
-      appBar: AppBar(title: Text(list.title)),
+      appBar: AppBar(
+        elevation: 0,
+        title: Text(
+          list.title,
+          style: const TextStyle(fontSize: 20, color: Colors.white),
+        ),
+        backgroundColor: MyColors.primary,
+        actions: [
+          IconButton(
+              onPressed: () {},
+              icon: const Icon(
+                Icons.edit,
+                color: Colors.white,
+              )),
+        ],
+      ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
+            Row(
+              children: [
+                const Spacer(
+                  flex: 2,
+                ),
+                Text("ID : ${list.id}", style: const TextStyle(fontSize: 17)),
+                const Spacer(
+                  flex: 17,
+                ),
+                IconButton(
+                    onPressed: () {
+                      Clipboard.setData(
+                          ClipboardData(text: list.id.toString()));
+                      Fluttertoast.showToast(
+                          msg: 'Copied ${list.id.toString()}');
+                    },
+                    icon: const Icon(Icons.copy)),
+                const Spacer(
+                  flex: 1,
+                ),
+              ],
+            ),
+            Column(
+              children: [
+                Row(
+                  children: [
+                    const Spacer(
+                      flex: 1,
+                    ),
+                    const Text('Note', style: TextStyle(fontSize: 17)),
+                    const Spacer(
+                      flex: 12,
+                    ),
+                    Text(list.date, style: const TextStyle(fontSize: 10)),
+                  ],
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 23),
+                  child: Text(list.description),
+                ),
+              ],
+            ),
             Expanded(child: ImageGrid(directory: _photoDir)),
           ],
         ),
@@ -56,6 +114,7 @@ class ImageGrid extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var mediaquery = MediaQuery.of(context).size;
     final DataItem list =
         ModalRoute.of(context)!.settings.arguments as DataItem;
     List imageList = list.imgUrl;
@@ -65,20 +124,6 @@ class ImageGrid extends StatelessWidget {
     //     .where((item) => item.endsWith(".png"))
     //     .toList(growable: false);
     return Column(children: [
-      Text(list.title),
-      Text(list.description),
-      Text(list.date),
-      Row(
-        children: [
-          Text(list.id),
-          IconButton(
-              onPressed: () {
-                Clipboard.setData(ClipboardData(text: list.id.toString()));
-                Fluttertoast.showToast(msg: 'Copied ${list.id.toString()}');
-              },
-              icon: const Icon(Icons.copy))
-        ],
-      ),
       IconButton(
           onPressed: () async {
             String? data = await SharedPref.read('data');
@@ -87,21 +132,27 @@ class ImageGrid extends StatelessWidget {
               return;
             } else {
               List<DataItem> lst = DataItem.decode(data);
-              print("Decoded lst $lst");
+              // print("Decoded lst $lst");
               // lst.remove(list);
               lst.removeWhere((item) => item.date == list.date);
-              print("Decoded lst afer remove $lst");
-               await SharedPref.save('data', DataItem.encode(lst));
-               Navigator.pushNamedAndRemoveUntil(context, MyHomePage.routeName, (route) => false);
+              // print("Decoded lst afer remove $lst");
+              await SharedPref.save('data', DataItem.encode(lst));
+              Navigator.pushNamedAndRemoveUntil(
+                  context, MyHomePage.routeName, (route) => false);
             }
           },
           icon: const Icon(Icons.delete)),
-          Add.imgUrl.isNotEmpty?IconButton(onPressed: () async{
-            await Share.shareFiles(Add.imgUrl,
-                      text: '${list.title}\n${list.description}\n${list.id}\nShared via Data Manager',
-                      subject: list.title);
-          }, icon: const Icon(Icons.share)):Container(),
-            Expanded(
+      Add.imgUrl.isNotEmpty
+          ? IconButton(
+              onPressed: () async {
+                await Share.shareFiles(Add.imgUrl,
+                    text:
+                        '${list.title}\n${list.description}\n${list.id}\nShared via Data Manager',
+                    subject: list.title);
+              },
+              icon: const Icon(Icons.share))
+          : Container(),
+      Expanded(
         child: GridView.builder(
           itemCount: list.imgUrl.length,
           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -122,16 +173,19 @@ class ImageGrid extends StatelessWidget {
                         return FullScreenPage(
                             dark: true,
                             path: imageList[index],
-                            child: Image.file(File(imageList[index])
-                            ));
+                            child: Image.file(File(imageList[index])));
                       },
                     ),
                   ),
-                  child: SizedBox(
-                    height: 50,
-                    child: Image.file(
-                      File(imageList[index]),
-                      fit: BoxFit.cover,
+                  child: Center(
+                    child: SizedBox(
+                      // height: 50,
+                      width: mediaquery.width * 0.8,
+                      height: mediaquery.height * 0.5,
+                      child: Image.file(
+                        File(imageList[index]),
+                        fit: BoxFit.cover,
+                      ),
                     ),
                   ),
                 ),
