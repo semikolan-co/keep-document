@@ -114,28 +114,7 @@ class _MyHomePageState extends State<MyHomePage> {
               child: Column(
                 children: [
                    SizedBox(height: 10),
-                  // Row(
-                  //   children: [
-                  //     Spacer(
-                  //       flex: 1,
-                  //     ),
-                  //     const Icon(
-                  //       Icons.eco,
-                  //       size: 30,
-                  //       color: Colors.white,
-                  //     ),
-                  //     Spacer(
-                  //       flex: 1,
-                  //     ),
-                  //     Text(
-                  //       'Document Keeper',
-                  //       style: TextStyle(fontSize: 30, color: Colors.white),
-                  //     ),
-                  //     Spacer(
-                  //       flex: 2,
-                  //     ),
-                  //   ],
-                  // ),
+
                   Text(
                     'Manage Your document safely loremds fdkfjaskfnsdmfnkjsadnlsafnjanldlk',
                     textAlign: TextAlign.center,
@@ -149,7 +128,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       height: 50,
                       borderRadius: 10,
                       blur: 10,
-                      // alignment: Alignment.,
+                      
                       border: 0,
                       linearGradient: linearGradiend(),
                       borderGradient: borderGradient(),
@@ -159,11 +138,9 @@ class _MyHomePageState extends State<MyHomePage> {
                           prefixIcon: Icon(
                             Icons.search,
                             color: Colors.white,
-                          ),
-
-                          hintText: 'Search',
+                          ),  hintText: 'Search',
                           hintStyle: TextStyle(color: Colors.white),
-                          // hintText: 'Search Docs',
+
                         ),
                       ),
                     ),
@@ -176,8 +153,6 @@ class _MyHomePageState extends State<MyHomePage> {
               children: [
                 SizedBox(height: mediaquery.height * 0.2),
                 Container(
-                  // alignment: Alignment.bottomCenter,
-
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.only(
                       topLeft: Radius.circular(30),
