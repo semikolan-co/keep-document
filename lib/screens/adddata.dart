@@ -97,7 +97,7 @@ class _DataScreenState extends State<AddData> {
         );
       }
     }
-    
+
     Future<void> _showChoiceDialog(BuildContext context) {
       return showDialog(
           context: context,
@@ -297,7 +297,8 @@ class _DataScreenState extends State<AddData> {
                       },
                       child: const Text('Save')),
                    SizedBox(
-                     height: 500,
+                    //  height: 500,
+                    height: mediaquery.height * 0.3,
                      child: Expanded(
                        child: ImageGrid(
                          directory: _photoDir,

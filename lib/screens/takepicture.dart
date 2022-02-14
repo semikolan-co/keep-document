@@ -68,6 +68,7 @@ class TakePictureScreenState extends State<TakePictureScreen> {
           }
         },
       ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: FloatingActionButton(
         // Provide an onPressed callback.
         onPressed: () async {
