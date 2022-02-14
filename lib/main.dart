@@ -1,36 +1,40 @@
-import 'dart:io';
-import 'package:image_picker/image_picker.dart';
-import 'package:passmanager/screens/image_full_screen.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:path/path.dart';
-
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:facebook_audience_network/facebook_audience_network.dart';
 import 'package:flutter/material.dart';
+import 'package:passmanager/models/dataitem.dart';
 import 'package:passmanager/screens/datascreen.dart';
+import 'package:passmanager/screens/introscreen.dart';
+import 'package:passmanager/screens/sharedpref.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'screens/adddata.dart';
 import 'screens/homepage.dart';
 
 Future<void> main() async {
-  WidgetsFlutterBinding.ensureInitialized();
+  WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
   SharedPreferences.getInstance();
-  FacebookAudienceNetwork.init();
-  runApp(const MyApp());
+  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
+  await FacebookAudienceNetwork.init();
+  final String? data = await SharedPref.read('data')??'';
+  runApp(MyApp(data: data,));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
-
+  const MyApp({key,this.data}) : super(key: key);
+  final String? data;
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context){
+    List<DataItem> dataList = [];
+    if(data!=null && data!=''){
+      dataList = DataItem.decode(data.toString());
+    }
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Keep Document',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
       debugShowCheckedModeBanner: false,
-      home: const MyHomePage(title: 'Data Manager'),
+      home: dataList.isEmpty? const IntroScreen(): const MyHomePage(title: 'Document Keeper'),
       routes: {
         DataScreen.routeName: (ctx) => const DataScreen(),
         AddData.routeName: (ctx) => const AddData(),

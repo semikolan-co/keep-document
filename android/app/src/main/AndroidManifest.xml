@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.semikolan.datamanager.passmanager">
    <application
-        android:label="Data Manager"
+        android:label="Keep Document"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"

@@ -36,6 +36,7 @@ class _DataScreenState extends State<AddData> {
       TextEditingController(text: Add.description);
   final TextEditingController idController =
       TextEditingController(text: Add.id);
+      final _formKey = GlobalKey<FormState>();
   // final LocalStorage storage = LocalStorage(Storage.storageName);
   String date = '';
   late final List<String> imgPath = Add.imgUrl;
@@ -65,7 +66,7 @@ class _DataScreenState extends State<AddData> {
       await SharedPref.save('data', DataItem.encode(list));
     }
 
-    addItem(String title, String desc, String id, String date) {
+    addItem(String title, String desc, String id, String date) async {
       setState(() {
         final item = DataItem(
             title: title,
@@ -145,7 +146,6 @@ class _DataScreenState extends State<AddData> {
             );
           });
     }
-
     var mediaquery = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
@@ -167,117 +167,149 @@ class _DataScreenState extends State<AddData> {
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(8.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: GlassmorphicContainer(
-                  width: mediaquery.width * 0.8,
-                  height: 50,
-                  borderRadius: 10,
-                  blur: 10,
-                  border: 2,
-                  linearGradient: linearGradiend(),
-                  borderGradient: borderGradient1(),
-                  child: Padding(
-                    padding: padding(10),
-                    child: TextFormField(
-                      controller: titleController,
-                      decoration: InputDecoration(
-                        border: InputBorder.none,
-                        labelText: 'Title',
-                        labelStyle: TextStyle(color: Colors.black),
-
-                        // prefixIcon: const Icon(Icons.arrow_forward_ios),
+          child: SingleChildScrollView(
+            child: Form(
+              key: _formKey,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: GlassmorphicContainer(
+                      width: mediaquery.width * 0.8,
+                      height: 80,
+                      borderRadius: 10,
+                      blur: 10,
+                      border: 2,
+                      linearGradient: linearGradiend(),
+                      borderGradient: borderGradient1(),
+                      child: Padding(
+                        padding: padding(10),
+                        child: TextFormField(
+                          validator: (value) {
+                            if (value != null) {
+                              if (value.isEmpty) {
+                                return 'Please enter a title';
+                              } else {
+                                bool isExist = false;
+                                for (var element in list) {
+                                  element.title == value ? isExist = true : null;
+                                }
+                                if (isExist) {
+                                  return 'Title Already Exist';
+                                }
+                              }
+                            } else {
+                              return 'Please enter a title';
+                            }
+                            return null;
+                          },
+                          controller: titleController,
+                          decoration: InputDecoration(
+                            border: InputBorder.none,
+                            labelText: 'Document Name',
+                            labelStyle: TextStyle(color: Colors.black),
+          
+                            // prefixIcon: const Icon(Icons.arrow_forward_ios),
+                          ),
+                        ),
                       ),
                     ),
                   ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: GlassmorphicContainer(
-                  //  width: 350,
-                  width: mediaquery.width * 0.8,
-                  height: 50,
-                  borderRadius: 10,
-                  blur: 10,
-                  // alignment: Alignment.,
-                  border: 2,
-                  linearGradient: linearGradiend(),
-                  borderGradient: borderGradient1(),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 5),
-                    child: TextFormField(
-                      maxLines: 2,
-                      controller: idController,
-                      decoration: const InputDecoration(
-                        labelText: 'ID',
-                        labelStyle: TextStyle(color: Colors.black),
-                        border: InputBorder.none,
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: GlassmorphicContainer(
+                      //  width: 350,
+                      width: mediaquery.width * 0.8,
+                      height: 100,
+                      borderRadius: 10,
+                      blur: 10,
+                      // alignment: Alignment.,
+                      border: 2,
+                      linearGradient: linearGradiend(),
+                      borderGradient: borderGradient1(),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 5),
+                        child: TextFormField(
+                          maxLines: 2,
+                          controller: idController,
+                          decoration: const InputDecoration(
+                            labelText: 'Document ID',
+                            labelStyle: TextStyle(color: Colors.black),
+                            border: InputBorder.none,
+                          ),
+                        ),
                       ),
                     ),
                   ),
-                ),
-              ),
-              GlassmorphicContainer(
-                width: mediaquery.width * 0.8,
-                height: mediaquery.height * 0.2,
-                borderRadius: 10,
-                blur: 10,
-                // alignment: Alignment.,
-                border: 2,
-                linearGradient: linearGradiend(),
-                borderGradient: borderGradient1(),
-                child: Padding(
-                  padding: padding(5),
-                  child: TextFormField(
-                    maxLines: 4,
-                    controller: descriptionController,
-                    decoration: InputDecoration(
-                      border: InputBorder.none,
-                      // hintMaxLines: 5,
-                      hintStyle: TextStyle(color: Colors.black),
-                      hintText: 'Note',
+                  GlassmorphicContainer(
+                    width: mediaquery.width * 0.8,
+                    height: mediaquery.height * 0.2,
+                    borderRadius: 10,
+                    blur: 10,
+                    // alignment: Alignment.,
+                    border: 2,
+                    linearGradient: linearGradiend(),
+                    borderGradient: borderGradient1(),
+                    child: Padding(
+                      padding: padding(10),
+                      child: TextFormField(
+                        maxLines: 4,
+                        controller: descriptionController,
+                        decoration: InputDecoration(
+                          border: InputBorder.none,
+                          // hintMaxLines: 5,
+                          hintStyle: TextStyle(color: Colors.black),
+                          hintText: 'Additional Note',
+                        ),
+                      ),
                     ),
                   ),
-                ),
-              ),
-              SizedBox(height: mediaquery.height * 0.1),
-              ElevatedButton(
-                  style: ButtonStyle(
-                      elevation: MaterialStateProperty.all(10),
-                      backgroundColor:
-                          MaterialStateProperty.all(MyColors.primary)),
-                  onPressed: () {
-                    // if(date=='') return;
-                    Add.description = '';
-                    Add.title = '';
-                    Add.imgUrl = [];
-                    Add.date = '';
-                    Add.id = '';
-                    addItem(titleController.text, descriptionController.text,
-                        idController.text, date);
-                    Navigator.pushNamedAndRemoveUntil(
-                        context, MyHomePage.routeName, (route) => false);
-                    FacebookInterstitialAd.loadInterstitialAd(
-                      placementId: "328150579086879_328163679085569",
-                      listener: (result, value) {
-                        if (result == InterstitialAdResult.LOADED) {
-                          FacebookInterstitialAd.showInterstitialAd();
+                  SizedBox(height: mediaquery.height * 0.05),
+                  ElevatedButton(
+                      style: ButtonStyle(
+                          elevation: MaterialStateProperty.all(10),
+                          backgroundColor:
+                              MaterialStateProperty.all(MyColors.primary)),
+                      onPressed: () {
+                        // if(date=='') return;
+                        if (_formKey.currentState!.validate()) {
+                          Add.description = '';
+                          Add.title = '';
+                          Add.imgUrl = [];
+                          Add.date = '';
+                          Add.id = '';
+                          addItem(
+                              titleController.text,
+                              descriptionController.text,
+                              idController.text,
+                              date);
+                          Navigator.pushNamedAndRemoveUntil(
+                              context, MyHomePage.routeName, (route) => false);
+                          FacebookInterstitialAd.loadInterstitialAd(
+                            placementId: "328150579086879_328163679085569",
+                            listener: (result, value) {
+                              if (result == InterstitialAdResult.LOADED) {
+                                FacebookInterstitialAd.showInterstitialAd();
+                              }
+                            },
+                          );
                         }
                       },
-                    );
-                  },
-                  child: const Text('Save')),
-              Expanded(
-                  child: ImageGrid(
-                directory: _photoDir,
-                date: date,
-                imgPath: imgPath,
-              )),
-            ],
+                      child: const Text('Save')),
+                   SizedBox(
+                     height: 500,
+                     child: Expanded(
+                       child: ImageGrid(
+                         directory: _photoDir,
+                         date: date,
+                         imgPath: imgPath,
+                                       ),
+                     ),
+                   ),
+                ],
+              ),
+            ),
           ),
         ),
       ),
