@@ -40,18 +40,21 @@ class _DataScreenState extends State<DataScreen> {
           style: const TextStyle(fontSize: 20, color: Colors.white),
         ),
         backgroundColor: MyColors.primary,
-        actions: [
-          IconButton(
-              onPressed: () {},
-              icon: const Icon(
-                Icons.edit,
-                color: Colors.white,
-              )),
-        ],
+        // actions: [
+        //   IconButton(
+        //       onPressed: () {
+
+        //       },
+        //       icon: const Icon(
+        //         Icons.edit,
+        //         color: Colors.white,
+        //       )),
+        // ],
       ),
       body: Center(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Row(
               children: [
@@ -75,26 +78,24 @@ class _DataScreenState extends State<DataScreen> {
                 ),
               ],
             ),
-            Column(
-              children: [
-                Row(
-                  children: [
-                    const Spacer(
-                      flex: 1,
-                    ),
-                    const Text('Note', style: TextStyle(fontSize: 17)),
-                    const Spacer(
-                      flex: 12,
-                    ),
-                    Text(list.date, style: const TextStyle(fontSize: 10)),
-                  ],
+            // Row(
+            //   children: [
+            //     const Spacer(
+            //       flex: 2,
+            //     ),
+                if(list.description!='') const Padding(
+                  padding: EdgeInsets.symmetric(horizontal:23.0,vertical: 5),
+                  child: Text('Additional Note:', style: TextStyle(fontSize: 17)),
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 23),
                   child: Text(list.description),
                 ),
-              ],
-            ),
+            //     const Spacer(
+            //       flex: 1,
+            //     ),
+            //   ],
+            // ),
             Expanded(child: ImageGrid(directory: _photoDir)),
           ],
         ),
@@ -123,77 +124,86 @@ class ImageGrid extends StatelessWidget {
     //     .map((item) => item.path)
     //     .where((item) => item.endsWith(".png"))
     //     .toList(growable: false);
-    return Column(children: [
-      IconButton(
-          onPressed: () async {
-            String? data = await SharedPref.read('data');
-            print("SHARED DATA $data");
-            if (data == null) {
-              return;
-            } else {
-              List<DataItem> lst = DataItem.decode(data);
-              // print("Decoded lst $lst");
-              // lst.remove(list);
-              lst.removeWhere((item) => item.date == list.date);
-              // print("Decoded lst afer remove $lst");
-              await SharedPref.save('data', DataItem.encode(lst));
-              Navigator.pushNamedAndRemoveUntil(
-                  context, MyHomePage.routeName, (route) => false);
-            }
-          },
-          icon: const Icon(Icons.delete)),
-      Add.imgUrl.isNotEmpty
-          ? IconButton(
-              onPressed: () async {
-                await Share.shareFiles(Add.imgUrl,
-                    text:
-                        '${list.title}\n${list.description}\n${list.id}\nShared via Data Manager',
-                    subject: list.title);
-              },
-              icon: const Icon(Icons.share))
-          : Container(),
-      Expanded(
-        child: GridView.builder(
-          itemCount: list.imgUrl.length,
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 3, childAspectRatio: 3.0 / 4.6),
-          itemBuilder: (context, index) {
-            return Card(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8.0),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(5.0),
-                child: InkWell(
-                  onTap: () => Navigator.push(
-                    context,
-                    PageRouteBuilder(
-                      opaque: false,
-                      pageBuilder: (BuildContext context, _, __) {
-                        return FullScreenPage(
-                            dark: true,
-                            path: imageList[index],
-                            child: Image.file(File(imageList[index])));
-                      },
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Column(children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            IconButton(
+                onPressed: () async {
+                  String? data = await SharedPref.read('data');
+                  print("SHARED DATA $data");
+                  if (data == null) {
+                    return;
+                  } else {
+                    List<DataItem> lst = DataItem.decode(data);
+                    // print("Decoded lst $lst");
+                    // lst.remove(list);
+                    lst.removeWhere((item) => item.title == list.title);
+                    // print("Decoded lst afer remove $lst");
+                    await SharedPref.save('data', DataItem.encode(lst));
+                    Navigator.pushNamedAndRemoveUntil(
+                        context, MyHomePage.routeName, (route) => false);
+                  }
+                },
+                icon: const Icon(Icons.delete,color: Colors.red,)),
+                Add.imgUrl.isNotEmpty
+            ? IconButton(
+                onPressed: () async {
+                  await Share.shareFiles(Add.imgUrl,
+                      text:
+                          '${list.title}\n${list.description}\n${list.id}\nShared via Data Manager',
+                      subject: list.title);
+                },
+                icon: const Icon(Icons.share,color: Colors.blue,))
+            : Container(),
+        
+          ],
+        ),
+        Expanded(
+          child: GridView.builder(
+            itemCount: list.imgUrl.length,
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 3, childAspectRatio: 3.0 / 4.6),
+            itemBuilder: (context, index) {
+              return Card(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8.0),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(5.0),
+                  child: InkWell(
+                    onTap: () => Navigator.push(
+                      context,
+                      PageRouteBuilder(
+                        opaque: false,
+                        pageBuilder: (BuildContext context, _, __) {
+                          return FullScreenPage(
+                              dark: true,
+                              path: imageList[index],
+                              child: Image.file(File(imageList[index])));
+                        },
+                      ),
                     ),
-                  ),
-                  child: Center(
-                    child: SizedBox(
-                      // height: 50,
-                      width: mediaquery.width * 0.8,
-                      height: mediaquery.height * 0.5,
-                      child: Image.file(
-                        File(imageList[index]),
-                        fit: BoxFit.cover,
+                    child: Center(
+                      child: SizedBox(
+                        // height: 50,
+                        width: mediaquery.width * 0.8,
+                        height: mediaquery.height * 0.5,
+                        child: Image.file(
+                          File(imageList[index]),
+                          fit: BoxFit.cover,
+                        ),
                       ),
                     ),
                   ),
                 ),
-              ),
-            );
-          },
-        ),
-      )
-    ]);
+              );
+            },
+          ),
+        )
+      ]),
+    );
   }
 }

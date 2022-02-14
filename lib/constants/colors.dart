@@ -5,8 +5,6 @@ class MyColors {
 }
 
 List<Color> colors = [
-  // Colors.blue,
-  const Color.fromARGB(255, 33, 243, 68),
   const Color.fromARGB(255, 243, 33, 86),
   const Color.fromARGB(255, 33, 149, 243),
   const Color.fromARGB(255, 243, 145, 33),

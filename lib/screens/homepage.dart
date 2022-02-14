@@ -5,12 +5,14 @@ import 'dart:io';
 import 'package:facebook_audience_network/facebook_audience_network.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:glassmorphism/glassmorphism.dart';
 import 'package:passmanager/constants/colors.dart';
 import 'package:passmanager/constants/storage.dart';
 import 'package:passmanager/models/additem.dart';
 import 'package:passmanager/models/dataitem.dart';
 import 'package:passmanager/screens/sharedpref.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import 'adddata.dart';
 import 'datascreen.dart';
@@ -26,6 +28,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   List<DataItem> list = [];
+  bool isChanging = false;
   // final LocalStorage storage = LocalStorage(Storage.storageName);
 
   loadSharedPreferences() async {
@@ -38,12 +41,13 @@ class _MyHomePageState extends State<MyHomePage> {
       print("Decoded lst $list");
       Add.dataList = list;
     }
+    FlutterNativeSplash.remove();
   }
 
   @override
   void initState() {
     super.initState();
-    loadSharedPreferences();
+    // loadSharedPreferences();
   }
 
   @override
@@ -53,7 +57,7 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         elevation: 0,
         backgroundColor: MyColors.primary,
-        title:const Text(
+        title: const Text(
           'Document Keeper',
           style: TextStyle(fontSize: 20, color: Colors.white),
         ),
@@ -63,234 +67,64 @@ class _MyHomePageState extends State<MyHomePage> {
           children: [
             DrawerHeader(
               child: Text(
-                'Document Keeper',
+                'Keep Document',
                 style: TextStyle(fontSize: 20, color: Colors.white),
               ),
               decoration: BoxDecoration(
                 color: MyColors.primary,
               ),
             ),
+            Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: Text('Helpful Resources:'),
+            ),
             ListTile(
-              title: Text('Add Data'),
+              title: Text('Aadhar Details'),
               onTap: () {
-                Navigator.pushNamed(context, AddData.routeName);
+                launch('https://uidai.gov.in/');
               },
             ),
             ListTile(
-              title: Text('View Data'),
+              title: Text('Passport Details'),
               onTap: () {
-                Navigator.pushNamed(context, DataScreen.routeName);
+                launch('https://www.passportindia.gov.in/');
               },
             ),
             ListTile(
-              title: Text('Add Item'),
+              title: Text('Voter ID Details'),
               onTap: () {
-                // Navigator.pushNamed(context, AddItem.routeName);
+                launch('https://www.nvsp.in/');
               },
             ),
             ListTile(
-              title: Text('View Item'),
+              title: Text('Driving License'),
               onTap: () {
-                // Navigator.pushNamed(context, AddItem.routeName);
+                launch(
+                    'https://parivahan.gov.in/parivahan/en/content/driving-licence-0');
               },
             ),
             ListTile(
-              title: Text('Logout'),
+              title: Text('Samagra ID Details'),
               onTap: () {
-                // SharedPref.delete('data');
-                Navigator.pushNamed(context, '/');
+                launch('http://samagra.gov.in/');
+              },
+            ),
+            ListTile(
+              title: Text('PAN Details'),
+              onTap: () {
+                launch(
+                    'https://www.onlineservices.nsdl.com/paam/endUserRegisterContact.html');
+              },
+            ),
+            ListTile(
+              title: Text('Ration Card Details'),
+              onTap: () {
+                launch(
+                    'https://nfsa.gov.in/portal/ration_card_state_portals_aa');
               },
             ),
           ],
         ),
-      ),
-      body: SizedBox(
-        height: mediaquery.height,
-        child: Stack(
-          children: [
-            Container(
-              height: mediaquery.height * 0.5,
-              width: mediaquery.width,
-              child: Column(
-                children: [
-                   SizedBox(height: 10),
-
-                  Text(
-                    'Manage Your document safely loremds fdkfjaskfnsdmfnkjsadnlsafnjanldlk',
-                    textAlign: TextAlign.center,
-                    overflow: TextOverflow.visible,
-                    style: const TextStyle(color: Colors.white, fontSize: 12),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: GlassmorphicContainer(
-                      width: mediaquery.width * 0.9,
-                      height: 50,
-                      borderRadius: 10,
-                      blur: 10,
-                      
-                      border: 0,
-                      linearGradient: linearGradiend(),
-                      borderGradient: borderGradient(),
-                      child: TextFormField(
-                        decoration: InputDecoration(
-                          border: InputBorder.none,
-                          prefixIcon: Icon(
-                            Icons.search,
-                            color: Colors.white,
-                          ),  hintText: 'Search',
-                          hintStyle: TextStyle(color: Colors.white),
-
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              decoration: BoxDecoration(color: MyColors.primary),
-            ),
-            Column(
-              children: [
-                SizedBox(height: mediaquery.height * 0.2),
-                Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(30),
-                      topRight: Radius.circular(30),
-                    ),
-                    color: Colors.white,
-                  ),
-                  height: mediaquery.height * 0.63,
-                  // color: Colors.red,
-                  child: FutureBuilder(
-                    future: loadSharedPreferences(),
-                    builder: (context, snapshot) => ListView.builder(
-                      itemBuilder: (ctx, index) => ListTile(
-                        title: Text(list[index].title.toString()),
-                        subtitle: Text(list[index].id.toString()),
-                        leading: list[index].imgUrl.isNotEmpty
-                            ?
-                            //  Container(
-                            //     height: 100,
-                            //     width: 100,
-                            //     child: FileImage(
-                            //       File(list[index].imgUrl[0]),
-                            //       // fit: BoxFit.fill,
-                            //     ).image,
-                            //   )
-
-                            CircleAvatar(
-                                backgroundImage: Image.file(
-                                  File(list[index].imgUrl[0]),
-                                  fit: BoxFit.fill,
-                                ).image,
-                              )
-                            : CircleAvatar(
-                                backgroundColor:
-                                    colors[index % colors.length],
-                                child: Text("${index + 1}"),
-                              ),
-                        trailing: IconButton(
-                          onPressed: () {
-                            showModalBottomSheet(
-                              // isScrollControlled: true,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(30.0),
-                              ),
-                              context: context,
-                              builder: (context) => Container(
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.only(
-                                    topLeft: Radius.circular(20),
-                                    topRight: Radius.circular(20),
-                                  ),
-                                ),
-                                padding: EdgeInsets.all(20),
-                                child: Column(
-                                  children: [
-                                    Text("Choose an action"),
-                                    SizedBox(height: 10),
-                                    ListTile(
-                                      title: Text("Edit"),
-                                      trailing: Icon(
-                                        Icons.edit,
-                                        color: Colors.green,
-                                      ),
-                                      onTap: () {
-                                        Navigator.of(context).pop();
-                                        // Navigator.push(
-                                        //   context,
-                                        //   MaterialPageRoute(
-                                        //     builder: (context) => AddData(
-                                        //       dataItem: list[index],
-                                        //     ),
-                                        //   ),
-                                        // );
-                                      },
-                                    ),
-                                    ListTile(
-                                      title: Text("Delete"),
-                                      trailing: Icon(
-                                        Icons.delete_forever_sharp,
-                                        color: Colors.red,
-                                      ),
-                                      onTap: () {
-                                        Navigator.of(context).pop();
-                                        setState(() {
-                                          list.removeAt(index);
-                                        });
-                                      },
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            );
-                          },
-                          icon: const Icon(
-                            Icons.more_vert_outlined,
-                            size: 20,
-                          ),
-                        ),
-                        onTap: () {
-                          Add.imgUrl.clear();
-                          for (var img in list[index].imgUrl) {
-                            Add.imgUrl.add(img.toString());
-                          }
-                          Navigator.pushNamed(context, DataScreen.routeName,
-                              arguments: list[index]);
-                        },
-                      ),
-                      itemCount: list.length,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
-      // floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: Colors.white,
-        elevation: 10,
-        // shape: RoundedRectangleBorder(
-        //   borderRadius: BorderRadius.circular(15),
-        //   side: BorderSide(color: Color.fromARGB(179, 238, 37, 37), width: 5),
-        // ),
-        onPressed: () {
-          Add.imgUrl.clear();
-          Navigator.pushNamed(context, AddData.routeName, arguments: list);
-        },
-        tooltip: 'Increment',
-        child: Icon(
-          Icons.add,
-          size: 40,
-          color: MyColors.primary,
-        ),
-      ),
-      bottomNavigationBar: FacebookBannerAd(
-        placementId: '328150579086879_328154279086509',
-        bannerSize: BannerSize.STANDARD,
       ),
     );
   }
