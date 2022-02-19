@@ -1,20 +1,22 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
 import 'dart:io';
-
 import 'package:facebook_audience_network/facebook_audience_network.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:glassmorphism/glassmorphism.dart';
 import 'package:lottie/lottie.dart';
-import 'package:passmanager/constants/colors.dart';
-import 'package:passmanager/constants/storage.dart';
+import 'package:passmanager/utils/colors.dart';
+import 'package:passmanager/utils/storage.dart';
 import 'package:passmanager/models/additem.dart';
 import 'package:passmanager/models/dataitem.dart';
 import 'package:passmanager/screens/sharedpref.dart';
+import 'package:passmanager/widgets/custom_alert.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../widgets/deleteconfirmation.dart';
+import '../widgets/drawer.dart';
 import 'adddata.dart';
 import 'datascreen.dart';
 
@@ -30,6 +32,8 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   List<DataItem> list = [];
   bool isChanging = false;
+  bool _speechEnabled = false;
+  final TextEditingController _searchController = TextEditingController();
   // final LocalStorage storage = LocalStorage(Storage.storageName);
 
   loadSharedPreferences() async {
@@ -46,12 +50,6 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   @override
-  void initState() {
-    super.initState();
-    // loadSharedPreferences();
-  }
-
-  @override
   Widget build(BuildContext context) {
     var mediaquery = MediaQuery.of(context).size;
     return Scaffold(
@@ -63,80 +61,16 @@ class _MyHomePageState extends State<MyHomePage> {
           style: TextStyle(fontSize: 20, color: Colors.white),
         ),
       ),
-      drawer: Drawer(
-        child: ListView(
-          children: [
-            DrawerHeader(
-              child: Text(
-                'Keep Document',
-                style: TextStyle(fontSize: 20, color: Colors.white),
-              ),
-              decoration: BoxDecoration(
-                color: MyColors.primary,
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: Text('Helpful Resources:'),
-            ),
-            ListTile(
-              title: Text('Aadhar Details'),
-              onTap: () {
-                launch('https://uidai.gov.in/');
-              },
-            ),
-            ListTile(
-              title: Text('Passport Details'),
-              onTap: () {
-                launch('https://www.passportindia.gov.in/');
-              },
-            ),
-            ListTile(
-              title: Text('Voter ID Details'),
-              onTap: () {
-                launch('https://www.nvsp.in/');
-              },
-            ),
-            ListTile(
-              title: Text('Driving License'),
-              onTap: () {
-                launch(
-                    'https://parivahan.gov.in/parivahan/en/content/driving-licence-0');
-              },
-            ),
-            ListTile(
-              title: Text('Samagra ID Details'),
-              onTap: () {
-                launch('http://samagra.gov.in/');
-              },
-            ),
-            ListTile(
-              title: Text('PAN Details'),
-              onTap: () {
-                launch(
-                    'https://www.onlineservices.nsdl.com/paam/endUserRegisterContact.html');
-              },
-            ),
-            ListTile(
-              title: Text('Ration Card Details'),
-              onTap: () {
-                launch(
-                    'https://nfsa.gov.in/portal/ration_card_state_portals_aa');
-              },
-            ),
-          ],
-        ),
-      ),
+      drawer: DrawerWidget(),
       body: FutureBuilder(
         future: isChanging ? null : loadSharedPreferences(),
-        builder: (context, snapshot) => 
-        SingleChildScrollView(child: 
-        SizedBox(
+        builder: (context, snapshot) => SingleChildScrollView(
+          child: SizedBox(
             // height: mediaquery.height*0.95,
             child: Stack(
               children: [
                 Container(
-                  height: mediaquery.height * 0.5,
+                  height: mediaquery.height * 0.4,
                   width: mediaquery.width,
                   child: Column(
                     children: [
@@ -160,17 +94,32 @@ class _MyHomePageState extends State<MyHomePage> {
                           linearGradient: linearGradiend(),
                           borderGradient: borderGradient(),
                           child: TextFormField(
+                            controller: _searchController,
                             onChanged: (value) async {
+                              print(_searchController.text.toString());
                               isChanging = true;
                               var data = await SharedPref.read('data');
-                              list = DataItem.decode(data);
+                              try {
+                                list = DataItem.decode(data);
+                              } catch (e) {
+                                list = [];
+                              }
                               print(value);
                               setState(() {
                                 list = list
                                     .where((element) =>
-                                        element.title.contains(value) ||
-                                        element.description.contains(value) ||
-                                        element.id.contains(value))
+                                        element.title
+                                            .toString()
+                                            .toLowerCase()
+                                            .contains(value.toLowerCase()) ||
+                                        element.description
+                                            .toString()
+                                            .toLowerCase()
+                                            .contains(value.toLowerCase()) ||
+                                        element.id
+                                            .toString()
+                                            .toLowerCase()
+                                            .contains(value.toLowerCase()))
                                     .toList();
                                 print(list);
                               });
@@ -209,123 +158,156 @@ class _MyHomePageState extends State<MyHomePage> {
                       height: mediaquery.height * 0.73,
                       // color: Colors.red,
                       child: list.isEmpty
-                          ? Lottie.network(
-                              'https://assets3.lottiefiles.com/packages/lf20_y6ilh1zw.json')
+                          ? _searchController.text.toString().isEmpty
+                              ? Lottie.asset('assets/emptyall.json')
+                              : Lottie.asset('assets/emptysearch.json')
                           : ListView.builder(
-                              itemBuilder: (ctx, index) => ListTile(
-                                title: Text(list[index].title.toString()),
-                                subtitle: Text(list[index].id.toString()),
-                                leading: list[index].imgUrl.isNotEmpty
-                                    ?
-                                    //  Container(
-                                    //     height: 100,
-                                    //     width: 100,
-                                    //     child: FileImage(
-                                    //       File(list[index].imgUrl[0]),
-                                    //       // fit: BoxFit.fill,
-                                    //     ).image,
-                                    //   )
-
-                                    CircleAvatar(
-                                        backgroundImage: Image.file(
-                                          File(list[index].imgUrl[0]),
-                                          fit: BoxFit.fill,
-                                        ).image,
-                                      )
-                                    : CircleAvatar(
-                                        backgroundColor:
-                                            colors[index % colors.length],
-                                        child: Text("${index + 1}"),
+                              itemBuilder: (ctx, index) => Dismissible(
+                                direction: DismissDirection.endToStart,
+                                onDismissed: (direction) {
+                                  deleteConfirmationDialog(
+                                      context,
+                                      () => deleteItem(index),
+                                      () => setState(() {}));
+                                },
+                                key: UniqueKey(),
+                                background: Container(
+                                  color: Colors.blueGrey,
+                                  alignment: Alignment.centerRight,
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    children: [
+                                      Text(
+                                        'Delete',
+                                        style: TextStyle(color: Colors.white),
                                       ),
-                                trailing: IconButton(
-                                  onPressed: () {
-                                    showModalBottomSheet(
-                                      // isScrollControlled: true,
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(30.0),
-                                      ),
-                                      context: context,
-                                      builder: (context) => Container(
-                                        decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.only(
-                                            topLeft: Radius.circular(20),
-                                            topRight: Radius.circular(20),
-                                          ),
-                                        ),
-                                        padding: EdgeInsets.all(20),
-                                        child: Column(
-                                          children: [
-                                            Text("Choose an action"),
-                                            SizedBox(height: 10),
-                                            // ListTile(
-                                            //   title: Text("Edit"),
-                                            //   trailing: Icon(
-                                            //     Icons.edit,
-                                            //     color: Colors.green,
-                                            //   ),
-                                            //   onTap: () {
-                                            //     Navigator.of(context).pop();
-                                            // Navigator.push(
-                                            //   context,
-                                            //   MaterialPageRoute(
-                                            //     builder: (context) => AddData(
-                                            //       dataItem: list[index],
-                                            //     ),
-                                            //   ),
-                                            // );
-                                            // },
-                                            // ),
-                                            ListTile(
-                                              title: Text("Delete"),
-                                              trailing: Icon(
-                                                Icons.delete_forever_sharp,
-                                                color: Colors.red,
-                                              ),
-                                              onTap: () async {
-                                                String data =
-                                                    await SharedPref.read(
-                                                        'data');
-                                                List<DataItem> newlist =
-                                                    DataItem.decode(data);
-                                                setState(() {
-                                                  newlist = newlist
-                                                      .where((element) =>
-                                                          element.title !=
-                                                          list[index].title)
-                                                      .toList();
-                                                  SharedPref.save('data',
-                                                      DataItem.encode(newlist));
-                                                });
-                                                await loadSharedPreferences();
-                                                Navigator.of(context).pop();
-                                              },
-                                            ),
-                                          ],
+                                      Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: const Icon(
+                                          Icons.delete,
+                                          color: Colors.white,
                                         ),
                                       ),
-                                    );
-                                  },
-                                  icon: const Icon(
-                                    Icons.more_vert_outlined,
-                                    size: 20,
+                                    ],
                                   ),
                                 ),
-                                onTap: () {
-                                  Add.imgUrl.clear();
-                                  for (var img in list[index].imgUrl) {
-                                    Add.imgUrl.add(img.toString());
-                                  }
-                                  Add.pdfUrl.clear();
-                                  if (list[index].pdfPath != null) {
-                                    for (var pdf in list[index].pdfPath ?? []) {
-                                      Add.pdfUrl.add(pdf.toString());
+                                child: ListTile(
+                                  title: Text(list[index].title.toString()),
+                                  subtitle: Text(list[index].id.toString()),
+                                  leading: list[index].imgUrl.isNotEmpty
+                                      ?
+                                      //  Container(
+                                      //     height: 100,
+                                      //     width: 100,
+                                      //     child: FileImage(
+                                      //       File(list[index].imgUrl[0]),
+                                      //       // fit: BoxFit.fill,
+                                      //     ).image,
+                                      //   )
+
+                                      CircleAvatar(
+                                          backgroundImage: Image.file(
+                                            File(list[index].imgUrl[0]),
+                                            fit: BoxFit.fill,
+                                          ).image,
+                                        )
+                                      : CircleAvatar(
+                                          backgroundColor:
+                                              colors[index % colors.length],
+                                          child: Text("${index + 1}"),
+                                        ),
+                                  trailing: IconButton(
+                                    onPressed: () {
+                                      showModalBottomSheet(
+                                        // isScrollControlled: true,
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.only(
+                                              topLeft: Radius.circular(20),
+                                              topRight: Radius.circular(20)),
+                                        ),
+                                        context: context,
+                                        builder: (context) => Container(
+                                          decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.only(
+                                              topLeft: Radius.circular(20),
+                                              topRight: Radius.circular(20),
+                                            ),
+                                          ),
+                                          padding: EdgeInsets.all(20),
+                                          child: Column(
+                                            children: [
+                                              Text("Choose an action"),
+                                              SizedBox(height: 10),
+                                              // ListTile(
+                                              //   title: Text("Edit"),
+                                              //   trailing: Icon(
+                                              //     Icons.edit,
+                                              //     color: Colors.green,
+                                              //   ),
+                                              //   onTap: () {
+                                              //     Navigator.of(context).pop();
+                                              // Navigator.push(
+                                              //   context,
+                                              //   MaterialPageRoute(
+                                              //     builder: (context) => AddData(
+                                              //       dataItem: list[index],
+                                              //     ),
+                                              //   ),
+                                              // );
+                                              // },
+                                              // ),
+                                              ListTile(
+                                                title: Text("Delete"),
+                                                trailing: Icon(
+                                                  Icons.delete_forever_sharp,
+                                                  color: Colors.red,
+                                                ),
+                                                onTap: () async {
+                                                  deleteConfirmationDialog(
+                                                      context,
+                                                      (){Navigator.of(context).pop();deleteItem(index);},
+                                                      () => Navigator.of(context).pop());
+                                                  // await deleteItem(index);
+                                                },
+                                              ),
+                                              Spacer(),
+                                              FacebookBannerAd(
+                                                placementId: Storage
+                                                    .facebookBannerPlacement,
+                                                bannerSize: BannerSize.STANDARD,
+                                              ),
+                                              FacebookBannerAd(
+                                                placementId: Storage
+                                                    .facebookBannerPlacement,
+                                                bannerSize: BannerSize.STANDARD,
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                    icon: const Icon(
+                                      Icons.more_vert_outlined,
+                                      size: 20,
+                                    ),
+                                  ),
+                                  onTap: () {
+                                    Add.imgUrl.clear();
+                                    for (var img in list[index].imgUrl) {
+                                      Add.imgUrl.add(img.toString());
                                     }
-                                  }
-                                  Navigator.pushNamed(
-                                      context, DataScreen.routeName,
-                                      arguments: list[index]);
-                                },
+                                    Add.pdfUrl.clear();
+                                    if (list[index].pdfPath != null) {
+                                      for (var pdf
+                                          in list[index].pdfPath ?? []) {
+                                        Add.pdfUrl.add(pdf.toString());
+                                      }
+                                    }
+                                    Navigator.pushNamed(
+                                        context, DataScreen.routeName,
+                                        arguments: list[index]);
+                                  },
+                                ),
                               ),
                               itemCount: list.length,
                             ),
@@ -337,7 +319,7 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
         ),
       ),
-      
+
       // floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.white,
@@ -357,9 +339,21 @@ class _MyHomePageState extends State<MyHomePage> {
         },
       ),
       bottomNavigationBar: FacebookBannerAd(
-        placementId: '328150579086879_328154279086509',
+        placementId: Storage.facebookBannerPlacement,
         bannerSize: BannerSize.STANDARD,
       ),
     );
+  }
+
+  Future<void> deleteItem(int index) async {
+    String data = await SharedPref.read('data');
+    List<DataItem> newlist = DataItem.decode(data);
+    setState(() {
+      newlist = newlist
+          .where((element) => element.title != list[index].title)
+          .toList();
+      SharedPref.save('data', DataItem.encode(newlist));
+    });
+    await loadSharedPreferences();
   }
 }

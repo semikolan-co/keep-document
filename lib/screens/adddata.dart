@@ -8,7 +8,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:glassmorphism/glassmorphism.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:passmanager/constants/storage.dart';
+import 'package:passmanager/utils/storage.dart';
 import 'package:passmanager/models/additem.dart';
 import 'package:passmanager/models/dataitem.dart';
 import 'package:passmanager/screens/homepage.dart';
@@ -16,7 +16,7 @@ import 'package:passmanager/screens/sharedpref.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 
-import '../constants/colors.dart';
+import '../utils/colors.dart';
 import 'takepicture.dart';
 
 class AddData extends StatefulWidget {
