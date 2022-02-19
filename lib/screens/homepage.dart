@@ -346,6 +346,10 @@ class _MyHomePageState extends State<MyHomePage> {
         //   borderRadius: BorderRadius.circular(15),
         //   side: BorderSide(color: Color.fromARGB(179, 238, 37, 37), width: 5),
         // ),
+        child: Icon(
+          Icons.add,
+          color: MyColors.primary,
+        ),
         onPressed: () {
           Add.imgUrl.clear();
           Add.pdfUrl.clear();
