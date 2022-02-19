@@ -351,12 +351,6 @@ class _MyHomePageState extends State<MyHomePage> {
           Add.pdfUrl.clear();
           Navigator.pushNamed(context, AddData.routeName, arguments: list);
         },
-        tooltip: 'Increment',
-        child: Icon(
-          Icons.add,
-          size: 40,
-          color: MyColors.primary,
-        ),
       ),
       bottomNavigationBar: FacebookBannerAd(
         placementId: '328150579086879_328154279086509',

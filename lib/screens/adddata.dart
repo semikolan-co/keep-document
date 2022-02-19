@@ -1,4 +1,3 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
 import 'dart:ffi';
 import 'dart:io';
@@ -248,7 +247,7 @@ class _DataScreenState extends State<AddData> {
                             return null;
                           },
                           controller: titleController,
-                          decoration: InputDecoration(
+                          decoration: const InputDecoration(
                             border: InputBorder.none,
                             labelText: 'Document Name',
                             labelStyle: TextStyle(color: Colors.black),
@@ -299,7 +298,7 @@ class _DataScreenState extends State<AddData> {
                       child: TextFormField(
                         maxLines: 4,
                         controller: descriptionController,
-                        decoration: InputDecoration(
+                        decoration: const InputDecoration(
                           border: InputBorder.none,
                           // hintMaxLines: 5,
                           hintStyle: TextStyle(color: Colors.black),
@@ -368,8 +367,8 @@ class _DataScreenState extends State<AddData> {
       begin: Alignment.topLeft,
       end: Alignment.bottomRight,
       colors: [
-        Color.fromRGBO(22, 68, 62, 1).withOpacity(1),
-        Color.fromRGBO(22, 68, 62, 1).withOpacity(0.2),
+        const Color.fromRGBO(22, 68, 62, 1).withOpacity(1),
+        const Color.fromRGBO(22, 68, 62, 1).withOpacity(0.2),
       ],
     );
   }
@@ -382,8 +381,8 @@ LinearGradient borderGradient() {
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
     colors: [
-      Color(0xFFffffff).withOpacity(0.5),
-      Color((0xFFFFFFFF)).withOpacity(0.5),
+      const Color(0xFFffffff).withOpacity(0.5),
+      const Color((0xFFFFFFFF)).withOpacity(0.5),
     ],
   );
 }
@@ -393,10 +392,10 @@ LinearGradient linearGradiend() {
       begin: Alignment.topLeft,
       end: Alignment.bottomRight,
       colors: [
-        Color(0xFFffffff).withOpacity(0.1),
-        Color(0xFFFFFFFF).withOpacity(0.05),
+        const Color(0xFFffffff).withOpacity(0.1),
+        const Color(0xFFFFFFFF).withOpacity(0.05),
       ],
-      stops: [
+      stops: const [
         0.1,
         1,
       ]);
