@@ -33,12 +33,11 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      debugShowCheckedModeBanner: false,
-      home: dataList.isEmpty? const IntroScreen(): const MyHomePage(title: 'Document Keeper'),
+      home: dataList.isEmpty? const IntroScreen(): const MyHomePage(title: 'Keep Document'),
       routes: {
         DataScreen.routeName: (ctx) => const DataScreen(),
         AddData.routeName: (ctx) => const AddData(),
-        MyHomePage.routeName: (ctx) => const MyHomePage(title: 'Data Manager'),
+        MyHomePage.routeName: (ctx) => const MyHomePage(title: 'Keep Document'),
       },
     );
   }

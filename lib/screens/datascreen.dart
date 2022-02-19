@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:open_file/open_file.dart';
 import 'package:passmanager/models/additem.dart';
 import 'package:passmanager/models/dataitem.dart';
 import 'package:passmanager/screens/homepage.dart';
@@ -83,14 +84,15 @@ class _DataScreenState extends State<DataScreen> {
             //     const Spacer(
             //       flex: 2,
             //     ),
-                if(list.description!='') const Padding(
-                  padding: EdgeInsets.symmetric(horizontal:23.0,vertical: 5),
-                  child: Text('Additional Note:', style: TextStyle(fontSize: 17)),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 23),
-                  child: Text(list.description),
-                ),
+            if (list.description != '')
+              const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 23.0, vertical: 5),
+                child: Text('Additional Note:', style: TextStyle(fontSize: 17)),
+              ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 23),
+              child: Text(list.description),
+            ),
             //     const Spacer(
             //       flex: 1,
             //     ),
@@ -124,45 +126,51 @@ class ImageGrid extends StatelessWidget {
     //     .map((item) => item.path)
     //     .where((item) => item.endsWith(".png"))
     //     .toList(growable: false);
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Column(children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            IconButton(
-                onPressed: () async {
-                  String? data = await SharedPref.read('data');
-                  print("SHARED DATA $data");
-                  if (data == null) {
-                    return;
-                  } else {
-                    List<DataItem> lst = DataItem.decode(data);
-                    // print("Decoded lst $lst");
-                    // lst.remove(list);
-                    lst.removeWhere((item) => item.title == list.title);
-                    // print("Decoded lst afer remove $lst");
-                    await SharedPref.save('data', DataItem.encode(lst));
-                    Navigator.pushNamedAndRemoveUntil(
-                        context, MyHomePage.routeName, (route) => false);
-                  }
-                },
-                icon: const Icon(Icons.delete,color: Colors.red,)),
-                Add.imgUrl.isNotEmpty
-            ? IconButton(
-                onPressed: () async {
-                  await Share.shareFiles(Add.imgUrl,
-                      text:
-                          '${list.title}\n${list.description}\n${list.id}\nShared via Data Manager',
-                      subject: list.title);
-                },
-                icon: const Icon(Icons.share,color: Colors.blue,))
-            : Container(),
-        
-          ],
-        ),
-        Expanded(
-          child: GridView.builder(
+    return SingleChildScrollView(
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              IconButton(
+                  onPressed: () async {
+                    String? data = await SharedPref.read('data');
+                    print("SHARED DATA $data");
+                    if (data == null) {
+                      return;
+                    } else {
+                      List<DataItem> lst = DataItem.decode(data);
+                      // print("Decoded lst $lst");
+                      // lst.remove(list);
+                      lst.removeWhere((item) => item.title == list.title);
+                      // print("Decoded lst afer remove $lst");
+                      await SharedPref.save('data', DataItem.encode(lst));
+                      Navigator.pushNamedAndRemoveUntil(
+                          context, MyHomePage.routeName, (route) => false);
+                    }
+                  },
+                  icon: const Icon(
+                    Icons.delete,
+                    color: Colors.red,
+                  )),
+              Add.imgUrl.isNotEmpty
+                  ? IconButton(
+                      onPressed: () async {
+                        await Share.shareFiles(Add.imgUrl,
+                            text:
+                                '${list.title}\n${list.description}\n${list.id}\nShared via Keep Document\nhttps://play.google.com/store/apps/details?id=com.semikolan.datamanager.passmanager',
+                            subject: list.title);
+                      },
+                      icon: const Icon(
+                        Icons.share,
+                      ))
+                  : Container(),
+            ],
+          ),
+          list.imgUrl.isNotEmpty? GridView.builder(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
             itemCount: list.imgUrl.length,
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 3, childAspectRatio: 3.0 / 4.6),
@@ -201,9 +209,45 @@ class ImageGrid extends StatelessWidget {
                 ),
               );
             },
-          ),
-        )
-      ]),
+          ):Container(),
+          Row(children: [
+            Spacer(),
+            IconButton(
+              onPressed: () async {
+                print(Add.pdfUrl);
+                await Share.shareFiles(
+                    Add.pdfUrl,
+                    text:
+                        '${list.title}\n${list.description}\n${list.id}\nShared via Keep Document\nhttps://play.google.com/store/apps/details?id=com.semikolan.datamanager.passmanager',
+                    subject: list.title);
+              },
+              icon: const Icon(Icons.share),
+            ),
+          ],),
+          list.pdfPath != null
+              ? ListView.builder(
+                  physics: NeverScrollableScrollPhysics(),
+                  shrinkWrap: true,
+                  itemBuilder: (context, index) {
+                    return InkWell(
+                      onLongPress: () => Share.shareFiles([list.pdfPath?[index]]),
+                      onTap: () => OpenFile.open(list.pdfPath?[index]),
+                      child: Card(
+                          child: ListTile(
+                        title: Text(list.pdfPath?[index]
+                                .toString()
+                                .split('/')
+                                .last
+                                .toString() ??
+                            ''),
+                      ),),
+                    );
+                  },
+                  itemCount: list.pdfPath?.length,
+                )
+              : Container(),
+        ]),
+      ),
     );
   }
 }

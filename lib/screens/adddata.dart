@@ -5,6 +5,7 @@ import 'dart:io';
 
 import 'package:camera/camera.dart';
 import 'package:facebook_audience_network/facebook_audience_network.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:glassmorphism/glassmorphism.dart';
 import 'package:image_picker/image_picker.dart';
@@ -36,10 +37,11 @@ class _DataScreenState extends State<AddData> {
       TextEditingController(text: Add.description);
   final TextEditingController idController =
       TextEditingController(text: Add.id);
-      final _formKey = GlobalKey<FormState>();
+  final _formKey = GlobalKey<FormState>();
   // final LocalStorage storage = LocalStorage(Storage.storageName);
   String date = '';
   late final List<String> imgPath = Add.imgUrl;
+  late final List<String> pdfPath = Add.pdfUrl;
 
   @override
   Widget build(BuildContext context) {
@@ -52,6 +54,7 @@ class _DataScreenState extends State<AddData> {
       Add.title = titleController.text;
       Add.id = idController.text;
       Add.imgUrl = imgPath;
+      Add.pdfUrl = pdfPath;
       Add.dataList = list;
       final cameras = await availableCameras();
       final firstCamera = cameras.first;
@@ -73,11 +76,42 @@ class _DataScreenState extends State<AddData> {
             description: desc,
             id: id,
             date: date,
-            imgUrl: imgPath);
+            imgUrl: imgPath,
+            pdfPath: pdfPath);
         list.add(item);
         // print("LISIST: $list");
         _saveToStorage();
       });
+    }
+
+    pickFile() async {
+      FilePickerResult? result = await FilePicker.platform.pickFiles(
+          type: FileType.custom,
+          allowCompression: true,
+          allowedExtensions: ['pdf']);
+
+      if (result != null) {
+        try {
+          File file = File(result.files.single.path.toString());
+          date = DateTime.now().toUtc().toIso8601String();
+          final directory = await getExternalStorageDirectory();
+          pdfPath.add(directory!.path + '/${result.files.single.name}');
+          setState(() {});
+          return File(file.path).copy('${directory.path}/${result.files.single.name.toString()}');
+          //       print(directory!.path);
+          // setState(() {});
+          //       final filePath = join(directory.path, '${date}.pdf');
+          // String? outputFile = await FilePicker.platform
+          //     .saveFile(fileName: '${date}.pdf', allowedExtensions: ['pdf']);
+        } catch (e) {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text('Error: $e'),
+          ));
+        }
+      } else {
+        // User canceled the picker
+        return null;
+      }
     }
 
     _saveImages(ImageSource source) async {
@@ -146,6 +180,7 @@ class _DataScreenState extends State<AddData> {
             );
           });
     }
+
     var mediaquery = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
@@ -162,12 +197,18 @@ class _DataScreenState extends State<AddData> {
                 Icons.add_a_photo,
                 color: Colors.white,
               )),
+          IconButton(
+              onPressed: () => pickFile(),
+              icon: const Icon(
+                Icons.file_present,
+                color: Colors.white,
+              )),
         ],
       ),
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: SingleChildScrollView(
+      body: SingleChildScrollView(
+        child: Center(
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
             child: Form(
               key: _formKey,
               child: Column(
@@ -176,7 +217,7 @@ class _DataScreenState extends State<AddData> {
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: GlassmorphicContainer(
-                      width: mediaquery.width * 0.8,
+                      width: mediaquery.width * 0.9,
                       height: 80,
                       borderRadius: 10,
                       blur: 10,
@@ -193,7 +234,9 @@ class _DataScreenState extends State<AddData> {
                               } else {
                                 bool isExist = false;
                                 for (var element in list) {
-                                  element.title == value ? isExist = true : null;
+                                  element.title == value
+                                      ? isExist = true
+                                      : null;
                                 }
                                 if (isExist) {
                                   return 'Title Already Exist';
@@ -209,7 +252,7 @@ class _DataScreenState extends State<AddData> {
                             border: InputBorder.none,
                             labelText: 'Document Name',
                             labelStyle: TextStyle(color: Colors.black),
-          
+
                             // prefixIcon: const Icon(Icons.arrow_forward_ios),
                           ),
                         ),
@@ -220,7 +263,7 @@ class _DataScreenState extends State<AddData> {
                     padding: const EdgeInsets.all(8.0),
                     child: GlassmorphicContainer(
                       //  width: 350,
-                      width: mediaquery.width * 0.8,
+                      width: mediaquery.width * 0.9,
                       height: 100,
                       borderRadius: 10,
                       blur: 10,
@@ -229,7 +272,7 @@ class _DataScreenState extends State<AddData> {
                       linearGradient: linearGradiend(),
                       borderGradient: borderGradient1(),
                       child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 5),
+                        padding: const EdgeInsets.symmetric(horizontal:10),
                         child: TextFormField(
                           maxLines: 2,
                           controller: idController,
@@ -243,8 +286,8 @@ class _DataScreenState extends State<AddData> {
                     ),
                   ),
                   GlassmorphicContainer(
-                    width: mediaquery.width * 0.8,
-                    height: mediaquery.height * 0.2,
+                    width: mediaquery.width * 0.9,
+                    height: mediaquery.height * 0.15,
                     borderRadius: 10,
                     blur: 10,
                     // alignment: Alignment.,
@@ -297,16 +340,16 @@ class _DataScreenState extends State<AddData> {
                         }
                       },
                       child: const Text('Save')),
-                   SizedBox(
-                     height: 500,
-                     child: Expanded(
-                       child: ImageGrid(
-                         directory: _photoDir,
-                         date: date,
-                         imgPath: imgPath,
-                                       ),
-                     ),
-                   ),
+                  ImageGrid(
+                    directory: _photoDir,
+                    date: date,
+                    imgPath: imgPath,
+                  ),
+                  FileList(
+                    directory: _photoDir,
+                    date: date,
+                    pdfPath: pdfPath,
+                  ),
                 ],
               ),
             ),
@@ -316,7 +359,7 @@ class _DataScreenState extends State<AddData> {
       bottomNavigationBar: FacebookBannerAd(
         placementId: '328150579086879_328154279086509',
         bannerSize: BannerSize.STANDARD,
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+      ),
     );
   }
 
@@ -375,6 +418,8 @@ class ImageGrid extends StatelessWidget {
     //     .where((item) => item.endsWith(".png"))
     //     .toList(growable: false);
     return GridView.builder(
+      shrinkWrap: true,
+      physics: NeverScrollableScrollPhysics(),
       itemCount: imgPath.length,
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 3, childAspectRatio: 3.0 / 4.6),
@@ -398,5 +443,27 @@ class ImageGrid extends StatelessWidget {
         );
       },
     );
+  }
+}
+
+class FileList extends StatelessWidget {
+  final Directory directory;
+  final String date;
+  final List<String> pdfPath;
+
+  const FileList(
+      {required this.directory, required this.date, required this.pdfPath});
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView.builder(
+      physics: NeverScrollableScrollPhysics(),
+      shrinkWrap:true,
+      itemCount: pdfPath.length,
+        itemBuilder: (context, index) => Card(
+          child: ListTile(
+                title: Text(pdfPath[index].toString().split('/').last),
+              ),
+        ));
   }
 }

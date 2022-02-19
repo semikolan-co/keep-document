@@ -5,6 +5,7 @@ class Add{
   static String description = '';
   static String id = '';
   static List<String> imgUrl = [];
+  static List<String> pdfUrl = [];
   static String date = '';
   static List<DataItem> dataList = [];
 }
