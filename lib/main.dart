@@ -3,10 +3,11 @@ import 'dart:io';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:facebook_audience_network/facebook_audience_network.dart';
 import 'package:flutter/material.dart';
+import 'package:local_auth/auth_strings.dart';
 import 'package:passmanager/models/dataitem.dart';
 import 'package:passmanager/screens/datascreen.dart';
 import 'package:passmanager/screens/introscreen.dart';
-import 'package:passmanager/screens/sharedpref.dart';
+import 'package:passmanager/models/sharedpref.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:local_auth/local_auth.dart';
 import 'screens/adddata.dart';
@@ -34,10 +35,9 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   bool authenticated = false;
   final LocalAuthentication auth = LocalAuthentication();
-  String _authorized = 'Not Authorized';
   bool _isAuthenticating = false;
-   bool _canCheckBiometrics=true;
-
+  bool _canCheckBiometrics=true;
+  String authorized = 'Not Authorized';
 
   Future<void> _checkBiometrics() async {
     late bool canCheckBiometrics;
@@ -54,17 +54,29 @@ class _MyAppState extends State<MyApp> {
     setState(() {
       _canCheckBiometrics = canCheckBiometrics;
     });
+    if(!_canCheckBiometrics){
+      FlutterNativeSplash.remove();
+    }
   }
   Future<void> _authenticate() async {
     bool authenticated = false;
     try {
       setState(() {
         _isAuthenticating = true;
-        _authorized = 'Authenticating';
+        authorized = 'Authenticating';
       });
       authenticated = await auth.authenticate(
-          localizedReason: 'Scan your fingerprint to authenticate',
-          stickyAuth: false,
+          localizedReason: 'Verify Login',
+          androidAuthStrings: const AndroidAuthMessages(
+            cancelButton: 'Cancel',
+            goToSettingsButton: 'Settings',
+            goToSettingsDescription: 'Open settings to set up fingerprints',
+            biometricHint: 'Place your finger or use password',
+            biometricNotRecognized: 'Fingerprint not recognized',
+            biometricSuccess: 'Fingerprint recognized',
+            signInTitle: 'Authenticate',
+          ),
+          stickyAuth: true,
           useErrorDialogs: true);
       setState(() {
         _isAuthenticating = false;
@@ -73,7 +85,7 @@ class _MyAppState extends State<MyApp> {
       print(e);
       setState(() {
         _isAuthenticating = false;
-        _authorized = 'Error - ${e.message}';
+        authorized = 'Error - ${e.message}';
       });
       return;
     }
@@ -82,7 +94,11 @@ class _MyAppState extends State<MyApp> {
     }
 
     setState(
-        () => _authorized = authenticated ? 'Authorized' : 'Not Authorized');
+        () => authorized = authenticated ? 'Authorized' : 'Not Authorized');
+    if(authorized=='Authorized'){
+      FlutterNativeSplash.remove();
+    }
+
   }
 
   @override
@@ -103,7 +119,7 @@ class _MyAppState extends State<MyApp> {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: _authorized=='Not Authorized'?exit(0):dataList.isEmpty? const IntroScreen(): const MyHomePage(title: 'Keep Document'),
+      home: authorized=='Not Authorized'?exit(0):dataList.isEmpty? const IntroScreen(): const MyHomePage(title: 'Keep Document'),
       routes: {
         DataScreen.routeName: (ctx) => const DataScreen(),
         AddData.routeName: (ctx) => const AddData(),

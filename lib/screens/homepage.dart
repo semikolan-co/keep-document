@@ -11,7 +11,7 @@ import 'package:passmanager/utils/colors.dart';
 import 'package:passmanager/utils/storage.dart';
 import 'package:passmanager/models/additem.dart';
 import 'package:passmanager/models/dataitem.dart';
-import 'package:passmanager/screens/sharedpref.dart';
+import 'package:passmanager/models/sharedpref.dart';
 import 'package:passmanager/widgets/custom_alert.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -46,7 +46,7 @@ class _MyHomePageState extends State<MyHomePage> {
       print("Decoded lst $list");
       Add.dataList = list;
     }
-    FlutterNativeSplash.remove();
+    // FlutterNativeSplash.remove();
   }
 
   @override

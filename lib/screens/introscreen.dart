@@ -3,6 +3,7 @@ import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:intro_slider/intro_slider.dart';
 import 'package:intro_slider/scrollbar_behavior_enum.dart';
 import 'package:intro_slider/slide_object.dart';
+import 'package:passmanager/main.dart';
 import 'package:passmanager/screens/homepage.dart';
 
 class IntroScreen extends StatefulWidget {
@@ -39,7 +40,7 @@ class _IntroScreenState extends State<IntroScreen> {
         backgroundColor: Colors.white
       ),
     );
-    FlutterNativeSplash.remove();
+    // if(authorized=='Authorized') FlutterNativeSplash.remove();
   }
 
   void onDonePress() {

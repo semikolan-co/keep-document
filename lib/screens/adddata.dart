@@ -12,7 +12,7 @@ import 'package:passmanager/utils/storage.dart';
 import 'package:passmanager/models/additem.dart';
 import 'package:passmanager/models/dataitem.dart';
 import 'package:passmanager/screens/homepage.dart';
-import 'package:passmanager/screens/sharedpref.dart';
+import 'package:passmanager/models/sharedpref.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -338,7 +338,7 @@ class _DataScreenState extends State<AddData> {
                           );
                         }
                       },
-                      child: const Text('Save')),
+                      child: const Text('Save',style: TextStyle(fontSize: 20,))),
                   ImageGrid(
                     directory: _photoDir,
                     date: date,

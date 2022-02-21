@@ -16,7 +16,7 @@ import 'package:share_plus/share_plus.dart';
 
 import '../utils/colors.dart';
 import 'image_full_screen.dart';
-import 'sharedpref.dart';
+import '../models/sharedpref.dart';
 
 class DataScreen extends StatefulWidget {
   const DataScreen({Key? key}) : super(key: key);
