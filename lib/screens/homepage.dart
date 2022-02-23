@@ -238,24 +238,24 @@ class _MyHomePageState extends State<MyHomePage> {
                                             children: [
                                               Text("Choose an action"),
                                               SizedBox(height: 10),
-                                              // ListTile(
-                                              //   title: Text("Edit"),
-                                              //   trailing: Icon(
-                                              //     Icons.edit,
-                                              //     color: Colors.green,
-                                              //   ),
-                                              //   onTap: () {
-                                              //     Navigator.of(context).pop();
-                                              // Navigator.push(
-                                              //   context,
-                                              //   MaterialPageRoute(
-                                              //     builder: (context) => AddData(
-                                              //       dataItem: list[index],
-                                              //     ),
-                                              //   ),
-                                              // );
-                                              // },
-                                              // ),
+                                              ListTile(
+                                                title: Text("Edit"),
+                                                trailing: Icon(
+                                                  Icons.edit,
+                                                  color: Colors.green,
+                                                ),
+                                                onTap: () {
+                                                  Navigator.of(context).pop();
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (context) => AddData(
+                                                    dataItem: list[index],
+                                                  ),
+                                                ),
+                                              );
+                                              },
+                                              ),
                                               ListTile(
                                                 title: Text("Delete"),
                                                 trailing: Icon(

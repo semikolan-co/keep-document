@@ -11,6 +11,7 @@ import 'package:passmanager/models/sharedpref.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:local_auth/local_auth.dart';
 import 'screens/adddata.dart';
+import 'screens/edit_data.dart';
 import 'screens/homepage.dart';
 import 'package:flutter/services.dart';
 import 'dart:async';
@@ -20,12 +21,14 @@ Future<void> main() async {
   SharedPreferences.getInstance();
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
   await FacebookAudienceNetwork.init();
-  final String? data = await SharedPref.read('data')??'';
-  runApp(MyApp(data: data,));
+  final String? data = await SharedPref.read('data') ?? '';
+  runApp(MyApp(
+    data: data,
+  ));
 }
 
 class MyApp extends StatefulWidget {
-  const MyApp({key,this.data}) : super(key: key);
+  const MyApp({key, this.data}) : super(key: key);
   final String? data;
 
   @override
@@ -36,7 +39,7 @@ class _MyAppState extends State<MyApp> {
   bool authenticated = false;
   final LocalAuthentication auth = LocalAuthentication();
   bool _isAuthenticating = false;
-  bool _canCheckBiometrics=true;
+  bool _canCheckBiometrics = true;
   String authorized = 'Not Authorized';
 
   Future<void> _checkBiometrics() async {
@@ -54,10 +57,11 @@ class _MyAppState extends State<MyApp> {
     setState(() {
       _canCheckBiometrics = canCheckBiometrics;
     });
-    if(!_canCheckBiometrics){
+    if (!_canCheckBiometrics) {
       FlutterNativeSplash.remove();
     }
   }
+
   Future<void> _authenticate() async {
     bool authenticated = false;
     try {
@@ -95,23 +99,22 @@ class _MyAppState extends State<MyApp> {
 
     setState(
         () => authorized = authenticated ? 'Authorized' : 'Not Authorized');
-    if(authorized=='Authorized'){
+    if (authorized == 'Authorized') {
       FlutterNativeSplash.remove();
     }
-
   }
 
   @override
   void initState() {
     super.initState();
     _checkBiometrics();
-    if(_canCheckBiometrics) _authenticate();
+    if (_canCheckBiometrics) _authenticate();
   }
 
   @override
-  Widget build(BuildContext context){
+  Widget build(BuildContext context) {
     List<DataItem> dataList = [];
-    if(widget.data!=null && widget.data!=''){
+    if (widget.data != null && widget.data != '') {
       dataList = DataItem.decode(widget.data.toString());
     }
     return MaterialApp(
@@ -119,14 +122,17 @@ class _MyAppState extends State<MyApp> {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: authorized=='Not Authorized'?exit(0):dataList.isEmpty? const IntroScreen(): const MyHomePage(title: 'Keep Document'),
+      home: authorized == 'Not Authorized'
+          ? exit(0)
+          : dataList.isEmpty
+              ? const IntroScreen()
+              : const MyHomePage(title: 'Keep Document'),
       routes: {
         DataScreen.routeName: (ctx) => const DataScreen(),
         AddData.routeName: (ctx) => const AddData(),
+        EditData.routeName: (ctx) => const EditData(),
         MyHomePage.routeName: (ctx) => const MyHomePage(title: 'Keep Document'),
       },
     );
   }
 }
-
-
