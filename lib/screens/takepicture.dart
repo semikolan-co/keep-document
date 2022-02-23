@@ -1,10 +1,11 @@
 import 'dart:io';
-
+import 'package:image_cropper/image_cropper.dart';
 import 'package:camera/camera.dart';
 import 'package:facebook_audience_network/facebook_audience_network.dart';
 import 'package:flutter/material.dart';
 import 'package:passmanager/models/additem.dart';
 import 'package:passmanager/screens/adddata.dart';
+import 'package:passmanager/utils/colors.dart';
 import 'package:path_provider/path_provider.dart';
 
 class TakePictureScreen extends StatefulWidget {
@@ -32,7 +33,7 @@ class TakePictureScreenState extends State<TakePictureScreen> {
       // Get a specific camera from the list of available cameras.
       widget.camera,
       // Define the resolution to use.
-      ResolutionPreset.medium,
+      ResolutionPreset.veryHigh,
     );
 
     // Next, initialize the controller. This returns a Future.
@@ -49,7 +50,7 @@ class TakePictureScreenState extends State<TakePictureScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Take a picture')),
+      appBar: AppBar(title: const Text('Take a picture'),backgroundColor: MyColors.primary,),
       // You must wait until the controller is initialized before displaying the
       // camera preview. Use a FutureBuilder to display a loading spinner until the
       // controller has finished initializing.
@@ -70,6 +71,7 @@ class TakePictureScreenState extends State<TakePictureScreen> {
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: FloatingActionButton(
+        backgroundColor: MyColors.primary,
         // Provide an onPressed callback.
         onPressed: () async {
           // Take the Picture in a try / catch block. If anything goes wrong,
@@ -82,16 +84,43 @@ class TakePictureScreenState extends State<TakePictureScreen> {
             // where it was saved.
             final image = await _controller.takePicture();
 
+            File? croppedFile = await ImageCropper().cropImage(
+                sourcePath: image.path,
+                aspectRatioPresets: [
+                  CropAspectRatioPreset.square,
+                  CropAspectRatioPreset.ratio3x2,
+                  CropAspectRatioPreset.original,
+                  CropAspectRatioPreset.ratio4x3,
+                  CropAspectRatioPreset.ratio16x9
+                ],
+                compressQuality: 80,
+                androidUiSettings: const AndroidUiSettings(
+                    toolbarTitle: 'Edit Image',
+                    activeControlsWidgetColor: MyColors.primary,
+                    // dimmedLayerColor: MyColors.primary,
+                    // toolbarColor: Colors.deepOrange,
+                    toolbarColor: MyColors.primary,
+                    toolbarWidgetColor: Colors.white,
+                    initAspectRatio: CropAspectRatioPreset.original,
+                    lockAspectRatio: false));
             // If the picture was taken, display it on a new screen.
-            await Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) => DisplayPictureScreen(
-                  // Pass the automatically generated path to
-                  // the DisplayPictureScreen widget.
-                  imagePath: image.path,
-                ),
-              ),
-            );
+            // await Navigator.of(context).push(
+            //   MaterialPageRoute(
+            //     builder: (context) => DisplayPictureScreen(
+            //       // Pass the automatically generated path to
+            //       // the DisplayPictureScreen widget.
+            //       imagePath: image.path,
+            //     ),
+            //   ),
+            // );
+            if (croppedFile != null) {
+              final date = DateTime.now().toUtc().toIso8601String();
+                    final directory = await getExternalStorageDirectory();
+                    print(directory!.path);
+                    Add.imgUrl.add(directory.path + '/$date.png');
+                    croppedFile.copy('${directory.path}/$date.png');
+                    Navigator.pushNamed(context, AddData.routeName);
+            }
           } catch (e) {
             // If an error occurs, log the error to the console.
             print(e);

@@ -139,14 +139,14 @@ class _DataScreenState extends State<AddData> {
             return AlertDialog(
               title: const Text(
                 "Choose option",
-                style: TextStyle(color: Colors.blue),
+                style: TextStyle(color:MyColors.primary),
               ),
               content: SingleChildScrollView(
                 child: ListBody(
                   children: [
                     const Divider(
                       height: 1,
-                      color: Colors.blue,
+                      color: MyColors.primary,
                     ),
                     ListTile(
                       onTap: () {
@@ -156,12 +156,12 @@ class _DataScreenState extends State<AddData> {
                       title: const Text("Gallery"),
                       leading: const Icon(
                         Icons.account_box,
-                        color: Colors.blue,
+                        color: MyColors.primary,
                       ),
                     ),
                     const Divider(
                       height: 1,
-                      color: Colors.blue,
+                      color: MyColors.primary,
                     ),
                     ListTile(
                       onTap: () {
@@ -170,7 +170,7 @@ class _DataScreenState extends State<AddData> {
                       title: const Text("Camera"),
                       leading: const Icon(
                         Icons.camera,
-                        color: Colors.blue,
+                        color: MyColors.primary,
                       ),
                     ),
                   ],
