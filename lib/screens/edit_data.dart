@@ -331,14 +331,14 @@ class _DataScreenState extends State<EditData> {
                               date);
                           Navigator.pushNamedAndRemoveUntil(
                               context, MyHomePage.routeName, (route) => false);
-                          FacebookInterstitialAd.loadInterstitialAd(
-                            placementId: "328150579086879_328163679085569",
-                            listener: (result, value) {
-                              if (result == InterstitialAdResult.LOADED) {
-                                FacebookInterstitialAd.showInterstitialAd();
-                              }
-                            },
-                          );
+                          // FacebookInterstitialAd.loadInterstitialAd(
+                          //   placementId: "328150579086879_328163679085569",
+                          //   listener: (result, value) {
+                          //     if (result == InterstitialAdResult.LOADED) {
+                          //       FacebookInterstitialAd.showInterstitialAd();
+                          //     }
+                          //   },
+                          // );
                         }
                       },
                       child: const Text('Save',

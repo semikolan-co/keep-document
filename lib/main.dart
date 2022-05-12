@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter_native_splash/flutter_native_splash.dart';
-import 'package:facebook_audience_network/facebook_audience_network.dart';
+// import 'package:facebook_audience_network/facebook_audience_network.dart';
 import 'package:flutter/material.dart';
 import 'package:local_auth/auth_strings.dart';
 import 'package:passmanager/models/dataitem.dart';
@@ -20,7 +20,7 @@ Future<void> main() async {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
   SharedPreferences.getInstance();
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
-  await FacebookAudienceNetwork.init();
+  // await FacebookAudienceNetwork.init();
   final String? data = await SharedPref.read('data') ?? '';
   runApp(MyApp(
     data: data,
@@ -130,7 +130,7 @@ class _MyAppState extends State<MyApp> {
       routes: {
         DataScreen.routeName: (ctx) => const DataScreen(),
         AddData.routeName: (ctx) => const AddData(),
-        EditData.routeName: (ctx) => const EditData(),
+        // EditData.routeName: (ctx) => const EditData(),
         MyHomePage.routeName: (ctx) => const MyHomePage(title: 'Keep Document'),
       },
     );
