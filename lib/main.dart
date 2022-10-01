@@ -130,11 +130,7 @@ class _MyAppState extends State<MyApp> {
       routes: {
         DataScreen.routeName: (ctx) => const DataScreen(),
         AddData.routeName: (ctx) => const AddData(),
-<<<<<<< HEAD
         // EditData.routeName: (ctx) =>  EditData(),
-=======
-        // EditData.routeName: (ctx) => const EditData(),
->>>>>>> 67c44e3b04a33b360d1dedb2e2f5b475d23cf1e8
         MyHomePage.routeName: (ctx) => const MyHomePage(title: 'Keep Document'),
       },
     );
