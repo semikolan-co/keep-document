@@ -250,7 +250,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                                 context,
                                                 MaterialPageRoute(
                                                   builder: (context) => AddData(
-                                                    dataItem: list[index],
+                                                    // dataItem: list[index],
                                                   ),
                                                 ),
                                               );
