@@ -13,6 +13,7 @@ import 'package:passmanager/models/additem.dart';
 import 'package:passmanager/models/dataitem.dart';
 import 'package:passmanager/models/sharedpref.dart';
 import 'package:passmanager/widgets/custom_alert.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../widgets/deleteconfirmation.dart';
@@ -239,21 +240,21 @@ class _MyHomePageState extends State<MyHomePage> {
                                               Text("Choose an action"),
                                               SizedBox(height: 10),
                                               ListTile(
-                                                title: Text("Edit"),
+                                                title: Text("Share"),
                                                 trailing: Icon(
-                                                  Icons.edit,
-                                                  color: Colors.green,
+                                                  Icons.share,
+                                                  color: Colors.blue,
                                                 ),
                                                 onTap: () {
-                                                  Navigator.of(context).pop();
-                                              Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                  builder: (context) => AddData(
-                                                    // dataItem: list[index],
-                                                  ),
-                                                ),
-                                              );
+                                                  final List<String> strs = list[index].imgUrl.map((e) => e.toString()).toList();
+                                                  if(list[index].pdfPath!=null){
+                                                    strs.addAll(list[index].pdfPath!.map((e) => e.toString()).toList());
+                                                  }
+                                                  strs.isNotEmpty ? 
+                                                  Share.shareFiles(strs,
+                                                      text:'${list[index].id} ${list[index].title} \n ${list[index].description}',
+                                                      subject: list[index].title):
+                                                      Share.share('${list[index].title} \n ${list[index].description}');
                                               },
                                               ),
                                               ListTile(
