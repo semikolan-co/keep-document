@@ -15,7 +15,7 @@ Be a part of the SemiKolan Developer's Community by joining our [Discord Server]
 
 ```
 
-
+keep-document
 │
 ├── android\
 │   ├── app\
@@ -31,30 +31,22 @@ Be a part of the SemiKolan Developer's Community by joining our [Discord Server]
 │   │   │   │   │                   └── MainActivity.kt
 │   │   │   │   ├── res\
 │   │   │   │   │   ├── drawable\
-│   │   │   │   │   │   ├── background.png
 │   │   │   │   │   │   └── launch_background.xml
-│   │   │   │   │   │
 │   │   │   │   │   ├── drawable-v21\
-│   │   │   │   │   │   ├── background.png
 │   │   │   │   │   │   └── launch_background.xml
-│   │   │   │   │   │
 │   │   │   │   │   ├── mipmap-anydpi-v26\
 │   │   │   │   │   │   └── ic_launcher.xml
-│   │   │   │   │   │
 │   │   │   │   │   ├── mipmap-hdpi\
-│   │   │   │   │   │
 │   │   │   │   │   ├── mipmap-mdpi\
-│   │   │   │   │   │
 │   │   │   │   │   ├── mipmap-xhdpi\
-│   │   │   │   │   │
 │   │   │   │   │   ├── mipmap-xxhdpi\
-│   │   │   │   │   │
 │   │   │   │   │   ├── mipmap-xxxhdpi\
-│   │   │   │   │   │
 │   │   │   │   │   ├── values\
 │   │   │   │   │   │   └── styles.xml
+│   │   │   │   │   │
 │   │   │   │   │   ├── values-night\
 │   │   │   │   │   │   └── styles.xml
+│   │   │   │   │   │
 │   │   │   │   │   └── values-v31\
 │   │   │   │   │       └── styles.xml
 │   │   │   │   └── AndroidManifest.xml
@@ -73,9 +65,6 @@ Be a part of the SemiKolan Developer's Community by joining our [Discord Server]
 ├── assets\
 │   ├── emptyall.json
 │   ├── emptysearch.json
-│   ├── intro1.png
-│   ├── intro2.png
-│   └── splash.png
 │
 ├── ios\
 │   ├── Flutter\
@@ -90,14 +79,13 @@ Be a part of the SemiKolan Developer's Community by joining our [Discord Server]
 │   │   │   │
 │   │   │   ├── BrandingImage.imageset\
 │   │   │   │   └── Contents.json
-│   │   │   │
 │   │   │   ├── LaunchBackground.imageset\
 │   │   │   │   ├── Contents.json
 │   │   │   │   └── background.png
-│   │   │   │
 │   │   │   └── LaunchImage.imageset\
 │   │   │       ├── Contents.json
 │   │   │       └── README.md
+│   │   │
 │   │   ├── Base.lproj\
 │   │   │   ├── LaunchScreen.storyboard
 │   │   │   └── Main.storyboard
@@ -119,6 +107,7 @@ Be a part of the SemiKolan Developer's Community by joining our [Discord Server]
 │   │   └── project.pbxproj
 │   │
 │   ├── Runner.xcworkspace\
+│   │   │
 │   │   ├── xcshareddata\
 │   │   │   ├── IDEWorkspaceChecks.plist
 │   │   │   └── WorkspaceSettings.xcsettings
@@ -151,7 +140,6 @@ Be a part of the SemiKolan Developer's Community by joining our [Discord Server]
 │   └── main.dart
 │
 ├── windows\
-│   │
 │   ├── flutter\
 │   │   ├── CMakeLists.txt
 │   │   ├── generated_plugin_registrant.cc
@@ -171,11 +159,8 @@ Be a part of the SemiKolan Developer's Community by joining our [Discord Server]
 │   │   ├── utils.h
 │   │   ├── win32_window.cpp
 │   │   └── win32_window.h
-│   │
-│   ├── .gitignore
 │   └── CMakeLists.txt
 │
-├── .gitignore
 ├── .metadata
 ├── README.md
 ├── analysis_options.yaml
