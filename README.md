@@ -11,6 +11,178 @@ Be a part of the SemiKolan Developer's Community by joining our [Discord Server]
 
 [![](https://img.shields.io/discord/849036512045039637?color=5865F2&logo=Discord&style=flat-square)](https://discord.semikolan.co)
 
+## File Structure
+
+```
+
+
+│
+├── android\
+│   ├── app\
+│   │   ├── src\
+│   │   │   ├── debug\
+│   │   │   │   └── AndroidManifest.xml
+│   │   │   ├── main\
+│   │   │   │   ├── kotlin\
+│   │   │   │   │   └── com\
+│   │   │   │   │       └── semikolan\
+│   │   │   │   │           └── datamanager\
+│   │   │   │   │               └── passmanager\
+│   │   │   │   │                   └── MainActivity.kt
+│   │   │   │   ├── res\
+│   │   │   │   │   ├── drawable\
+│   │   │   │   │   │   ├── background.png
+│   │   │   │   │   │   └── launch_background.xml
+│   │   │   │   │   │
+│   │   │   │   │   ├── drawable-v21\
+│   │   │   │   │   │   ├── background.png
+│   │   │   │   │   │   └── launch_background.xml
+│   │   │   │   │   │
+│   │   │   │   │   ├── mipmap-anydpi-v26\
+│   │   │   │   │   │   └── ic_launcher.xml
+│   │   │   │   │   │
+│   │   │   │   │   ├── mipmap-hdpi\
+│   │   │   │   │   │
+│   │   │   │   │   ├── mipmap-mdpi\
+│   │   │   │   │   │
+│   │   │   │   │   ├── mipmap-xhdpi\
+│   │   │   │   │   │
+│   │   │   │   │   ├── mipmap-xxhdpi\
+│   │   │   │   │   │
+│   │   │   │   │   ├── mipmap-xxxhdpi\
+│   │   │   │   │   │
+│   │   │   │   │   ├── values\
+│   │   │   │   │   │   └── styles.xml
+│   │   │   │   │   ├── values-night\
+│   │   │   │   │   │   └── styles.xml
+│   │   │   │   │   └── values-v31\
+│   │   │   │   │       └── styles.xml
+│   │   │   │   └── AndroidManifest.xml
+│   │   │   │
+│   │   │   └── profile\
+│   │   │       └── AndroidManifest.xml
+│   │   └── build.gradle
+│   │
+│   ├── gradle\
+│   │   └── wrapper\
+│   │       └── gradle-wrapper.properties
+│   ├── build.gradle
+│   ├── gradle.properties
+│   └── settings.gradle
+│
+├── assets\
+│   ├── emptyall.json
+│   ├── emptysearch.json
+│   ├── intro1.png
+│   ├── intro2.png
+│   └── splash.png
+│
+├── ios\
+│   ├── Flutter\
+│   │   ├── AppFrameworkInfo.plist
+│   │   ├── Debug.xcconfig
+│   │   └── Release.xcconfig
+│   │
+│   ├── Runner\
+│   │   ├── Assets.xcassets\
+│   │   │   ├── AppIcon.appiconset\
+│   │   │   │   ├── Contents.json
+│   │   │   │
+│   │   │   ├── BrandingImage.imageset\
+│   │   │   │   └── Contents.json
+│   │   │   │
+│   │   │   ├── LaunchBackground.imageset\
+│   │   │   │   ├── Contents.json
+│   │   │   │   └── background.png
+│   │   │   │
+│   │   │   └── LaunchImage.imageset\
+│   │   │       ├── Contents.json
+│   │   │       └── README.md
+│   │   ├── Base.lproj\
+│   │   │   ├── LaunchScreen.storyboard
+│   │   │   └── Main.storyboard
+│   │   │
+│   │   ├── AppDelegate.swift
+│   │   ├── Info.plist
+│   │   └── Runner-Bridging-Header.h
+│   │
+│   ├── Runner.xcodeproj\
+│   │   ├── project.xcworkspace\
+│   │   │   ├── xcshareddata\
+│   │   │   │   ├── IDEWorkspaceChecks.plist
+│   │   │   │   └── WorkspaceSettings.xcsettings
+│   │   │   └── contents.xcworkspacedata
+│   │   │
+│   │   ├── xcshareddata\
+│   │   │   └── xcschemes\
+│   │   │       └── Runner.xcscheme
+│   │   └── project.pbxproj
+│   │
+│   ├── Runner.xcworkspace\
+│   │   ├── xcshareddata\
+│   │   │   ├── IDEWorkspaceChecks.plist
+│   │   │   └── WorkspaceSettings.xcsettings
+│   │   └── contents.xcworkspacedata
+│   └── .gitignore
+│
+├── lib\
+│   ├── models\
+│   │   ├── additem.dart
+│   │   ├── dataitem.dart
+│   │   └── sharedpref.dart
+│   │
+│   ├── screens\
+│   │   ├── adddata.dart
+│   │   ├── datascreen.dart
+│   │   ├── edit_data.dart
+│   │   ├── homepage.dart
+│   │   ├── image_full_screen.dart
+│   │   ├── introscreen.dart
+│   │   └── takepicture.dart
+│   │
+│   ├── utils\
+│   │   ├── colors.dart
+│   │   └── storage.dart
+│   │
+│   ├── widgets\
+│   │   ├── custom_alert.dart
+│   │   ├── deleteconfirmation.dart
+│   │   └── drawer.dart
+│   └── main.dart
+│
+├── windows\
+│   │
+│   ├── flutter\
+│   │   ├── CMakeLists.txt
+│   │   ├── generated_plugin_registrant.cc
+│   │   ├── generated_plugin_registrant.h
+│   │   └── generated_plugins.cmake
+│   │
+│   ├── runner\
+│   │   ├── resources\
+│   │   ├── CMakeLists.txt
+│   │   ├── Runner.rc
+│   │   ├── flutter_window.cpp
+│   │   ├── flutter_window.h
+│   │   ├── main.cpp
+│   │   ├── resource.h
+│   │   ├── runner.exe.manifest
+│   │   ├── utils.cpp
+│   │   ├── utils.h
+│   │   ├── win32_window.cpp
+│   │   └── win32_window.h
+│   │
+│   ├── .gitignore
+│   └── CMakeLists.txt
+│
+├── .gitignore
+├── .metadata
+├── README.md
+├── analysis_options.yaml
+├── pubspec.lock
+└── pubspec.yaml
+```
+
 
 ## Code Contributers
 
