@@ -11,6 +11,46 @@ Be a part of the SemiKolan Developer's Community by joining our [Discord Server]
 
 [![](https://img.shields.io/discord/849036512045039637?color=5865F2&logo=Discord&style=flat-square)](https://discord.semikolan.co)
 
+## File Structure
+
+```
+
+keep-document
+├── android\
+├── assets\
+├── ios\
+├── lib\
+│   ├── models\
+│   │   ├── additem.dart
+│   │   ├── dataitem.dart
+│   │   └── sharedpref.dart
+│   │
+│   ├── screens\
+│   │   ├── adddata.dart
+│   │   ├── datascreen.dart
+│   │   ├── edit_data.dart
+│   │   ├── homepage.dart
+│   │   ├── image_full_screen.dart
+│   │   ├── introscreen.dart
+│   │   └── takepicture.dart
+│   │
+│   ├── utils\
+│   │   ├── colors.dart
+│   │   └── storage.dart
+│   │
+│   ├── widgets\
+│   │   ├── custom_alert.dart
+│   │   ├── deleteconfirmation.dart
+│   │   └── drawer.dart
+│   └── main.dart
+├── windows\
+├── .metadata
+├── README.md
+├── analysis_options.yaml
+├── pubspec.lock
+└── pubspec.yaml
+```
+
 
 ## Code Contributers
 
