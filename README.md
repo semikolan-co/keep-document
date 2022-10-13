@@ -16,104 +16,9 @@ Be a part of the SemiKolan Developer's Community by joining our [Discord Server]
 ```
 
 keep-document
-│
 ├── android\
-│   ├── app\
-│   │   ├── src\
-│   │   │   ├── debug\
-│   │   │   │   └── AndroidManifest.xml
-│   │   │   ├── main\
-│   │   │   │   ├── kotlin\
-│   │   │   │   │   └── com\
-│   │   │   │   │       └── semikolan\
-│   │   │   │   │           └── datamanager\
-│   │   │   │   │               └── passmanager\
-│   │   │   │   │                   └── MainActivity.kt
-│   │   │   │   ├── res\
-│   │   │   │   │   ├── drawable\
-│   │   │   │   │   │   └── launch_background.xml
-│   │   │   │   │   ├── drawable-v21\
-│   │   │   │   │   │   └── launch_background.xml
-│   │   │   │   │   ├── mipmap-anydpi-v26\
-│   │   │   │   │   │   └── ic_launcher.xml
-│   │   │   │   │   ├── mipmap-hdpi\
-│   │   │   │   │   ├── mipmap-mdpi\
-│   │   │   │   │   ├── mipmap-xhdpi\
-│   │   │   │   │   ├── mipmap-xxhdpi\
-│   │   │   │   │   ├── mipmap-xxxhdpi\
-│   │   │   │   │   ├── values\
-│   │   │   │   │   │   └── styles.xml
-│   │   │   │   │   │
-│   │   │   │   │   ├── values-night\
-│   │   │   │   │   │   └── styles.xml
-│   │   │   │   │   │
-│   │   │   │   │   └── values-v31\
-│   │   │   │   │       └── styles.xml
-│   │   │   │   └── AndroidManifest.xml
-│   │   │   │
-│   │   │   └── profile\
-│   │   │       └── AndroidManifest.xml
-│   │   └── build.gradle
-│   │
-│   ├── gradle\
-│   │   └── wrapper\
-│   │       └── gradle-wrapper.properties
-│   ├── build.gradle
-│   ├── gradle.properties
-│   └── settings.gradle
-│
 ├── assets\
-│   ├── emptyall.json
-│   ├── emptysearch.json
-│
 ├── ios\
-│   ├── Flutter\
-│   │   ├── AppFrameworkInfo.plist
-│   │   ├── Debug.xcconfig
-│   │   └── Release.xcconfig
-│   │
-│   ├── Runner\
-│   │   ├── Assets.xcassets\
-│   │   │   ├── AppIcon.appiconset\
-│   │   │   │   ├── Contents.json
-│   │   │   │
-│   │   │   ├── BrandingImage.imageset\
-│   │   │   │   └── Contents.json
-│   │   │   ├── LaunchBackground.imageset\
-│   │   │   │   ├── Contents.json
-│   │   │   │   └── background.png
-│   │   │   └── LaunchImage.imageset\
-│   │   │       ├── Contents.json
-│   │   │       └── README.md
-│   │   │
-│   │   ├── Base.lproj\
-│   │   │   ├── LaunchScreen.storyboard
-│   │   │   └── Main.storyboard
-│   │   │
-│   │   ├── AppDelegate.swift
-│   │   ├── Info.plist
-│   │   └── Runner-Bridging-Header.h
-│   │
-│   ├── Runner.xcodeproj\
-│   │   ├── project.xcworkspace\
-│   │   │   ├── xcshareddata\
-│   │   │   │   ├── IDEWorkspaceChecks.plist
-│   │   │   │   └── WorkspaceSettings.xcsettings
-│   │   │   └── contents.xcworkspacedata
-│   │   │
-│   │   ├── xcshareddata\
-│   │   │   └── xcschemes\
-│   │   │       └── Runner.xcscheme
-│   │   └── project.pbxproj
-│   │
-│   ├── Runner.xcworkspace\
-│   │   │
-│   │   ├── xcshareddata\
-│   │   │   ├── IDEWorkspaceChecks.plist
-│   │   │   └── WorkspaceSettings.xcsettings
-│   │   └── contents.xcworkspacedata
-│   └── .gitignore
-│
 ├── lib\
 │   ├── models\
 │   │   ├── additem.dart
@@ -138,29 +43,7 @@ keep-document
 │   │   ├── deleteconfirmation.dart
 │   │   └── drawer.dart
 │   └── main.dart
-│
 ├── windows\
-│   ├── flutter\
-│   │   ├── CMakeLists.txt
-│   │   ├── generated_plugin_registrant.cc
-│   │   ├── generated_plugin_registrant.h
-│   │   └── generated_plugins.cmake
-│   │
-│   ├── runner\
-│   │   ├── resources\
-│   │   ├── CMakeLists.txt
-│   │   ├── Runner.rc
-│   │   ├── flutter_window.cpp
-│   │   ├── flutter_window.h
-│   │   ├── main.cpp
-│   │   ├── resource.h
-│   │   ├── runner.exe.manifest
-│   │   ├── utils.cpp
-│   │   ├── utils.h
-│   │   ├── win32_window.cpp
-│   │   └── win32_window.h
-│   └── CMakeLists.txt
-│
 ├── .metadata
 ├── README.md
 ├── analysis_options.yaml
