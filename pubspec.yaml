@@ -44,7 +44,9 @@ dependencies:
   open_file: ^3.2.1
   lottie: ^1.2.2
   camera: ^0.9.4+11
-  share_plus: ^3.0.4
+  # share_plus: ^3.0.4
+  # share_plus:
+  share_plus: ^4.0.4
   facebook_audience_network: ^1.0.1
   local_auth: ^1.1.11
   image_cropper: ^1.5.0

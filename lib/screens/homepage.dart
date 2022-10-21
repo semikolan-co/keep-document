@@ -1,19 +1,16 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
 import 'dart:io';
+
 import 'package:facebook_audience_network/facebook_audience_network.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
-import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:glassmorphism/glassmorphism.dart';
 import 'package:lottie/lottie.dart';
-import 'package:passmanager/utils/colors.dart';
-import 'package:passmanager/utils/storage.dart';
 import 'package:passmanager/models/additem.dart';
 import 'package:passmanager/models/dataitem.dart';
 import 'package:passmanager/models/sharedpref.dart';
-import 'package:passmanager/widgets/custom_alert.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:passmanager/utils/colors.dart';
+import 'package:passmanager/utils/storage.dart';
 
 import '../widgets/deleteconfirmation.dart';
 import '../widgets/drawer.dart';
@@ -32,18 +29,18 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   List<DataItem> list = [];
   bool isChanging = false;
-  bool _speechEnabled = false;
+  final bool _speechEnabled = false;
   final TextEditingController _searchController = TextEditingController();
   // final LocalStorage storage = LocalStorage(Storage.storageName);
 
   loadSharedPreferences() async {
     String? data = await SharedPref.read('data');
-    print("SHARED DATA $data");
+    // print("SHARED DATA $data");
     if (data == null) {
       return;
     } else {
       list = DataItem.decode(data);
-      print("Decoded lst $list");
+      // print("Decoded lst $list");
       Add.dataList = list;
     }
     // FlutterNativeSplash.remove();
@@ -51,7 +48,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    var mediaquery = MediaQuery.of(context).size;
+    final mq = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
@@ -61,33 +58,26 @@ class _MyHomePageState extends State<MyHomePage> {
           style: TextStyle(fontSize: 20, color: Colors.white),
         ),
       ),
-      drawer: DrawerWidget(),
+      drawer: const DrawerWidget(),
       body: FutureBuilder(
         future: isChanging ? null : loadSharedPreferences(),
         builder: (context, snapshot) => SingleChildScrollView(
           child: SizedBox(
-            // height: mediaquery.height*0.95,
             child: Stack(
               children: [
                 Container(
-                  height: mediaquery.height * 0.4,
-                  width: mediaquery.width,
+                  height: mq.height * 0.4,
+                  width: mq.width,
                   child: Column(
                     children: [
                       SizedBox(height: 10),
-                      Text(
-                        'Manage Your document easy and safely at One Place',
-                        textAlign: TextAlign.center,
-                        overflow: TextOverflow.visible,
-                        style:
-                            const TextStyle(color: Colors.white, fontSize: 15),
-                      ),
-                      SizedBox(height: mediaquery.height * 0.02),
+                      headingText(),
+                      SizedBox(height: mq.height * 0.02),
                       Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: GlassmorphicContainer(
-                          width: mediaquery.width * 0.9,
-                          height: mediaquery.height * 0.06,
+                          width: mq.width * 0.9,
+                          height: mq.height * 0.06,
                           borderRadius: 10,
                           blur: 10,
                           border: 0,
@@ -96,7 +86,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           child: TextFormField(
                             controller: _searchController,
                             onChanged: (value) async {
-                              print(_searchController.text.toString());
+                              // print(_searchController.text.toString());
                               isChanging = true;
                               var data = await SharedPref.read('data');
                               try {
@@ -104,7 +94,7 @@ class _MyHomePageState extends State<MyHomePage> {
                               } catch (e) {
                                 list = [];
                               }
-                              print(value);
+                              // print(value);
                               setState(() {
                                 list = list
                                     .where((element) =>
@@ -121,20 +111,11 @@ class _MyHomePageState extends State<MyHomePage> {
                                             .toLowerCase()
                                             .contains(value.toLowerCase()))
                                     .toList();
-                                print(list);
+                                // print(list);
                               });
                             },
                             style: TextStyle(color: Colors.white),
-                            decoration: InputDecoration(
-                              border: InputBorder.none,
-                              prefixIcon: Icon(
-                                Icons.search,
-                                color: Colors.white,
-                              ),
-                              hintText: 'Search',
-                              hintStyle: TextStyle(color: Colors.white),
-                              // hintText: 'Search Docs',
-                            ),
+                            decoration: searchFieldInputDecoration(),
                           ),
                         ),
                       ),
@@ -144,7 +125,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
                 Column(
                   children: [
-                    SizedBox(height: mediaquery.height * 0.15),
+                    SizedBox(height: mq.height * 0.15),
                     Container(
                       // alignment: Alignment.bottomCenter,
 
@@ -155,7 +136,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         ),
                         color: Colors.white,
                       ),
-                      height: mediaquery.height * 0.73,
+                      height: mq.height * 0.73,
                       // color: Colors.red,
                       child: list.isEmpty
                           ? _searchController.text.toString().isEmpty
@@ -246,15 +227,16 @@ class _MyHomePageState extends State<MyHomePage> {
                                                 ),
                                                 onTap: () {
                                                   Navigator.of(context).pop();
-                                              Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                  builder: (context) => AddData(
-                                                    dataItem: list[index],
-                                                  ),
-                                                ),
-                                              );
-                                              },
+                                                  Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          AddData(
+                                                              //  list[index],
+                                                              ),
+                                                    ),
+                                                  );
+                                                },
                                               ),
                                               ListTile(
                                                 title: Text("Delete"),
@@ -264,9 +246,13 @@ class _MyHomePageState extends State<MyHomePage> {
                                                 ),
                                                 onTap: () async {
                                                   deleteConfirmationDialog(
-                                                      context,
-                                                      (){Navigator.of(context).pop();deleteItem(index);},
-                                                      () => Navigator.of(context).pop());
+                                                      context, () {
+                                                    Navigator.of(context).pop();
+                                                    deleteItem(index);
+                                                  },
+                                                      () =>
+                                                          Navigator.of(context)
+                                                              .pop());
                                                   // await deleteItem(index);
                                                 },
                                               ),
@@ -342,6 +328,28 @@ class _MyHomePageState extends State<MyHomePage> {
         placementId: Storage.facebookBannerPlacement,
         bannerSize: BannerSize.STANDARD,
       ),
+    );
+  }
+
+  Text headingText() {
+    return Text(
+      'Manage Your document easy and safely at One Place',
+      textAlign: TextAlign.center,
+      overflow: TextOverflow.visible,
+      style: const TextStyle(color: Colors.white, fontSize: 15),
+    );
+  }
+
+  InputDecoration searchFieldInputDecoration() {
+    return InputDecoration(
+      border: InputBorder.none,
+      prefixIcon: Icon(
+        Icons.search,
+        color: Colors.white,
+      ),
+      hintText: 'Search',
+      hintStyle: TextStyle(color: Colors.white),
+      // hintText: 'Search Docs',
     );
   }
 

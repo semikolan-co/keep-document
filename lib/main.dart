@@ -1,5 +1,5 @@
 import 'dart:io';
-
+import 'package:flutter/foundation.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:facebook_audience_network/facebook_audience_network.dart';
 import 'package:flutter/material.dart';
@@ -22,9 +22,7 @@ Future<void> main() async {
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
   await FacebookAudienceNetwork.init();
   final String? data = await SharedPref.read('data') ?? '';
-  runApp(MyApp(
-    data: data,
-  ));
+  runApp(MyApp(data: data));
 }
 
 class MyApp extends StatefulWidget {
@@ -86,7 +84,7 @@ class _MyAppState extends State<MyApp> {
         _isAuthenticating = false;
       });
     } on PlatformException catch (e) {
-      print(e);
+      // print(e);
       setState(() {
         _isAuthenticating = false;
         authorized = 'Error - ${e.message}';
@@ -107,8 +105,11 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
-    _checkBiometrics();
-    if (_canCheckBiometrics) _authenticate();
+    if (!kDebugMode) {
+      _checkBiometrics();
+      if (_canCheckBiometrics) _authenticate();
+      
+    }
   }
 
   @override
@@ -122,7 +123,7 @@ class _MyAppState extends State<MyApp> {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: authorized == 'Not Authorized'
+      home: (authorized == 'Not Authorized' )
           ? exit(0)
           : dataList.isEmpty
               ? const IntroScreen()
@@ -130,7 +131,7 @@ class _MyAppState extends State<MyApp> {
       routes: {
         DataScreen.routeName: (ctx) => const DataScreen(),
         AddData.routeName: (ctx) => const AddData(),
-        EditData.routeName: (ctx) => const EditData(),
+        EditData.routeName: (ctx) => EditData(index: 0),
         MyHomePage.routeName: (ctx) => const MyHomePage(title: 'Keep Document'),
       },
     );
