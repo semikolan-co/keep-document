@@ -10,6 +10,7 @@ import 'package:passmanager/models/sharedpref.dart';
 import 'package:passmanager/utils/colors.dart';
 import 'package:passmanager/utils/storage.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:simple_speed_dial/simple_speed_dial.dart';
 
 import '../widgets/deleteconfirmation.dart';
 import '../widgets/drawer.dart';
@@ -322,23 +323,61 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
 
       // floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: Colors.white,
-        elevation: 10,
-        // shape: RoundedRectangleBorder(
-        //   borderRadius: BorderRadius.circular(15),
-        //   side: BorderSide(color: Color.fromARGB(179, 238, 37, 37), width: 5),
-        // ),
-        child: const Icon(
-          Icons.add,
-          color: MyColors.primary,
+
+      floatingActionButton:
+          SpeedDial(child: const Icon(Icons.add), speedDialChildren: [
+        SpeedDialChild(
+          child: const Icon(Icons.add),
+          foregroundColor: Colors.black,
+          backgroundColor: Colors.yellow,
+          label: 'Add files and images from device',
+          onPressed: () {
+            Add.imgUrl.clear();
+            Add.pdfUrl.clear();
+            Navigator.pushNamed(context, AddData.routeName, arguments: list);
+          },
         ),
-        onPressed: () {
-          Add.imgUrl.clear();
-          Add.pdfUrl.clear();
-          Navigator.pushNamed(context, AddData.routeName, arguments: list);
-        },
-      ),
+        SpeedDialChild(
+          child: const Icon(Icons.document_scanner_outlined),
+          foregroundColor: Colors.white,
+          backgroundColor: MyColors.primary,
+          label: 'Scan Images',
+          onPressed: () {
+            // Add.imgUrl.clear();
+            // Add.pdfUrl.clear();
+            // Navigator.pushNamed(context, AddData.routeName, arguments: list);
+          },
+        ),
+        SpeedDialChild(
+          child: const Icon(Icons.picture_as_pdf),
+          foregroundColor: Colors.white,
+          backgroundColor: Colors.teal,
+          label: 'PDF Compressor',
+          onPressed: () {
+            // Add.imgUrl.clear();
+            // Add.pdfUrl.clear();
+            // Navigator.pushNamed(context, AddData.routeName, arguments: list);
+          },
+        ),
+      ]),
+      // floatingActionButton: FloatingActionButton(
+      //   backgroundColor: Colors.white,
+      //   elevation: 10,
+      //   // shape: RoundedRectangleBorder(
+      //   //   borderRadius: BorderRadius.circular(15),
+      //   //   side: BorderSide(color: Color.fromARGB(179, 238, 37, 37), width: 5),
+      //   // ),
+      //   child: const Icon(
+      //     Icons.add,
+      //     color: MyColors.primary,
+      //   ),
+      //   onPressed: () {
+      //     Add.imgUrl.clear();
+      //     Add.pdfUrl.clear();
+      //     Navigator.pushNamed(context, AddData.routeName, arguments: list);
+      //   },
+      // ),
+
       bottomNavigationBar: FacebookBannerAd(
         placementId: Storage.facebookBannerPlacement,
         bannerSize: BannerSize.STANDARD,
