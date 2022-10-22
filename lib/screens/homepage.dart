@@ -1,5 +1,3 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
-
 import 'dart:io';
 
 import 'package:facebook_audience_network/facebook_audience_network.dart';
@@ -11,6 +9,7 @@ import 'package:passmanager/models/dataitem.dart';
 import 'package:passmanager/models/sharedpref.dart';
 import 'package:passmanager/utils/colors.dart';
 import 'package:passmanager/utils/storage.dart';
+import 'package:share_plus/share_plus.dart';
 
 import '../widgets/deleteconfirmation.dart';
 import '../widgets/drawer.dart';
@@ -29,7 +28,7 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   List<DataItem> list = [];
   bool isChanging = false;
-  final bool _speechEnabled = false;
+  // final bool _speechEnabled = false;
   final TextEditingController _searchController = TextEditingController();
   // final LocalStorage storage = LocalStorage(Storage.storageName);
 
@@ -70,7 +69,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   width: mq.width,
                   child: Column(
                     children: [
-                      SizedBox(height: 10),
+                      const SizedBox(height: 10),
                       headingText(),
                       SizedBox(height: mq.height * 0.02),
                       Padding(
@@ -114,14 +113,14 @@ class _MyHomePageState extends State<MyHomePage> {
                                 // print(list);
                               });
                             },
-                            style: TextStyle(color: Colors.white),
+                            style: const TextStyle(color: Colors.white),
                             decoration: searchFieldInputDecoration(),
                           ),
                         ),
                       ),
                     ],
                   ),
-                  decoration: BoxDecoration(color: MyColors.primary),
+                  decoration: const BoxDecoration(color: MyColors.primary),
                 ),
                 Column(
                   children: [
@@ -129,7 +128,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     Container(
                       // alignment: Alignment.bottomCenter,
 
-                      decoration: BoxDecoration(
+                      decoration: const BoxDecoration(
                         borderRadius: BorderRadius.only(
                           topLeft: Radius.circular(30),
                           topRight: Radius.circular(30),
@@ -157,14 +156,14 @@ class _MyHomePageState extends State<MyHomePage> {
                                   alignment: Alignment.centerRight,
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.end,
-                                    children: [
+                                    children: const [
                                       Text(
                                         'Delete',
                                         style: TextStyle(color: Colors.white),
                                       ),
                                       Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: const Icon(
+                                        padding: EdgeInsets.all(8.0),
+                                        child: Icon(
                                           Icons.delete,
                                           color: Colors.white,
                                         ),
@@ -201,46 +200,61 @@ class _MyHomePageState extends State<MyHomePage> {
                                     onPressed: () {
                                       showModalBottomSheet(
                                         // isScrollControlled: true,
-                                        shape: RoundedRectangleBorder(
+                                        shape: const RoundedRectangleBorder(
                                           borderRadius: BorderRadius.only(
                                               topLeft: Radius.circular(20),
                                               topRight: Radius.circular(20)),
                                         ),
                                         context: context,
                                         builder: (context) => Container(
-                                          decoration: BoxDecoration(
+                                          decoration: const BoxDecoration(
                                             borderRadius: BorderRadius.only(
                                               topLeft: Radius.circular(20),
                                               topRight: Radius.circular(20),
                                             ),
                                           ),
-                                          padding: EdgeInsets.all(20),
+                                          padding: const EdgeInsets.all(20),
                                           child: Column(
                                             children: [
-                                              Text("Choose an action"),
-                                              SizedBox(height: 10),
+                                              const Text(
+                                                "Choose an action",
+                                                style: TextStyle(fontSize: 20),
+                                              ),
+                                              const SizedBox(height: 10),
                                               ListTile(
-                                                title: Text("Edit"),
-                                                trailing: Icon(
-                                                  Icons.edit,
-                                                  color: Colors.green,
+                                                title: const Text("Share"),
+                                                trailing: const Icon(
+                                                  Icons.share,
+                                                  color: Colors.blue,
                                                 ),
                                                 onTap: () {
-                                                  Navigator.of(context).pop();
-                                                  Navigator.push(
-                                                    context,
-                                                    MaterialPageRoute(
-                                                      builder: (context) =>
-                                                          AddData(
-                                                              //  list[index],
-                                                              ),
-                                                    ),
-                                                  );
+                                                  final List<String> strs =
+                                                      list[index]
+                                                          .imgUrl
+                                                          .map((e) =>
+                                                              e.toString())
+                                                          .toList();
+                                                  if (list[index].pdfPath !=
+                                                      null) {
+                                                    strs.addAll(list[index]
+                                                        .pdfPath!
+                                                        .map(
+                                                            (e) => e.toString())
+                                                        .toList());
+                                                  }
+                                                  strs.isNotEmpty
+                                                      ? Share.shareFiles(strs,
+                                                          text:
+                                                              '${list[index].id} ${list[index].title} \n ${list[index].description}',
+                                                          subject:
+                                                              list[index].title)
+                                                      : Share.share(
+                                                          '${list[index].title} \n ${list[index].description}');
                                                 },
                                               ),
                                               ListTile(
-                                                title: Text("Delete"),
-                                                trailing: Icon(
+                                                title: const Text("Delete"),
+                                                trailing: const Icon(
                                                   Icons.delete_forever_sharp,
                                                   color: Colors.red,
                                                 ),
@@ -256,7 +270,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                                   // await deleteItem(index);
                                                 },
                                               ),
-                                              Spacer(),
+                                              const Spacer(),
                                               FacebookBannerAd(
                                                 placementId: Storage
                                                     .facebookBannerPlacement,
@@ -298,6 +312,7 @@ class _MyHomePageState extends State<MyHomePage> {
                               itemCount: list.length,
                             ),
                     ),
+                    // const SizedBox(height: 50),
                   ],
                 ),
               ],
@@ -314,7 +329,7 @@ class _MyHomePageState extends State<MyHomePage> {
         //   borderRadius: BorderRadius.circular(15),
         //   side: BorderSide(color: Color.fromARGB(179, 238, 37, 37), width: 5),
         // ),
-        child: Icon(
+        child: const Icon(
           Icons.add,
           color: MyColors.primary,
         ),
@@ -332,16 +347,16 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Text headingText() {
-    return Text(
+    return const Text(
       'Manage Your document easy and safely at One Place',
       textAlign: TextAlign.center,
       overflow: TextOverflow.visible,
-      style: const TextStyle(color: Colors.white, fontSize: 15),
+      style: TextStyle(color: Colors.white, fontSize: 15),
     );
   }
 
   InputDecoration searchFieldInputDecoration() {
-    return InputDecoration(
+    return const InputDecoration(
       border: InputBorder.none,
       prefixIcon: Icon(
         Icons.search,

@@ -15,10 +15,10 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-version: 2.2.5+10
+version: 2.2.6+11
 
 environment:
-  sdk: ">=2.14.0 <3.0.0"
+  sdk: ">=2.16.0 <3.0.0"
 
 # Dependencies specify other packages that your package needs in order to work.
 # To automatically upgrade your package dependencies to the latest versions
@@ -43,14 +43,19 @@ dependencies:
   flutter_pdfview: ^1.2.1
   open_file: ^3.2.1
   lottie: ^1.2.2
-  camera: ^0.9.4+11
+
+  # camera: ^0.9.4+11
   # share_plus: ^3.0.4
   # share_plus:
+  # share_plus: ^4.0.4
+
+  camera: ^0.9.4+21
+
   share_plus: ^4.0.4
   facebook_audience_network: ^1.0.1
   local_auth: ^1.1.11
   image_cropper: ^1.5.0
-  # in_app_update: ^3.0.0
+  in_app_update: ^3.0.0
 
 dev_dependencies:
   flutter_test:
