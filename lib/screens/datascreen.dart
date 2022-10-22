@@ -34,7 +34,7 @@ class _DataScreenState extends State<DataScreen> {
   Widget build(BuildContext context) {
     final DataItem list =
         ModalRoute.of(context)!.settings.arguments as DataItem;
-    print(list.pdfPath.toString());
+    // print(list.pdfPath.toString());
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
@@ -122,7 +122,7 @@ class ImageGrid extends StatelessWidget {
     var mediaquery = MediaQuery.of(context).size;
     final DataItem list =
         ModalRoute.of(context)!.settings.arguments as DataItem;
-        
+
     void deleteItem() async {
       String? data = await SharedPref.read('data');
       print("SHARED DATA $data");
@@ -153,14 +153,25 @@ class ImageGrid extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              IconButton(
-                  onPressed: (){
-                    deleteConfirmationDialog(context, deleteItem,(){});
-                  },
-                  icon: const Icon(
-                    Icons.delete,
-                    color: Colors.red,
-                  )),
+              Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: const Text(
+                  'Images',
+                  style: TextStyle(
+                    fontSize: 25,
+                    color: Colors.black,
+                  ),
+                ),
+              ),
+              const Spacer(),
+              // IconButton(
+              //     onPressed: () {
+              //       deleteConfirmationDialog(context, deleteItem, () {});
+              //     },
+              //     icon: const Icon(
+              //       Icons.delete,
+              //       color: Colors.red,
+              //     r)),
               Add.imgUrl.isNotEmpty
                   ? IconButton(
                       onPressed: () async {
@@ -181,7 +192,7 @@ class ImageGrid extends StatelessWidget {
                   physics: const NeverScrollableScrollPhysics(),
                   itemCount: list.imgUrl.length,
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 3, childAspectRatio: 3.0 / 4.6),
+                      crossAxisCount: 2, childAspectRatio: 3.0 / 3.5),
                   itemBuilder: (context, index) {
                     return Card(
                       shape: RoundedRectangleBorder(
@@ -219,11 +230,22 @@ class ImageGrid extends StatelessWidget {
                   },
                 )
               : Container(),
+          SizedBox(height: 20),
           if (list.pdfPath != null)
             list.pdfPath == [] || list.pdfPath == [] || list.pdfPath!.isEmpty
                 ? Container()
                 : Row(children: [
-                    Spacer(),
+                    Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: const Text(
+                        'PDF Files',
+                        style: TextStyle(
+                          fontSize: 25,
+                          color: Colors.black,
+                        ),
+                      ),
+                    ),
+                    const Spacer(),
                     IconButton(
                       onPressed: () async {
                         print(Add.pdfUrl);
@@ -236,24 +258,64 @@ class ImageGrid extends StatelessWidget {
                     ),
                   ]),
           list.pdfPath != null
-              ? ListView.builder(
-                  physics: NeverScrollableScrollPhysics(),
+              ? GridView.builder(
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    // childAspectRatio: 3 / 2,
+                    crossAxisSpacing: 10,
+                    mainAxisSpacing: 10,
+                  ),
+                  physics: const NeverScrollableScrollPhysics(),
                   shrinkWrap: true,
                   itemBuilder: (context, index) {
                     return InkWell(
                       onLongPress: () =>
                           Share.shareFiles([list.pdfPath?[index]]),
                       onTap: () => OpenFile.open(list.pdfPath?[index]),
-                      child: Card(
-                        child: ListTile(
-                          title: Text(list.pdfPath?[index]
-                                  .toString()
-                                  .split('/')
-                                  .last
-                                  .toString() ??
-                              ''),
-                        ),
-                      ),
+                      child: 1 == 1
+                          ? Card(
+                              elevation: 5,
+                              child: Column(
+                                children: [
+                                  const Icon(
+                                    Icons.picture_as_pdf_rounded,
+                                    size: 100,
+                                    color: Colors.red,
+                                  ),
+                                  // const Expanded(
+                                  //   child: SizedBox(),
+                                  // ),
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Text(
+                                      list.pdfPath?[index]
+                                              .toString()
+                                              .split('/')
+                                              .last
+                                              .toString() ??
+                                          '',
+                                      overflow: TextOverflow.ellipsis,
+                                      style: const TextStyle(),
+                                    ),
+                                  ),
+                                  //  SizedBox(height: mediaquery.height * 0.),
+                                  // ListTile(
+                                  //   title: Text(),
+                                  //   // subtitle:  tex,
+                                  // ),
+                                ],
+                              ),
+                            )
+                          : Card(
+                              child: ListTile(
+                                title: Text(list.pdfPath?[index]
+                                        .toString()
+                                        .split('/')
+                                        .last
+                                        .toString() ??
+                                    ''),
+                              ),
+                            ),
                     );
                   },
                   itemCount: list.pdfPath?.length,

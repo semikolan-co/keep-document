@@ -12,6 +12,7 @@ import 'package:passmanager/models/additem.dart';
 import 'package:passmanager/models/dataitem.dart';
 import 'package:passmanager/screens/homepage.dart';
 import 'package:passmanager/models/sharedpref.dart';
+import 'package:passmanager/widgets/snack_bar.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -106,9 +107,10 @@ class _DataScreenState extends State<EditData> {
           // String? outputFile = await FilePicker.platform
           //     .saveFile(fileName: '${date}.pdf', allowedExtensions: ['pdf']);
         } catch (e) {
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            content: Text('Error: $e'),
-          ));
+          // ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          //   content: Text('Error: $e'),
+          // ));
+           showSnackBar(context, Colors.red, 'Error: $e');
         }
       } else {
         // User canceled the picker
