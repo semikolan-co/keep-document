@@ -127,11 +127,7 @@ class _DataScreenState extends State<AddData> {
         imgPath.add(directory.path + '/$date.png');
         return File(pickedImage.path).copy('${directory.path}/$date.png');
       } catch (e) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Error: $e'),
-          ),
-        );
+         showSnackBar(context, Colors.red, 'Error: $e');
       }
     }
 

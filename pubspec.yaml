@@ -56,6 +56,7 @@ dependencies:
   local_auth: ^1.1.11
   image_cropper: ^1.5.0
   in_app_update: ^3.0.0
+  document_scanner_flutter: ^0.2.7
 
 dev_dependencies:
   flutter_test:
