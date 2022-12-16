@@ -1,3 +1,13 @@
+//list order by most recently added
+//edit option of added document
+//UI of adding as per figma
+
+//after some time chages
+//dark mode
+//sort by option to user
+//delete the image inside the add section
+
+
 import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';

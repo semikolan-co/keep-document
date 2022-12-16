@@ -1,4 +1,3 @@
-import 'dart:ffi';
 import 'dart:io';
 
 import 'package:camera/camera.dart';
@@ -127,7 +126,7 @@ class _DataScreenState extends State<AddData> {
         imgPath.add(directory.path + '/$date.png');
         return File(pickedImage.path).copy('${directory.path}/$date.png');
       } catch (e) {
-         showSnackBar(context, Colors.red, 'Error: $e');
+        showSnackBar(context, Colors.red, 'Error: $e');
       }
     }
 
@@ -212,52 +211,6 @@ class _DataScreenState extends State<AddData> {
               ),
             );
           });
-
-      // showDialog(
-      //     context: context,
-      //     builder: (BuildContext context) {
-      //       return AlertDialog(
-      //         title: const Text(
-      //           "Choose option",
-      //           style: TextStyle(color: MyColors.primary),
-      //         ),
-      //         content: SingleChildScrollView(
-      //           child: ListBody(
-      //             children: [
-      //               const Divider(
-      //                 height: 1,
-      //                 color: MyColors.primary,
-      //               ),
-      //               ListTile(
-      //                 onTap: () {
-      //                   _saveImages(ImageSource.gallery);
-      //                   Navigator.of(context).pop();
-      //                 },
-      //                 title: const Text("Gallery"),
-      //                 leading: const Icon(
-      //                   Icons.account_box,
-      //                   color: MyColors.primary,
-      //                 ),
-      //               ),
-      //               const Divider(
-      //                 height: 1,
-      //                 color: MyColors.primary,
-      //               ),
-      //               ListTile(
-      //                 onTap: () {
-      //                   _toCamera();
-      //                 },
-      //                 title: const Text("Camera"),
-      //                 leading: const Icon(
-      //                   Icons.camera,
-      //                   color: MyColors.primary,
-      //                 ),
-      //               ),
-      //             ],
-      //           ),
-      //         ),
-      //       );
-      //     });
     }
 
     final mq = MediaQuery.of(context).size;
@@ -284,169 +237,218 @@ class _DataScreenState extends State<AddData> {
               )),
         ],
       ),
-      persistentFooterButtons: [
-        Center(
-          child: PrimaryButton(
-              onPressed: () {
-                // if(date=='') return;
-                if (_formKey.currentState!.validate()) {
-                  Add.description = '';
-                  Add.title = '';
-                  Add.imgUrl = [];
-                  Add.date = '';
-                  Add.id = '';
-                  addItem(titleController.text, descriptionController.text,
-                      idController.text, date);
-                  Navigator.pushNamedAndRemoveUntil(
-                      context, MyHomePage.routeName, (route) => false);
-                  FacebookInterstitialAd.loadInterstitialAd(
-                    placementId: "328150579086879_328163679085569",
-                    listener: (result, value) {
-                      if (result == InterstitialAdResult.LOADED) {
-                        FacebookInterstitialAd.showInterstitialAd();
-                      }
-                    },
-                  );
-                }
-              },
-              buttonText: "Save"),
-        ),
-      ],
-      body: SingleChildScrollView(
-        child: Center(
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Form(
-              key: _formKey,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: GlassmorphicContainer(
-                      width: mq.width * 0.9,
-                      height: 80,
-                      borderRadius: 10,
-                      blur: 10,
-                      border: 2,
-                      linearGradient: linearGradiend(),
-                      borderGradient: borderGradient1(),
-                      child: Padding(
-                        padding: padding(10),
-                        child: TextFormField(
-                          validator: (value) {
-                            if (value != null) {
-                              if (value.isEmpty) {
-                                return 'Please enter a title';
-                              } else {
-                                bool isExist = false;
-                                for (var element in list) {
-                                  element.title == value
-                                      ? isExist = true
-                                      : null;
-                                }
-                                if (isExist) {
-                                  return 'Title Already Exist';
-                                }
-                              }
-                            } else {
-                              return 'Please enter a title';
-                            }
-                            return null;
-                          },
-                          controller: titleController,
-                          decoration: const InputDecoration(
-                            border: InputBorder.none,
-                            labelText: 'Document Name',
-                            labelStyle: TextStyle(color: Colors.black),
-
-                            // prefixIcon: const Icon(Icons.arrow_forward_ios),
+      
+      body: Column(
+        children: [
+          Expanded(
+            flex: 1,
+            child: SingleChildScrollView(
+              child: Center(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Form(
+                    key: _formKey,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Container(
+                            width: mq.width * 0.9,
+                            // height: 80,
+                            // borderRadius: 10,
+                            // blur: 10,
+                            // border: 2,
+                            // linearGradient: linearGradiend(),
+                            // borderGradient: borderGradient1(),
+                            child: Padding(
+                              padding: padding(10),
+                              child: TextFormField(
+                                validator: (value) {
+                                  if (value != null) {
+                                    if (value.isEmpty) {
+                                      return 'Please enter Document Name';
+                                    } else {
+                                      bool isExist = false;
+                                      for (var element in list) {
+                                        element.title == value
+                                            ? isExist = true
+                                            : null;
+                                      }
+                                      if (isExist) {
+                                        return 'Title Already Exist';
+                                      }
+                                    }
+                                  } else {
+                                    return 'Please enter a title';
+                                  }
+                                  return null;
+                                },
+                                controller: titleController,
+                                style: const TextStyle(fontSize: 18),
+                                decoration: const InputDecoration(
+                                  border: InputBorder.none,
+                                  labelText: 'Document Name',
+                                  labelStyle: TextStyle(color: MyColors.textColor, fontSize: 18),
+          
+                                  // prefixIcon: const Icon(Icons.arrow_forward_ios),
+                                ),
+                              ),
+                            ),
                           ),
                         ),
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: GlassmorphicContainer(
-                      //  width: 350,
-                      width: mq.width * 0.9,
-                      height: 100,
-                      borderRadius: 10,
-                      blur: 10,
-                      // alignment: Alignment.,
-                      border: 2,
-                      linearGradient: linearGradiend(),
-                      borderGradient: borderGradient1(),
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 10),
-                        child: TextFormField(
-                          // maxLines: 2,
-                          controller: idController,
-                          decoration: const InputDecoration(
-                            labelText: 'Document ID',
-                            labelStyle: TextStyle(color: Colors.black),
-                            border: InputBorder.none,
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Container(
+                            //  width: 350,
+                            width: mq.width * 0.9,
+                            // height: 100,
+                            // borderRadius: 10,
+                            // blur: 10,
+                            // // alignment: Alignment.,
+                            // border: 2,
+                            // linearGradient: linearGradiend(),
+                            // borderGradient: borderGradient1(),
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 10),
+                              child: TextFormField(
+                                style: const TextStyle(fontSize: 17),
+                                // maxLines: 2,
+                                controller: idController,
+                                decoration: const InputDecoration(
+                                  labelText: 'Document ID',
+                                  labelStyle: TextStyle(
+                                      color: MyColors.textColor, fontSize: 17),
+                                  border: InputBorder.none,
+                                  focusColor: Colors.black,
+                                ),
+                              ),
+                            ),
                           ),
                         ),
-                      ),
-                    ),
-                  ),
-                  GlassmorphicContainer(
-                    width: mq.width * 0.9,
-                    height: mq.height * 0.15,
-                    borderRadius: 10,
-                    blur: 10,
-                    // alignment: Alignment.,
-                    border: 2,
-                    linearGradient: linearGradiend(),
-                    borderGradient: borderGradient1(),
-                    child: Padding(
-                      padding: padding(10),
-                      child: TextFormField(
-                        maxLines: 4,
-                        controller: descriptionController,
-                        decoration: const InputDecoration(
-                          border: InputBorder.none,
-                          // hintMaxLines: 5,
-                          hintStyle: TextStyle(color: Colors.black),
-                          hintText: 'Additional Note',
+                        Container(
+                          width: mq.width * 0.9,
+                          // height: mq.height * 0.15,
+                          // borderRadius: 10,
+                          // blur: 10,
+                          // // alignment: Alignment.,
+                          // border: 2,
+                          // linearGradient: linearGradiend(),
+                          // borderGradient: borderGradient1(),
+                          child: Padding(
+                            padding: padding(10),
+                            child: TextFormField(
+                              style: const TextStyle(fontSize: 16),
+                              minLines: 1,
+                              maxLines: 100,
+                              controller: descriptionController,
+                              decoration: const InputDecoration(
+                                border: InputBorder.none,
+                                // hintMaxLines: 5,
+                                hintStyle:
+                                    TextStyle(color: MyColors.textColor, fontSize: 16),
+                                hintText: 'Additional Note',
+                              ),
+                            ),
+                          ),
                         ),
-                      ),
+                        // SizedBox(height: mq.height * 0.05),
+          
+                        // ElevatedButton(
+                        //     style: ButtonStyle(
+                        //         elevation: MaterialStateProperty.all(10),
+                        //         backgroundColor:
+                        //             MaterialStateProperty.all(MyColors.primary)),
+                        //     onPressed: () {
+          
+                        //     },
+                        //     child: const Text('Save',
+                        //         style: TextStyle(
+                        //           fontSize: 20,
+                        //         ))),
+                        // const SizedBox(height: 30),
+                        imgPath.isEmpty
+                            ? Container()
+                            : ImageGrid(
+                                directory: _photoDir,
+                                date: date,
+                                imgPath: imgPath,
+                              ),
+                        const SizedBox(height: 20),
+                        pdfPath.isEmpty
+                            ? Container()
+                            : FileList(
+                                directory: _photoDir,
+                                date: date,
+                                pdfPath: pdfPath,
+                              ),
+                        
+                      ],
                     ),
                   ),
-                  SizedBox(height: mq.height * 0.05),
-
-                  // ElevatedButton(
-                  //     style: ButtonStyle(
-                  //         elevation: MaterialStateProperty.all(10),
-                  //         backgroundColor:
-                  //             MaterialStateProperty.all(MyColors.primary)),
-                  //     onPressed: () {
-
-                  //     },
-                  //     child: const Text('Save',
-                  //         style: TextStyle(
-                  //           fontSize: 20,
-                  //         ))),
-                  const SizedBox(height: 30),
-                  ImageGrid(
-                    directory: _photoDir,
-                    date: date,
-                    imgPath: imgPath,
-                  ),
-                  const SizedBox(height: 20),
-                  FileList(
-                    directory: _photoDir,
-                    date: date,
-                    pdfPath: pdfPath,
-                  ),
-                ],
+                ),
               ),
             ),
           ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Center(
+            child: PrimaryButton(
+                onPressed: () {
+                  // if(date=='') return;
+                  if (_formKey.currentState!.validate()) {
+                    Add.description = '';
+                    Add.title = '';
+                    Add.imgUrl = [];
+                    Add.date = '';
+                    Add.id = '';
+                    addItem(titleController.text, descriptionController.text,
+                        idController.text, date);
+                    Navigator.pushNamedAndRemoveUntil(
+                        context, MyHomePage.routeName, (route) => false);
+                    FacebookInterstitialAd.loadInterstitialAd(
+                      placementId: "328150579086879_328163679085569",
+                      listener: (result, value) {
+                        if (result == InterstitialAdResult.LOADED) {
+                          FacebookInterstitialAd.showInterstitialAd();
+                        }
+                      },
+                    );
+                  }
+                },
+                buttonText: "Save"),
         ),
+          ),
+        ],
       ),
+      // persistentFooterButtons: [
+      //   Center(
+      //     child: PrimaryButton(
+      //         onPressed: () {
+      //           // if(date=='') return;
+      //           if (_formKey.currentState!.validate()) {
+      //             Add.description = '';
+      //             Add.title = '';
+      //             Add.imgUrl = [];
+      //             Add.date = '';
+      //             Add.id = '';
+      //             addItem(titleController.text, descriptionController.text,
+      //                 idController.text, date);
+      //             Navigator.pushNamedAndRemoveUntil(
+      //                 context, MyHomePage.routeName, (route) => false);
+      //             FacebookInterstitialAd.loadInterstitialAd(
+      //               placementId: "328150579086879_328163679085569",
+      //               listener: (result, value) {
+      //                 if (result == InterstitialAdResult.LOADED) {
+      //                   FacebookInterstitialAd.showInterstitialAd();
+      //                 }
+      //               },
+      //             );
+      //           }
+      //         },
+      //         buttonText: "Save"),
+      //   ),
+      // ],
       bottomNavigationBar: FacebookBannerAd(
         placementId: '328150579086879_328154279086509',
         bannerSize: BannerSize.STANDARD,
@@ -516,7 +518,7 @@ class ImageGrid extends StatelessWidget {
           crossAxisCount: 2, childAspectRatio: 3.0 / 3.5),
       itemBuilder: (context, index) {
         return Card(
-          elevation: 5,
+          elevation: 10,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(8.0),
           ),
@@ -549,43 +551,59 @@ class FileList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GridView.builder(
-        physics: const NeverScrollableScrollPhysics(),
-        shrinkWrap: true,
-        itemCount: pdfPath.length,
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2,
-          // childAspectRatio: 3 / 2,
-          crossAxisSpacing: 10,
-          mainAxisSpacing: 10,
-        ),
-        itemBuilder: (context, index) => Card(
-              elevation: 5,
-              child: Column(
-                children: [
-                  const Icon(
-                    Icons.picture_as_pdf_rounded,
-                    size: 100,
-                    color: Colors.red,
-                  ),
-                  const Expanded(
-                    child: SizedBox(),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text(
-                      pdfPath[index].toString().split('/').last,
-                      overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(),
-                    ),
-                  ),
-                  //  SizedBox(height: mediaquery.height * 0.),
-                  // ListTile(
-                  //   title: Text(),
-                  //   // subtitle:  tex,
-                  // ),
-                ],
-              ),
-            ));
+    return ListView.builder(
+      physics: const NeverScrollableScrollPhysics(),
+      shrinkWrap: true,
+      itemCount: pdfPath.length,
+      itemBuilder: (context, index) => Card(
+        child: Container(
+            height: 50,
+            child: ListTile(
+                leading: Icon(
+                  Icons.picture_as_pdf,
+                  color: Colors.red,
+                ),
+                title: Text(
+                  pdfPath[index].split('/').last,
+                  overflow: TextOverflow.ellipsis,
+                ))),
+        // subtitle:  tex,
+      ),
+      // physics: const NeverScrollableScrollPhysics(),
+      // shrinkWrap: true,
+      // itemCount: pdfPath.length,
+      // gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+      //   crossAxisCount: 2,
+      //   // childAspectRatio: 3 / 2,
+      //   crossAxisSpacing: 10,
+      //   mainAxisSpacing: 10,
+      // ),
+      // itemBuilder: (context, index) => Card(
+      //       elevation: 5,
+      //       child: Column(
+      //         children: [
+      //           const Icon(
+      //             Icons.picture_as_pdf_rounded,
+      //             size: 100,
+      //             color: Colors.red,
+      //           ),
+      //           const Expanded(
+      //             child: SizedBox(),
+      //           ),
+      //           Padding(
+      //             padding: const EdgeInsets.all(8.0),
+      //             child: Text(
+      //               pdfPath[index].toString().split('/').last,
+      //               overflow: TextOverflow.ellipsis,
+      //               style: const TextStyle(),
+      //             ),
+      //           ),
+      //  SizedBox(height: mediaquery.height * 0.),
+      // ListTile(
+      //   title: Text(),
+      //   // subtitle:  tex,
+      // ),
+      // ],
+    );
   }
 }
