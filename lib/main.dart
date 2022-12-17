@@ -7,19 +7,19 @@
 //sort by option to user
 //delete the image inside the add section
 
-
 import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 // import 'package:facebook_audience_network/facebook_audience_network.dart';
 import 'package:flutter/material.dart';
-import 'package:local_auth/auth_strings.dart';
+import 'package:local_auth/local_auth.dart';
 import 'package:passmanager/models/dataitem.dart';
 import 'package:passmanager/screens/datascreen.dart';
 import 'package:passmanager/screens/introscreen.dart';
 import 'package:passmanager/models/sharedpref.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:local_auth/local_auth.dart';
+import 'package:local_auth_android/local_auth_android.dart';
 import 'screens/adddata.dart';
 import 'screens/edit_data.dart';
 import 'screens/homepage.dart';
@@ -79,17 +79,17 @@ class _MyAppState extends State<MyApp> {
       });
       authenticated = await auth.authenticate(
           localizedReason: 'Verify Login',
-          androidAuthStrings: const AndroidAuthMessages(
-            cancelButton: 'Cancel',
-            goToSettingsButton: 'Settings',
-            goToSettingsDescription: 'Open settings to set up fingerprints',
-            biometricHint: 'Place your finger or use password',
-            biometricNotRecognized: 'Fingerprint not recognized',
-            biometricSuccess: 'Fingerprint recognized',
-            signInTitle: 'Authenticate',
-          ),
-          stickyAuth: true,
-          useErrorDialogs: true);
+          options: const AuthenticationOptions(
+              // cancelButton: 'Cancel',
+              // goToSettingsButton: 'Settings',
+              // goToSettingsDescription: 'Open settings to set up fingerprints',
+              // biometricHint: 'Place your finger or use password',
+              // biometricNotRecognized: 'Fingerprint not recognized',
+              // biometricSuccess: 'Fingerprint recognized',
+              // signInTitle: 'Authenticate',
+
+              stickyAuth: true,
+              useErrorDialogs: true));
       setState(() {
         _isAuthenticating = false;
       });
@@ -115,7 +115,7 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
-   _checkBiometrics();
+    _checkBiometrics();
     if (_canCheckBiometrics) _authenticate();
   }
 
@@ -130,7 +130,7 @@ class _MyAppState extends State<MyApp> {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: (authorized == 'Not Authorized' )
+      home: (authorized == 'Not Authorized')
           ? exit(0)
           : dataList.isEmpty
               ? const IntroScreen()

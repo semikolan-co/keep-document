@@ -5,7 +5,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
-import 'package:local_auth/auth_strings.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:passmanager/models/dataitem.dart';
 import 'package:passmanager/models/sharedpref.dart';
@@ -72,18 +71,18 @@ class _MyAppState extends State<MyApp> {
         authorized = 'Authenticating';
       });
       authenticated = await auth.authenticate(
-          localizedReason: 'Verify Login',
-          androidAuthStrings: const AndroidAuthMessages(
-            cancelButton: 'Cancel',
-            goToSettingsButton: 'Settings',
-            goToSettingsDescription: 'Open settings to set up fingerprints',
-            biometricHint: 'Place your finger or use password',
-            biometricNotRecognized: 'Fingerprint not recognized',
-            biometricSuccess: 'Fingerprint recognized',
-            signInTitle: 'Authenticate',
-          ),
-          stickyAuth: true,
-          useErrorDialogs: true);
+        localizedReason: 'Verify Login',
+        options: const AuthenticationOptions(
+            stickyAuth: true, useErrorDialogs: true
+            // cancelButton: 'Cancel',
+            // goToSettingsButton: 'Settings',
+            // goToSettingsDescription: 'Open settings to set up fingerprints',
+            // biometricHint: 'Place your finger or use password',
+            // biometricNotRecognized: 'Fingerprint not recognized',
+            // biometricSuccess: 'Fingerprint recognized',
+            // signInTitle: 'Authenticate',
+            ),
+      );
       setState(() {
         _isAuthenticating = false;
       });
@@ -111,9 +110,7 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     super.initState();
 
-      FlutterNativeSplash.remove();
-    
-
+    FlutterNativeSplash.remove();
   }
 
   @override
