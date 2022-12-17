@@ -10,6 +10,7 @@ import 'package:passmanager/models/sharedpref.dart';
 import 'package:passmanager/utils/colors.dart';
 import 'package:passmanager/utils/storage.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:simple_speed_dial/simple_speed_dial.dart';
 
 import '../widgets/deleteconfirmation.dart';
 import '../widgets/drawer.dart';
@@ -142,6 +143,7 @@ class _MyHomePageState extends State<MyHomePage> {
                               ? Lottie.asset('assets/emptyall.json')
                               : Lottie.asset('assets/emptysearch.json')
                           : ListView.builder(
+                            padding: const EdgeInsets.only(bottom: 50),
                               itemBuilder: (ctx, index) => Dismissible(
                                 direction: DismissDirection.endToStart,
                                 onDismissed: (direction) {
@@ -184,18 +186,72 @@ class _MyHomePageState extends State<MyHomePage> {
                                       //       // fit: BoxFit.fill,
                                       //     ).image,
                                       //   )
-
-                                      CircleAvatar(
-                                          backgroundImage: Image.file(
-                                            File(list[index].imgUrl[0]),
-                                            fit: BoxFit.fill,
-                                          ).image,
+                                      SizedBox(
+                                          height: 40,
+                                          width: 40,
+                                          child: Container(
+                                            width: double.infinity,
+                                            height: double.infinity,
+                                            decoration: BoxDecoration(
+                                              color: Colors.white,
+                                              image: DecorationImage(
+                                                  image: Image.file(
+                                                File(list[index].imgUrl[0]),
+                                                fit: BoxFit.fill,
+                                              ).image),
+                                              border: Border.all(
+                                                  color: MyColors.borderColor,
+                                                  style: BorderStyle.solid),
+                                              borderRadius:
+                                                  const BorderRadius.all(
+                                                Radius.circular(10),
+                                              ), //BorderRadius.all
+                                            ),
+                                            // child: DecorationImage(
+                                            //     image: Image.file(
+                                            //   File(list[index].imgUrl[0]),
+                                            //   fit: BoxFit.fitWidth,
+                                            // )),
+                                          ),
                                         )
-                                      : CircleAvatar(
-                                          backgroundColor:
-                                              colors[index % colors.length],
-                                          child: Text("${index + 1}"),
+                                      :
+
+                                      // CircleAvatar(
+                                      //     backgroundImage: Image.file(
+                                      //       File(list[index].imgUrl[0]),
+                                      //       fit: BoxFit.fill,
+                                      //     ).image,
+                                      //   )
+                                      // :
+                                      // CircleAvatar(
+                                      //     backgroundColor: MyColors.primary,
+                                      //     child: Text("${index + 1}"),
+                                      //   ),
+                                      // :
+                                      SizedBox(
+                                          height: 40,
+                                          width: 40,
+                                          child: Container(
+                                            decoration: BoxDecoration(
+                                                color: MyColors.primary,
+                                                borderRadius:
+                                                    BorderRadius.circular(12)),
+                                            child: Center(
+                                              child: Text(
+                                                "${index + 1}",
+                                                style: const TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: 16),
+                                              ),
+                                            ),
+                                          ),
+                                          // child: Text("${index + 1}"),
+                                          // decoration: BoxDecoration(
+                                          //     color: MyColors.primary,
+                                          //     borderRadius:
+                                          //         BorderRadius.circular(50)),
                                         ),
+                                  // )
                                   trailing: IconButton(
                                     onPressed: () {
                                       showModalBottomSheet(
@@ -322,16 +378,56 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
 
       // floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+
+      // floatingActionButton:
+      //     SpeedDial(child: const Icon(Icons.add), speedDialChildren: [
+      //   SpeedDialChild(
+      //     child: const Icon(Icons.add),
+      //     foregroundColor: Colors.black,
+      //     backgroundColor: Colors.yellow,
+      //     label: 'Add files and images from device',
+      //     onPressed: () {
+      //       Add.imgUrl.clear();
+      //       Add.pdfUrl.clear();
+      //       Navigator.pushNamed(context, AddData.routeName, arguments: list);
+      //     },
+      // ),
+      // SpeedDialChild(
+      //   child: const Icon(Icons.document_scanner_outlined),
+      //   foregroundColor: Colors.white,
+      //   backgroundColor: MyColors.primary,
+      //   label: 'Scan Images',
+      //   onPressed: () {
+      //     // Add.imgUrl.clear();
+      //     // Add.pdfUrl.clear();
+      //     // Navigator.pushNamed(context, AddData.routeName, arguments: list);
+      //   },
+      // ),
+      // SpeedDialChild(
+      //   child: const Icon(Icons.picture_as_pdf),
+      //   foregroundColor: Colors.white,
+      //   backgroundColor: Colors.teal,
+      //   label: 'PDF Compressor',
+      //   onPressed: () {
+      //     // Add.imgUrl.clear();
+      //     // Add.pdfUrl.clear();
+      //     // Navigator.pushNamed(context, AddData.routeName, arguments: list);
+      //   },
+      // ),
+      // ]),
       floatingActionButton: FloatingActionButton(
+        highlightElevation: 40,
+        shape:  RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         backgroundColor: Colors.white,
-        elevation: 10,
+        // elevation: 20,
         // shape: RoundedRectangleBorder(
         //   borderRadius: BorderRadius.circular(15),
         //   side: BorderSide(color: Color.fromARGB(179, 238, 37, 37), width: 5),
         // ),
-        child: const Icon(
+        child: Icon(
           Icons.add,
           color: MyColors.primary,
+          size: mq.width * 0.08,
         ),
         onPressed: () {
           Add.imgUrl.clear();
@@ -339,6 +435,7 @@ class _MyHomePageState extends State<MyHomePage> {
           Navigator.pushNamed(context, AddData.routeName, arguments: list);
         },
       ),
+
       bottomNavigationBar: FacebookBannerAd(
         placementId: Storage.facebookBannerPlacement,
         bannerSize: BannerSize.STANDARD,

@@ -30,7 +30,7 @@ class PrimaryButton extends StatelessWidget {
     return ElevatedButton(
       onPressed: disabled == true || isLoading == true ? () {} : onPressed,
       child: SizedBox(
-        width: widthSize ?? mediaquery.width * (0.8),
+        width: widthSize ?? mediaquery.width * (0.3),
         child: FittedBox(
           fit: BoxFit.scaleDown,
           child: Column(
@@ -43,7 +43,7 @@ class PrimaryButton extends StatelessWidget {
                     style: const TextStyle(
                         color: Colors.white,
                         fontSize: 16,
-                        fontWeight: FontWeight.w500,
+                        // fontWeight: FontWeight.w500,
                         overflow: TextOverflow.ellipsis),
                     textAlign: TextAlign.center,
                   ),
@@ -81,14 +81,14 @@ class PrimaryButton extends StatelessWidget {
           ? ElevatedButton.styleFrom(
               primary: MyColors.primary,
               shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(25)),
+                  borderRadius: BorderRadius.circular(5)),
               padding: const EdgeInsets.all(14),
               elevation: 0,
             )
           : ElevatedButton.styleFrom(
               primary: MyColors.primary,
               shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(25)),
+                  borderRadius: BorderRadius.circular(5)),
               padding: const EdgeInsets.all(14),
               elevation: 0,
               onSurface: Colors.grey,
@@ -122,7 +122,7 @@ class SecondaryButton extends StatelessWidget {
     return ElevatedButton(
       onPressed: disabled == true || isLoading == true ? () {} : onPressed,
       child: SizedBox(
-        width: widthSize ?? mediaquery.width * (0.8),
+        width: widthSize ?? mediaquery.width * (0.6),
         child: FittedBox(
           fit: BoxFit.scaleDown,
           child: Column(

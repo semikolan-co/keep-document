@@ -1,30 +1,23 @@
-//list order by most recently added
-//edit option of added document
-//UI of adding as per figma
+import 'dart:async';
 
-//after some time chages
-//dark mode
-//sort by option to user
-//delete the image inside the add section
-
-import 'dart:io';
 import 'package:flutter/foundation.dart';
-import 'package:flutter_native_splash/flutter_native_splash.dart';
 // import 'package:facebook_audience_network/facebook_audience_network.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:passmanager/models/dataitem.dart';
+import 'package:passmanager/models/sharedpref.dart';
 import 'package:passmanager/screens/datascreen.dart';
 import 'package:passmanager/screens/introscreen.dart';
-import 'package:passmanager/models/sharedpref.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:local_auth/local_auth.dart';
-import 'package:local_auth_android/local_auth_android.dart';
+
 import 'screens/adddata.dart';
-import 'screens/edit_data.dart';
 import 'screens/homepage.dart';
-import 'package:flutter/services.dart';
-import 'dart:async';
+
+/// This is only for development purpose.
+/// Run project using below command
+/// flutter run lib/main_dev.dart
 
 Future<void> main() async {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
@@ -78,18 +71,18 @@ class _MyAppState extends State<MyApp> {
         authorized = 'Authenticating';
       });
       authenticated = await auth.authenticate(
-          localizedReason: 'Verify Login',
-          options: const AuthenticationOptions(
-              // cancelButton: 'Cancel',
-              // goToSettingsButton: 'Settings',
-              // goToSettingsDescription: 'Open settings to set up fingerprints',
-              // biometricHint: 'Place your finger or use password',
-              // biometricNotRecognized: 'Fingerprint not recognized',
-              // biometricSuccess: 'Fingerprint recognized',
-              // signInTitle: 'Authenticate',
-
-              stickyAuth: true,
-              useErrorDialogs: true));
+        localizedReason: 'Verify Login',
+        options: const AuthenticationOptions(
+            stickyAuth: true, useErrorDialogs: true
+            // cancelButton: 'Cancel',
+            // goToSettingsButton: 'Settings',
+            // goToSettingsDescription: 'Open settings to set up fingerprints',
+            // biometricHint: 'Place your finger or use password',
+            // biometricNotRecognized: 'Fingerprint not recognized',
+            // biometricSuccess: 'Fingerprint recognized',
+            // signInTitle: 'Authenticate',
+            ),
+      );
       setState(() {
         _isAuthenticating = false;
       });
@@ -107,6 +100,7 @@ class _MyAppState extends State<MyApp> {
 
     setState(
         () => authorized = authenticated ? 'Authorized' : 'Not Authorized');
+
     if (authorized == 'Authorized') {
       FlutterNativeSplash.remove();
     }
@@ -115,8 +109,8 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
-    _checkBiometrics();
-    if (_canCheckBiometrics) _authenticate();
+
+    FlutterNativeSplash.remove();
   }
 
   @override
@@ -130,11 +124,9 @@ class _MyAppState extends State<MyApp> {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: (authorized == 'Not Authorized')
-          ? exit(0)
-          : dataList.isEmpty
-              ? const IntroScreen()
-              : const MyHomePage(title: 'Keep Document'),
+      home: dataList.isEmpty
+          ? const IntroScreen()
+          : const MyHomePage(title: 'Keep Document'),
       routes: {
         DataScreen.routeName: (ctx) => const DataScreen(),
         AddData.routeName: (ctx) => const AddData(),

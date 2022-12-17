@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:intro_slider/intro_slider.dart';
-import 'package:intro_slider/scrollbar_behavior_enum.dart';
-import 'package:intro_slider/slide_object.dart';
 import 'package:passmanager/screens/homepage.dart';
 
 class IntroScreen extends StatefulWidget {
@@ -12,14 +10,14 @@ class IntroScreen extends StatefulWidget {
 }
 
 class _IntroScreenState extends State<IntroScreen> {
-  List<Slide> slides = [];
+  List<ContentConfig> slides = [];
 
   @override
   void initState() {
     super.initState();
 
     slides.add(
-      Slide(
+      ContentConfig(
           title: "Your Security, Our Obligation",
           styleTitle: const TextStyle(
               color: Color.fromRGBO(22, 68, 62, 1), fontSize: 25),
@@ -31,7 +29,7 @@ class _IntroScreenState extends State<IntroScreen> {
           backgroundColor: Colors.white),
     );
     slides.add(
-      Slide(
+      ContentConfig(
           title: "Documents at a Single Click",
           description:
               "Easily store, share and organise all your documents at one place.",
@@ -84,7 +82,7 @@ class _IntroScreenState extends State<IntroScreen> {
   @override
   Widget build(BuildContext context) {
     return IntroSlider(
-      slides: slides,
+      listContentConfig: slides,
       onDonePress: onDonePress,
       renderSkipBtn: renderSkipBtn(),
       skipButtonStyle: myButtonStyle(),
@@ -98,17 +96,17 @@ class _IntroScreenState extends State<IntroScreen> {
       doneButtonStyle: myButtonStyle(),
 
       // Dot indicator
-      colorDot: const Color.fromRGBO(22, 68, 62, 0.2),
-      colorActiveDot: const Color.fromRGBO(22, 68, 62, 1),
-      sizeDot: 13.0,
+      // colorDot: const Color.fromRGBO(22, 68, 62, 0.2),
+      // colorActiveDot: const Color.fromRGBO(22, 68, 62, 1),
+      // sizeDot: 13.0,
 
-      // Show or hide status bar
-      // hideStatusBar: true,
-      hideStatusBar: false,
-      backgroundColorAllSlides: Colors.grey,
+      // // Show or hide status bar
+      // // hideStatusBar: true,
+      // hideStatusBar: false,
+      // backgroundColorAllSlides: Colors.grey,
 
-      // Scrollbar
-      verticalScrollbarBehavior: scrollbarBehavior.SHOW_ALWAYS,
+      // // Scrollbar
+      // verticalScrollbarBehavior: scrollbarBehavior.SHOW_ALWAYS,
     );
   }
 }
