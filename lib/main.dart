@@ -35,12 +35,13 @@ class MyApp extends StatefulWidget {
   State<MyApp> createState() => _MyAppState();
 }
 
+String authorized = 'Not Authorized';
+
 class _MyAppState extends State<MyApp> {
   bool authenticated = false;
   final LocalAuthentication auth = LocalAuthentication();
   bool _isAuthenticating = false;
   bool _canCheckBiometrics = true;
-  String authorized = 'Not Authorized';
 
   Future<void> _checkBiometrics() async {
     late bool canCheckBiometrics;

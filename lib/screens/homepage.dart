@@ -13,7 +13,7 @@ import 'package:passmanager/models/additem.dart';
 import 'package:passmanager/models/dataitem.dart';
 import 'package:passmanager/models/sharedpref.dart';
 import 'package:passmanager/widgets/custom_alert.dart';
-import 'package:share_plus/share_plus.dart';
+// import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../widgets/deleteconfirmation.dart';
@@ -250,11 +250,11 @@ class _MyHomePageState extends State<MyHomePage> {
                                                   if(list[index].pdfPath!=null){
                                                     strs.addAll(list[index].pdfPath!.map((e) => e.toString()).toList());
                                                   }
-                                                  strs.isNotEmpty ? 
-                                                  Share.shareFiles(strs,
-                                                      text:'${list[index].id} ${list[index].title} \n ${list[index].description}',
-                                                      subject: list[index].title):
-                                                      Share.share('${list[index].title} \n ${list[index].description}');
+                                                  // strs.isNotEmpty ? 
+                                                  // Share.shareFiles(strs,
+                                                  //     text:'${list[index].id} ${list[index].title} \n ${list[index].description}',
+                                                  //     subject: list[index].title):
+                                                  //     Share.share('${list[index].title} \n ${list[index].description}');
                                               },
                                               ),
                                               ListTile(

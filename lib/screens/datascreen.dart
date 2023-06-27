@@ -12,7 +12,7 @@ import 'package:passmanager/screens/homepage.dart';
 import 'package:passmanager/widgets/deleteconfirmation.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:share_plus/share_plus.dart';
+// import 'package:share_plus/share_plus.dart';
 
 import '../utils/colors.dart';
 import 'image_full_screen.dart';
@@ -122,7 +122,7 @@ class ImageGrid extends StatelessWidget {
     var mediaquery = MediaQuery.of(context).size;
     final DataItem list =
         ModalRoute.of(context)!.settings.arguments as DataItem;
-        
+
     void deleteItem() async {
       String? data = await SharedPref.read('data');
       print("SHARED DATA $data");
@@ -154,8 +154,8 @@ class ImageGrid extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               IconButton(
-                  onPressed: (){
-                    deleteConfirmationDialog(context, deleteItem,(){});
+                  onPressed: () {
+                    deleteConfirmationDialog(context, deleteItem, () {});
                   },
                   icon: const Icon(
                     Icons.delete,
@@ -164,10 +164,10 @@ class ImageGrid extends StatelessWidget {
               Add.imgUrl.isNotEmpty
                   ? IconButton(
                       onPressed: () async {
-                        await Share.shareFiles(Add.imgUrl,
-                            text:
-                                '${list.title}\n${list.description}\n${list.id}\nShared via Keep Document\nhttps://play.google.com/store/apps/details?id=com.semikolan.datamanager.passmanager',
-                            subject: list.title);
+                        // await Share.shareFiles(Add.imgUrl,
+                        //     text:
+                        //         '${list.title}\n${list.description}\n${list.id}\nShared via Keep Document\nhttps://play.google.com/store/apps/details?id=com.semikolan.datamanager.passmanager',
+                        //     subject: list.title);
                       },
                       icon: const Icon(
                         Icons.share,
@@ -227,10 +227,10 @@ class ImageGrid extends StatelessWidget {
                     IconButton(
                       onPressed: () async {
                         print(Add.pdfUrl);
-                        await Share.shareFiles(Add.pdfUrl,
-                            text:
-                                '${list.title}\n${list.description}\n${list.id}\nShared via Keep Document\nhttps://play.google.com/store/apps/details?id=com.semikolan.datamanager.passmanager',
-                            subject: list.title);
+                        // await Share.shareFiles(Add.pdfUrl,
+                        //     text:
+                        //         '${list.title}\n${list.description}\n${list.id}\nShared via Keep Document\nhttps://play.google.com/store/apps/details?id=com.semikolan.datamanager.passmanager',
+                        //     subject: list.title);
                       },
                       icon: const Icon(Icons.share),
                     ),
@@ -241,8 +241,8 @@ class ImageGrid extends StatelessWidget {
                   shrinkWrap: true,
                   itemBuilder: (context, index) {
                     return InkWell(
-                      onLongPress: () =>
-                          Share.shareFiles([list.pdfPath?[index]]),
+                      // onLongPress: () =>
+                      // Share.shareFiles([list.pdfPath?[index]]),
                       onTap: () => OpenFile.open(list.pdfPath?[index]),
                       child: Card(
                         child: ListTile(
