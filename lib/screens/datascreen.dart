@@ -12,7 +12,7 @@ import 'package:passmanager/screens/homepage.dart';
 import 'package:passmanager/widgets/deleteconfirmation.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
-// import 'package:share_plus/share_plus.dart';
+import 'package:share_plus/share_plus.dart';
 
 import '../utils/colors.dart';
 import 'image_full_screen.dart';
@@ -164,10 +164,10 @@ class ImageGrid extends StatelessWidget {
               Add.imgUrl.isNotEmpty
                   ? IconButton(
                       onPressed: () async {
-                        // await Share.shareFiles(Add.imgUrl,
-                        //     text:
-                        //         '${list.title}\n${list.description}\n${list.id}\nShared via Keep Document\nhttps://play.google.com/store/apps/details?id=com.semikolan.datamanager.passmanager',
-                        //     subject: list.title);
+                        await Share.shareFiles(Add.imgUrl,
+                            text:
+                                '${list.title}\n${list.description}\n${list.id}\nShared via Keep Document\nhttps://play.google.com/store/apps/details?id=com.semikolan.datamanager.passmanager',
+                            subject: list.title);
                       },
                       icon: const Icon(
                         Icons.share,

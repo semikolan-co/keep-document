@@ -13,7 +13,7 @@ import 'package:passmanager/models/additem.dart';
 import 'package:passmanager/models/dataitem.dart';
 import 'package:passmanager/models/sharedpref.dart';
 import 'package:passmanager/widgets/custom_alert.dart';
-// import 'package:share_plus/share_plus.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../widgets/deleteconfirmation.dart';
@@ -52,7 +52,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    var mediaquery = MediaQuery.of(context).size;
+    final mq = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
@@ -62,33 +62,26 @@ class _MyHomePageState extends State<MyHomePage> {
           style: TextStyle(fontSize: 20, color: Colors.white),
         ),
       ),
-      drawer: DrawerWidget(),
+      drawer: const DrawerWidget(),
       body: FutureBuilder(
         future: isChanging ? null : loadSharedPreferences(),
         builder: (context, snapshot) => SingleChildScrollView(
           child: SizedBox(
-            // height: mediaquery.height*0.95,
             child: Stack(
               children: [
                 Container(
-                  height: mediaquery.height * 0.4,
-                  width: mediaquery.width,
+                  height: mq.height * 0.4,
+                  width: mq.width,
                   child: Column(
                     children: [
-                      SizedBox(height: 10),
-                      Text(
-                        'Manage Your document easy and safely at One Place',
-                        textAlign: TextAlign.center,
-                        overflow: TextOverflow.visible,
-                        style:
-                            const TextStyle(color: Colors.white, fontSize: 15),
-                      ),
-                      SizedBox(height: mediaquery.height * 0.02),
+                      const SizedBox(height: 10),
+                      headingText(),
+                      SizedBox(height: mq.height * 0.02),
                       Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: GlassmorphicContainer(
-                          width: mediaquery.width * 0.9,
-                          height: mediaquery.height * 0.06,
+                          width: mq.width * 0.9,
+                          height: mq.height * 0.06,
                           borderRadius: 10,
                           blur: 10,
                           border: 0,
@@ -97,7 +90,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           child: TextFormField(
                             controller: _searchController,
                             onChanged: (value) async {
-                              print(_searchController.text.toString());
+                              // print(_searchController.text.toString());
                               isChanging = true;
                               var data = await SharedPref.read('data');
                               try {
@@ -105,7 +98,7 @@ class _MyHomePageState extends State<MyHomePage> {
                               } catch (e) {
                                 list = [];
                               }
-                              print(value);
+                              // print(value);
                               setState(() {
                                 list = list
                                     .where((element) =>
@@ -122,47 +115,39 @@ class _MyHomePageState extends State<MyHomePage> {
                                             .toLowerCase()
                                             .contains(value.toLowerCase()))
                                     .toList();
-                                print(list);
+                                // print(list);
                               });
                             },
-                            style: TextStyle(color: Colors.white),
-                            decoration: InputDecoration(
-                              border: InputBorder.none,
-                              prefixIcon: Icon(
-                                Icons.search,
-                                color: Colors.white,
-                              ),
-                              hintText: 'Search',
-                              hintStyle: TextStyle(color: Colors.white),
-                              // hintText: 'Search Docs',
-                            ),
+                            style: const TextStyle(color: Colors.white),
+                            decoration: searchFieldInputDecoration(),
                           ),
                         ),
                       ),
                     ],
                   ),
-                  decoration: BoxDecoration(color: MyColors.primary),
+                  decoration: const BoxDecoration(color: MyColors.primary),
                 ),
                 Column(
                   children: [
-                    SizedBox(height: mediaquery.height * 0.15),
+                    SizedBox(height: mq.height * 0.15),
                     Container(
                       // alignment: Alignment.bottomCenter,
 
-                      decoration: BoxDecoration(
+                      decoration: const BoxDecoration(
                         borderRadius: BorderRadius.only(
                           topLeft: Radius.circular(30),
                           topRight: Radius.circular(30),
                         ),
                         color: Colors.white,
                       ),
-                      height: mediaquery.height * 0.73,
+                      height: mq.height * 0.73,
                       // color: Colors.red,
                       child: list.isEmpty
                           ? _searchController.text.toString().isEmpty
                               ? Lottie.asset('assets/emptyall.json')
                               : Lottie.asset('assets/emptysearch.json')
                           : ListView.builder(
+                              padding: const EdgeInsets.only(bottom: 50),
                               itemBuilder: (ctx, index) => Dismissible(
                                 direction: DismissDirection.endToStart,
                                 onDismissed: (direction) {
@@ -177,14 +162,14 @@ class _MyHomePageState extends State<MyHomePage> {
                                   alignment: Alignment.centerRight,
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.end,
-                                    children: [
+                                    children: const [
                                       Text(
                                         'Delete',
                                         style: TextStyle(color: Colors.white),
                                       ),
                                       Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: const Icon(
+                                        padding: EdgeInsets.all(8.0),
+                                        child: Icon(
                                           Icons.delete,
                                           color: Colors.white,
                                         ),
@@ -205,73 +190,147 @@ class _MyHomePageState extends State<MyHomePage> {
                                       //       // fit: BoxFit.fill,
                                       //     ).image,
                                       //   )
-
-                                      CircleAvatar(
-                                          backgroundImage: Image.file(
-                                            File(list[index].imgUrl[0]),
-                                            fit: BoxFit.fill,
-                                          ).image,
+                                      SizedBox(
+                                          height: 40,
+                                          width: 40,
+                                          child: Container(
+                                            width: double.infinity,
+                                            height: double.infinity,
+                                            decoration: BoxDecoration(
+                                              color: Colors.white,
+                                              image: DecorationImage(
+                                                  image: Image.file(
+                                                File(list[index].imgUrl[0]),
+                                                fit: BoxFit.fill,
+                                              ).image),
+                                              border: Border.all(
+                                                  color: MyColors.borderColor,
+                                                  style: BorderStyle.solid),
+                                              borderRadius:
+                                                  const BorderRadius.all(
+                                                Radius.circular(10),
+                                              ), //BorderRadius.all
+                                            ),
+                                            // child: DecorationImage(
+                                            //     image: Image.file(
+                                            //   File(list[index].imgUrl[0]),
+                                            //   fit: BoxFit.fitWidth,
+                                            // )),
+                                          ),
                                         )
-                                      : CircleAvatar(
-                                          backgroundColor:
-                                              colors[index % colors.length],
-                                          child: Text("${index + 1}"),
+                                      :
+
+                                      // CircleAvatar(
+                                      //     backgroundImage: Image.file(
+                                      //       File(list[index].imgUrl[0]),
+                                      //       fit: BoxFit.fill,
+                                      //     ).image,
+                                      //   )
+                                      // :
+                                      // CircleAvatar(
+                                      //     backgroundColor: MyColors.primary,
+                                      //     child: Text("${index + 1}"),
+                                      //   ),
+                                      // :
+                                      SizedBox(
+                                          height: 40,
+                                          width: 40,
+                                          child: Container(
+                                            decoration: BoxDecoration(
+                                                color: MyColors.primary,
+                                                borderRadius:
+                                                    BorderRadius.circular(12)),
+                                            child: Center(
+                                              child: Text(
+                                                "${index + 1}",
+                                                style: const TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: 16),
+                                              ),
+                                            ),
+                                          ),
+                                          // child: Text("${index + 1}"),
+                                          // decoration: BoxDecoration(
+                                          //     color: MyColors.primary,
+                                          //     borderRadius:
+                                          //         BorderRadius.circular(50)),
                                         ),
+                                  // )
                                   trailing: IconButton(
                                     onPressed: () {
                                       showModalBottomSheet(
                                         // isScrollControlled: true,
-                                        shape: RoundedRectangleBorder(
+                                        shape: const RoundedRectangleBorder(
                                           borderRadius: BorderRadius.only(
                                               topLeft: Radius.circular(20),
                                               topRight: Radius.circular(20)),
                                         ),
                                         context: context,
                                         builder: (context) => Container(
-                                          decoration: BoxDecoration(
+                                          decoration: const BoxDecoration(
                                             borderRadius: BorderRadius.only(
                                               topLeft: Radius.circular(20),
                                               topRight: Radius.circular(20),
                                             ),
                                           ),
-                                          padding: EdgeInsets.all(20),
+                                          padding: const EdgeInsets.all(20),
                                           child: Column(
                                             children: [
-                                              Text("Choose an action"),
-                                              SizedBox(height: 10),
+                                              const Text(
+                                                "Choose an action",
+                                                style: TextStyle(fontSize: 20),
+                                              ),
+                                              const SizedBox(height: 10),
                                               ListTile(
-                                                title: Text("Share"),
-                                                trailing: Icon(
+                                                title: const Text("Share"),
+                                                trailing: const Icon(
                                                   Icons.share,
                                                   color: Colors.blue,
                                                 ),
                                                 onTap: () {
-                                                  final List<String> strs = list[index].imgUrl.map((e) => e.toString()).toList();
-                                                  if(list[index].pdfPath!=null){
-                                                    strs.addAll(list[index].pdfPath!.map((e) => e.toString()).toList());
+                                                  final List<String> strs =
+                                                      list[index]
+                                                          .imgUrl
+                                                          .map((e) =>
+                                                              e.toString())
+                                                          .toList();
+                                                  if (list[index].pdfPath !=
+                                                      null) {
+                                                    strs.addAll(list[index]
+                                                        .pdfPath!
+                                                        .map(
+                                                            (e) => e.toString())
+                                                        .toList());
                                                   }
-                                                  // strs.isNotEmpty ? 
-                                                  // Share.shareFiles(strs,
-                                                  //     text:'${list[index].id} ${list[index].title} \n ${list[index].description}',
-                                                  //     subject: list[index].title):
-                                                  //     Share.share('${list[index].title} \n ${list[index].description}');
-                                              },
+                                                  strs.isNotEmpty
+                                                      ? Share.shareFiles(strs,
+                                                          text:
+                                                              '${list[index].id} ${list[index].title} \n ${list[index].description}',
+                                                          subject:
+                                                              list[index].title)
+                                                      : Share.share(
+                                                          '${list[index].title} \n ${list[index].description}');
+                                                },
                                               ),
                                               ListTile(
-                                                title: Text("Delete"),
-                                                trailing: Icon(
+                                                title: const Text("Delete"),
+                                                trailing: const Icon(
                                                   Icons.delete_forever_sharp,
                                                   color: Colors.red,
                                                 ),
                                                 onTap: () async {
                                                   deleteConfirmationDialog(
-                                                      context,
-                                                      (){Navigator.of(context).pop();deleteItem(index);},
-                                                      () => Navigator.of(context).pop());
+                                                      context, () {
+                                                    Navigator.of(context).pop();
+                                                    deleteItem(index);
+                                                  },
+                                                      () =>
+                                                          Navigator.of(context)
+                                                              .pop());
                                                   // await deleteItem(index);
                                                 },
                                               ),
-                                              Spacer(),
+                                              const Spacer(),
                                               FacebookBannerAd(
                                                 placementId: Storage
                                                     .facebookBannerPlacement,
@@ -282,6 +341,14 @@ class _MyHomePageState extends State<MyHomePage> {
                                                     .facebookBannerPlacement,
                                                 bannerSize: BannerSize.STANDARD,
                                               )
+                                              // MaxAdView(
+                                              //   adUnitId: Storage.banner,
+                                              //   adFormat: AdFormat.banner,
+                                              // ),
+                                              // MaxAdView(
+                                              //   adUnitId: Storage.banner,
+                                              //   adFormat: AdFormat.banner,
+                                              // ),
                                             ],
                                           ),
                                         ),
@@ -313,6 +380,7 @@ class _MyHomePageState extends State<MyHomePage> {
                               itemCount: list.length,
                             ),
                     ),
+                    // const SizedBox(height: 50),
                   ],
                 ),
               ],
@@ -322,9 +390,48 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
 
       // floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+
+      // floatingActionButton:
+      //     SpeedDial(child: const Icon(Icons.add), speedDialChildren: [
+      //   SpeedDialChild(
+      //     child: const Icon(Icons.add),
+      //     foregroundColor: Colors.black,
+      //     backgroundColor: Colors.yellow,
+      //     label: 'Add files and images from device',
+      //     onPressed: () {
+      //       Add.imgUrl.clear();
+      //       Add.pdfUrl.clear();
+      //       Navigator.pushNamed(context, AddData.routeName, arguments: list);
+      //     },
+      // ),
+      // SpeedDialChild(
+      //   child: const Icon(Icons.document_scanner_outlined),
+      //   foregroundColor: Colors.white,
+      //   backgroundColor: MyColors.primary,
+      //   label: 'Scan Images',
+      //   onPressed: () {
+      //     // Add.imgUrl.clear();
+      //     // Add.pdfUrl.clear();
+      //     // Navigator.pushNamed(context, AddData.routeName, arguments: list);
+      //   },
+      // ),
+      // SpeedDialChild(
+      //   child: const Icon(Icons.picture_as_pdf),
+      //   foregroundColor: Colors.white,
+      //   backgroundColor: Colors.teal,
+      //   label: 'PDF Compressor',
+      //   onPressed: () {
+      //     // Add.imgUrl.clear();
+      //     // Add.pdfUrl.clear();
+      //     // Navigator.pushNamed(context, AddData.routeName, arguments: list);
+      //   },
+      // ),
+      // ]),
       floatingActionButton: FloatingActionButton(
+        highlightElevation: 40,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         backgroundColor: Colors.white,
-        elevation: 10,
+        // elevation: 20,
         // shape: RoundedRectangleBorder(
         //   borderRadius: BorderRadius.circular(15),
         //   side: BorderSide(color: Color.fromARGB(179, 238, 37, 37), width: 5),
@@ -332,6 +439,7 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Icon(
           Icons.add,
           color: MyColors.primary,
+          size: mq.width * 0.08,
         ),
         onPressed: () {
           Add.imgUrl.clear();
@@ -339,6 +447,11 @@ class _MyHomePageState extends State<MyHomePage> {
           Navigator.pushNamed(context, AddData.routeName, arguments: list);
         },
       ),
+
+      // bottomNavigationBar: FacebookBannerAd(
+      //   placementId: Storage.facebookBannerPlacement,
+      //   bannerSize: BannerSize.STANDARD,
+      // ),
       bottomNavigationBar: FacebookBannerAd(
         placementId: Storage.facebookBannerPlacement,
         bannerSize: BannerSize.STANDARD,
@@ -357,4 +470,26 @@ class _MyHomePageState extends State<MyHomePage> {
     });
     await loadSharedPreferences();
   }
+}
+
+Text headingText() {
+  return const Text(
+    'Manage Your document easy and safely at One Place',
+    textAlign: TextAlign.center,
+    overflow: TextOverflow.visible,
+    style: TextStyle(color: Colors.white, fontSize: 15),
+  );
+}
+
+InputDecoration searchFieldInputDecoration() {
+  return const InputDecoration(
+    border: InputBorder.none,
+    prefixIcon: Icon(
+      Icons.search,
+      color: Colors.white,
+    ),
+    hintText: 'Search',
+    hintStyle: TextStyle(color: Colors.white),
+    // hintText: 'Search Docs',
+  );
 }

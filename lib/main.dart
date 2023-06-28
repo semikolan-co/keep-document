@@ -8,6 +8,7 @@ import 'package:passmanager/models/dataitem.dart';
 import 'package:passmanager/screens/datascreen.dart';
 import 'package:passmanager/screens/introscreen.dart';
 import 'package:passmanager/models/sharedpref.dart';
+import 'package:passmanager/utils/colors.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:local_auth/local_auth.dart';
 import 'screens/adddata.dart';
@@ -121,7 +122,7 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       title: 'Keep Document',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primarySwatch: MyColors.primaryShade,
       ),
       home: authorized == 'Not Authorized'
           ? exit(0)
