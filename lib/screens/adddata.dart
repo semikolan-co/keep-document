@@ -1,22 +1,22 @@
-import 'dart:ffi';
 import 'dart:io';
 
 import 'package:camera/camera.dart';
-import 'package:facebook_audience_network/facebook_audience_network.dart';
+// import 'package:applovin_max/applovin_max.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:glassmorphism/glassmorphism.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:passmanager/utils/ads.dart';
 import 'package:passmanager/utils/storage.dart';
 import 'package:passmanager/models/additem.dart';
 import 'package:passmanager/models/dataitem.dart';
 import 'package:passmanager/screens/homepage.dart';
 import 'package:passmanager/models/sharedpref.dart';
-import 'package:path/path.dart';
+import 'package:passmanager/widgets/primary_button.dart';
+import 'package:passmanager/widgets/snack_bar.dart';
 import 'package:path_provider/path_provider.dart';
 
 import '../utils/colors.dart';
-import '../widgets/primary_button.dart';
 import 'takepicture.dart';
 
 class AddData extends StatefulWidget {
@@ -104,9 +104,10 @@ class _DataScreenState extends State<AddData> {
           // String? outputFile = await FilePicker.platform
           //     .saveFile(fileName: '${date}.pdf', allowedExtensions: ['pdf']);
         } catch (e) {
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            content: Text('Error: $e'),
-          ));
+          // ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          //   content: Text('Error: $e'),
+          // ));
+          showSnackBar(context, Colors.red, 'Error: $e');
         }
       } else {
         // User canceled the picker
@@ -125,11 +126,7 @@ class _DataScreenState extends State<AddData> {
         imgPath.add(directory.path + '/$date.png');
         return File(pickedImage.path).copy('${directory.path}/$date.png');
       } catch (e) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Error: $e'),
-          ),
-        );
+        showSnackBar(context, Colors.red, 'Error: $e');
       }
     }
 
@@ -240,6 +237,7 @@ class _DataScreenState extends State<AddData> {
               )),
         ],
       ),
+
       body: Column(
         children: [
           Expanded(
@@ -409,14 +407,15 @@ class _DataScreenState extends State<AddData> {
                           idController.text, date);
                       Navigator.pushNamedAndRemoveUntil(
                           context, MyHomePage.routeName, (route) => false);
-                      FacebookInterstitialAd.loadInterstitialAd(
-                        placementId: "328150579086879_328163679085569",
-                        listener: (result, value) {
-                          if (result == InterstitialAdResult.LOADED) {
-                            FacebookInterstitialAd.showInterstitialAd();
-                          }
-                        },
-                      );
+                      // FacebookInterstitialAd.loadInterstitialAd(
+                      //   placementId: "328150579086879_328163679085569",
+                      //   listener: (result, value) {
+                      //     if (result == InterstitialAdResult.LOADED) {
+                      //       FacebookInterstitialAd.showInterstitialAd();
+                      //     }
+                      //   },
+                      // );
+                      loadInterstitial();
                     }
                   },
                   buttonText: "Save"),
@@ -424,10 +423,38 @@ class _DataScreenState extends State<AddData> {
           ),
         ],
       ),
-      bottomNavigationBar: FacebookBannerAd(
-        placementId: '328150579086879_328154279086509',
-        bannerSize: BannerSize.STANDARD,
-      ),
+      // persistentFooterButtons: [
+      //   Center(
+      //     child: PrimaryButton(
+      //         onPressed: () {
+      //           // if(date=='') return;
+      //           if (_formKey.currentState!.validate()) {
+      //             Add.description = '';
+      //             Add.title = '';
+      //             Add.imgUrl = [];
+      //             Add.date = '';
+      //             Add.id = '';
+      //             addItem(titleController.text, descriptionController.text,
+      //                 idController.text, date);
+      //             Navigator.pushNamedAndRemoveUntil(
+      //                 context, MyHomePage.routeName, (route) => false);
+      //             FacebookInterstitialAd.loadInterstitialAd(
+      //               placementId: "328150579086879_328163679085569",
+      //               listener: (result, value) {
+      //                 if (result == InterstitialAdResult.LOADED) {
+      //                   FacebookInterstitialAd.showInterstitialAd();
+      //                 }
+      //               },
+      //             );
+      //           }
+      //         },
+      //         buttonText: "Save"),
+      //   ),
+      // ],
+      // bottomNavigationBar: MaxAdView(
+      //   adUnitId: Storage.banner,
+      //   adFormat: AdFormat.banner,
+      // ),
     );
   }
 
@@ -487,12 +514,13 @@ class ImageGrid extends StatelessWidget {
     //     .toList(growable: false);
     return GridView.builder(
       shrinkWrap: true,
-      physics: NeverScrollableScrollPhysics(),
+      physics: const NeverScrollableScrollPhysics(),
       itemCount: imgPath.length,
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 3, childAspectRatio: 3.0 / 4.6),
+          crossAxisCount: 2, childAspectRatio: 3.0 / 3.5),
       itemBuilder: (context, index) {
         return Card(
+          elevation: 10,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(8.0),
           ),
@@ -501,6 +529,7 @@ class ImageGrid extends StatelessWidget {
             child: InkWell(
               child: SizedBox(
                 height: 50,
+                width: 50,
                 child: Image.file(
                   File(imgPath[index]),
                   fit: BoxFit.cover,
@@ -525,13 +554,58 @@ class FileList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
-        physics: NeverScrollableScrollPhysics(),
-        shrinkWrap: true,
-        itemCount: pdfPath.length,
-        itemBuilder: (context, index) => Card(
-              child: ListTile(
-                title: Text(pdfPath[index].toString().split('/').last),
-              ),
-            ));
+      physics: const NeverScrollableScrollPhysics(),
+      shrinkWrap: true,
+      itemCount: pdfPath.length,
+      itemBuilder: (context, index) => Card(
+        child: Container(
+            height: 50,
+            child: ListTile(
+                leading: Icon(
+                  Icons.picture_as_pdf,
+                  color: Colors.red,
+                ),
+                title: Text(
+                  pdfPath[index].split('/').last,
+                  overflow: TextOverflow.ellipsis,
+                ))),
+        // subtitle:  tex,
+      ),
+      // physics: const NeverScrollableScrollPhysics(),
+      // shrinkWrap: true,
+      // itemCount: pdfPath.length,
+      // gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+      //   crossAxisCount: 2,
+      //   // childAspectRatio: 3 / 2,
+      //   crossAxisSpacing: 10,
+      //   mainAxisSpacing: 10,
+      // ),
+      // itemBuilder: (context, index) => Card(
+      //       elevation: 5,
+      //       child: Column(
+      //         children: [
+      //           const Icon(
+      //             Icons.picture_as_pdf_rounded,
+      //             size: 100,
+      //             color: Colors.red,
+      //           ),
+      //           const Expanded(
+      //             child: SizedBox(),
+      //           ),
+      //           Padding(
+      //             padding: const EdgeInsets.all(8.0),
+      //             child: Text(
+      //               pdfPath[index].toString().split('/').last,
+      //               overflow: TextOverflow.ellipsis,
+      //               style: const TextStyle(),
+      //             ),
+      //           ),
+      //  SizedBox(height: mediaquery.height * 0.),
+      // ListTile(
+      //   title: Text(),
+      //   // subtitle:  tex,
+      // ),
+      // ],
+    );
   }
 }

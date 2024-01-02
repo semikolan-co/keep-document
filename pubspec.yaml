@@ -1,9 +1,9 @@
 name: passmanager
-description: A new Flutter project.
+description: Organize your Documents in one place.
 
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
-publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+publish_to: "none" # Remove this line if you wish to publish to pub.dev
 
 # The following defines the version and build number for your application.
 # A version number is three numbers separated by dots, like 1.2.43
@@ -15,10 +15,10 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-version: 2.2.9+14
+version: 2.2.10+15
 
 environment:
-  sdk: ">=2.16.0 <3.0.0"
+  sdk: '>=3.2.3 <4.0.0'
 
 # Dependencies specify other packages that your package needs in order to work.
 # To automatically upgrade your package dependencies to the latest versions
@@ -31,24 +31,29 @@ dependencies:
     sdk: flutter
   cupertino_icons: ^1.0.2
   path_provider: ^2.0.9
-  image_picker: ^0.8.4+8
+  image_picker: ^1.0.5
   fluttertoast: ^8.0.8
   shared_preferences: ^2.0.13
   animations: ^2.0.2
   glassmorphism: ^3.0.0
   url_launcher: ^6.0.20
   flutter_native_splash: ^2.0.3+1
-  intro_slider: ^3.0.3
-  file_picker: ^4.4.0
+  intro_slider: ^4.2.0
+  file_picker: ^6.1.1
   flutter_pdfview: ^1.2.1
   open_file: ^3.2.1
-  lottie: ^1.2.2
-  camera: ^0.9.4+20
-  share_plus: ^4.0.1
-  facebook_audience_network: ^1.0.1
-  local_auth: ^1.1.11
-  image_cropper: ^1.5.0
-
+  lottie: ^2.3.2
+  # applovin_max: ^2.3.3
+  camera: ^0.10.5+7
+  # camera: ^0.10.0+5
+  share_plus: ^7.2.1
+  # facebook_audience_network: ^1.0.1
+  local_auth: ^2.1.2
+  image_cropper: ^5.0.1
+  # in_app_update: ^4.0.1
+  # document_scanner_flutter: ^0.2.7
+  simple_speed_dial: ^0.1.7
+ 
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -58,14 +63,14 @@ dev_dependencies:
   # activated in the `analysis_options.yaml` file located at the root of your
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
-  flutter_lints: ^1.0.0
+  flutter_lints: ^3.0.1
+  change_app_package_name: ^1.1.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 
 # The following section is specific to Flutter.
 flutter:
-
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.

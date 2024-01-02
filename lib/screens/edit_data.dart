@@ -1,8 +1,7 @@
-import 'dart:ffi';
 import 'dart:io';
 
 import 'package:camera/camera.dart';
-import 'package:facebook_audience_network/facebook_audience_network.dart';
+// import 'package:applovin_max/applovin_max.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:glassmorphism/glassmorphism.dart';
@@ -12,7 +11,7 @@ import 'package:passmanager/models/additem.dart';
 import 'package:passmanager/models/dataitem.dart';
 import 'package:passmanager/screens/homepage.dart';
 import 'package:passmanager/models/sharedpref.dart';
-import 'package:path/path.dart';
+import 'package:passmanager/widgets/snack_bar.dart';
 import 'package:path_provider/path_provider.dart';
 
 import '../utils/colors.dart';
@@ -106,9 +105,10 @@ class _DataScreenState extends State<EditData> {
           // String? outputFile = await FilePicker.platform
           //     .saveFile(fileName: '${date}.pdf', allowedExtensions: ['pdf']);
         } catch (e) {
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            content: Text('Error: $e'),
-          ));
+          // ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          //   content: Text('Error: $e'),
+          // ));
+          showSnackBar(context, Colors.red, 'Error: $e');
         }
       } else {
         // User canceled the picker
@@ -361,10 +361,10 @@ class _DataScreenState extends State<EditData> {
           ),
         ),
       ),
-      bottomNavigationBar: FacebookBannerAd(
-        placementId: '328150579086879_328154279086509',
-        bannerSize: BannerSize.STANDARD,
-      ),
+      // bottomNavigationBar: MaxAdView(
+      //   adUnitId: Storage.banner,
+      //   adFormat: AdFormat.banner,
+      // ),
     );
   }
 

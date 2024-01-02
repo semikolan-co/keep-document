@@ -1,6 +1,5 @@
 import 'dart:io';
-
-import 'package:facebook_audience_network/facebook_audience_network.dart';
+// import 'package:applovin_max/applovin_max.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -9,8 +8,7 @@ import 'package:open_file/open_file.dart';
 import 'package:passmanager/models/additem.dart';
 import 'package:passmanager/models/dataitem.dart';
 import 'package:passmanager/screens/homepage.dart';
-import 'package:passmanager/widgets/deleteconfirmation.dart';
-import 'package:path/path.dart';
+import 'package:passmanager/utils/storage.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 
@@ -34,66 +32,64 @@ class _DataScreenState extends State<DataScreen> {
   Widget build(BuildContext context) {
     final DataItem list =
         ModalRoute.of(context)!.settings.arguments as DataItem;
-    print(list.pdfPath.toString());
+    // print(list.pdfPath.toString());
     return Scaffold(
       appBar: AppBar(
-        elevation: 0,
-        title: Text(
-          list.title,
-          style: const TextStyle(fontSize: 20, color: Colors.white),
-        ),
-        backgroundColor: MyColors.primary,
-        // actions: [
-        //   IconButton(
-        //       onPressed: () {
+          elevation: 0,
+          title: Text(
+            list.title,
+            style: const TextStyle(fontSize: 20, color: Colors.white),
+          ),
+          backgroundColor: MyColors.primary,
+          iconTheme: IconThemeData(color: Colors.white)
+          // actions: [
+          //   IconButton(
+          //       onPressed: () {
 
-        //       },
-        //       icon: const Icon(
-        //         Icons.edit,
-        //         color: Colors.white,
-        //       )),
-        // ],
-      ),
+          //       },
+          //       icon: const Icon(
+          //         Icons.edit,
+          //         color: Colors.white,
+          //       )),
+          // ],
+          ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            Row(
-              children: [
-                const Spacer(
-                  flex: 2,
-                ),
-                Text("ID : ${list.id}", style: const TextStyle(fontSize: 17)),
-                const Spacer(
-                  flex: 17,
-                ),
-                IconButton(
-                    onPressed: () {
-                      Clipboard.setData(
-                          ClipboardData(text: list.id.toString()));
-                      Fluttertoast.showToast(
-                          msg: 'Copied ${list.id.toString()}');
-                    },
-                    icon: const Icon(Icons.copy)),
-                const Spacer(
-                  flex: 1,
-                ),
-              ],
+            Padding(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: Storage.paddingSize),
+              child: Row(
+                children: [
+                  Text("ID : ${list.id}", style: const TextStyle(fontSize: 20)),
+                  const Spacer(
+                    flex: 17,
+                  ),
+                  IconButton(
+                      onPressed: () {
+                        Clipboard.setData(
+                            ClipboardData(text: list.id.toString()));
+                        Fluttertoast.showToast(
+                            msg: 'Copied ${list.id.toString()}');
+                      },
+                      icon: const Icon(Icons.copy)),
+                  const Spacer(
+                    flex: 1,
+                  ),
+                ],
+              ),
             ),
             // Row(
             //   children: [
             //     const Spacer(
             //       flex: 2,
             //     ),
-            if (list.description != '')
-              const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 23.0, vertical: 5),
-                child: Text('Additional Note:', style: TextStyle(fontSize: 17)),
-              ),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 23),
-              child: Text(list.description),
+              padding:
+                  const EdgeInsets.symmetric(horizontal: Storage.paddingSize),
+              child: Text(list.description, style: TextStyle(fontSize: 16)),
             ),
             //     const Spacer(
             //       flex: 1,
@@ -104,10 +100,10 @@ class _DataScreenState extends State<DataScreen> {
           ],
         ),
       ),
-      bottomNavigationBar: FacebookBannerAd(
-        placementId: '328150579086879_328154279086509',
-        bannerSize: BannerSize.STANDARD,
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+      // bottomNavigationBar: MaxAdView(
+      //   adUnitId: Storage.banner,
+      //   adFormat: AdFormat.banner,
+      // ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }
@@ -147,41 +143,58 @@ class ImageGrid extends StatelessWidget {
     //     .where((item) => item.endsWith(".png"))
     //     .toList(growable: false);
     return SingleChildScrollView(
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              IconButton(
-                  onPressed: () {
-                    deleteConfirmationDialog(context, deleteItem, () {});
-                  },
-                  icon: const Icon(
-                    Icons.delete,
-                    color: Colors.red,
-                  )),
-              Add.imgUrl.isNotEmpty
-                  ? IconButton(
-                      onPressed: () async {
-                        await Share.shareFiles(Add.imgUrl,
-                            text:
-                                '${list.title}\n${list.description}\n${list.id}\nShared via Keep Document\nhttps://play.google.com/store/apps/details?id=com.semikolan.datamanager.passmanager',
-                            subject: list.title);
-                      },
-                      icon: const Icon(
-                        Icons.share,
-                      ))
-                  : Container(),
-            ],
-          ),
-          list.imgUrl.isNotEmpty
-              ? GridView.builder(
+      // child: Padding(
+      // padding: const EdgeInsets.all(8.0),
+      child: Column(children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            Add.imgUrl.isNotEmpty
+                ? const Padding(
+                    padding:
+                        EdgeInsets.symmetric(horizontal: Storage.paddingSize),
+                    child: Text(
+                      "Images: ",
+                      style: TextStyle(
+                        fontSize: 18,
+                        color: Colors.black,
+                      ),
+                    ),
+                  )
+                : Container(),
+            const Spacer(),
+            // IconButton(
+            //     onPressed: () {
+            //       deleteConfirmationDialog(context, deleteItem, () {});
+            //     },
+            //     icon: const Icon(
+            //       Icons.delete,
+            //       color: Colors.red,
+            //     r)),
+            Add.imgUrl.isNotEmpty
+                ? IconButton(
+                    onPressed: () async {
+                      await Share.shareFiles(Add.imgUrl,
+                          text:
+                              '${list.title}\n${list.description}\n${list.id}\nShared via Keep Document\nhttps://play.google.com/store/apps/details?id=com.semikolan.datamanager.passmanager',
+                          subject: list.title);
+                    },
+                    icon: const Icon(
+                      Icons.share,
+                    ))
+                : Container(),
+          ],
+        ),
+        list.imgUrl.isNotEmpty
+            ? Padding(
+                padding: const EdgeInsets.symmetric(
+                    horizontal: Storage.paddingSize / 2),
+                child: GridView.builder(
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),
                   itemCount: list.imgUrl.length,
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 3, childAspectRatio: 3.0 / 4.6),
+                      crossAxisCount: 2, childAspectRatio: 3.0 / 3.5),
                   itemBuilder: (context, index) {
                     return Card(
                       shape: RoundedRectangleBorder(
@@ -217,50 +230,113 @@ class ImageGrid extends StatelessWidget {
                       ),
                     );
                   },
-                )
-              : Container(),
-          if (list.pdfPath != null)
-            list.pdfPath == [] || list.pdfPath == [] || list.pdfPath!.isEmpty
-                ? Container()
-                : Row(children: [
-                    Spacer(),
-                    IconButton(
-                      onPressed: () async {
-                        print(Add.pdfUrl);
-                        // await Share.shareFiles(Add.pdfUrl,
-                        //     text:
-                        //         '${list.title}\n${list.description}\n${list.id}\nShared via Keep Document\nhttps://play.google.com/store/apps/details?id=com.semikolan.datamanager.passmanager',
-                        //     subject: list.title);
-                      },
-                      icon: const Icon(Icons.share),
+                ),
+              )
+            : Container(),
+        if (list.pdfPath != null)
+          list.pdfPath == [] || list.pdfPath == [] || list.pdfPath!.isEmpty
+              ? Container()
+              : Row(children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: Storage.paddingSize),
+                    child: Text(
+                      list.pdfPath!.length > 1 ? 'Documents:' : 'Document:',
+                      style: TextStyle(
+                        fontSize: 18,
+                        color: Colors.black,
+                      ),
                     ),
-                  ]),
-          list.pdfPath != null
-              ? ListView.builder(
-                  physics: NeverScrollableScrollPhysics(),
-                  shrinkWrap: true,
-                  itemBuilder: (context, index) {
-                    return InkWell(
-                      // onLongPress: () =>
-                      // Share.shareFiles([list.pdfPath?[index]]),
+                  ),
+                  const Spacer(),
+                  IconButton(
+                    onPressed: () async {
+                      print(Add.pdfUrl);
+                      await Share.shareFiles(Add.pdfUrl,
+                          text:
+                              '${list.title}\n${list.description}\n${list.id}\nShared via Keep Document\nhttps://play.google.com/store/apps/details?id=com.semikolan.datamanager.passmanager',
+                          subject: list.title);
+                    },
+                    icon: const Icon(Icons.share),
+                  ),
+                ]),
+        list.pdfPath != null
+            ? ListView.builder(
+                padding: const EdgeInsets.symmetric(
+                    horizontal: Storage.paddingSize / 2),
+                physics: const NeverScrollableScrollPhysics(),
+                shrinkWrap: true,
+                itemCount: list.pdfPath?.length,
+                itemBuilder: (context, index) => InkWell(
+                      onLongPress: () =>
+                          Share.shareFiles([list.pdfPath?[index]]),
                       onTap: () => OpenFile.open(list.pdfPath?[index]),
                       child: Card(
-                        child: ListTile(
-                          title: Text(list.pdfPath?[index]
-                                  .toString()
-                                  .split('/')
-                                  .last
-                                  .toString() ??
-                              ''),
-                        ),
+                        child: Container(
+                            height: 50,
+                            child: ListTile(
+                                leading: Icon(
+                                  Icons.picture_as_pdf,
+                                  color: Colors.red,
+                                ),
+                                title: Text(
+                                  list.pdfPath?[index].split('/').last,
+                                  overflow: TextOverflow.ellipsis,
+                                ))),
+                        // subtitle:  tex,
                       ),
-                    );
-                  },
-                  itemCount: list.pdfPath?.length,
-                )
-              : Container(),
-        ]),
-      ),
+                    ))
+            // ? GridView.builder(
+            //     gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            //       crossAxisCount: 2,
+            //       // childAspectRatio: 3 / 2,
+            //       crossAxisSpacing: 10,
+            //       mainAxisSpacing: 10,
+            //     ),
+            //     physics: const NeverScrollableScrollPhysics(),
+            //     shrinkWrap: true,
+            //     itemBuilder: (context, index) {
+            //       return InkWell(
+            //         onLongPress: () =>
+            //             Share.shareFiles([list.pdfPath?[index]]),
+            //         onTap: () => OpenFile.open(list.pdfPath?[index]),
+            //         child: 1 == 1
+            //             ? Card(
+            //                 elevation: 5,
+            //                 child: Column(
+            //                   children: [
+            //                     const Icon(
+            //                       Icons.picture_as_pdf_rounded,
+            //                       size: 100,
+            //                       color: Colors.red,
+            //                     ),
+            //                     // const Expanded(
+            //                     //   child: SizedBox(),
+            //                     // ),
+            //                     Padding(
+            //                       padding: const EdgeInsets.all(8.0),
+            //                       child: Text(
+            //                         list.pdfPath?[index]
+            //                                 .toString()
+            //                                 .split('/')
+            //                                 .last
+            //                                 .toString() ??
+            //                             '',
+            //                         overflow: TextOverflow.ellipsis,
+            //                         style: const TextStyle(),
+            //                       ),
+            //                     ),
+            //                     //  SizedBox(height: mediaquery.height * 0.),
+            //                     // ListTile(
+            //                     //   title: Text(),
+            //                     //   // subtitle:  tex,
+            //                     // ),
+            //                   ],
+            //                 ),
+            //               )
+            : Container(),
+      ]),
     );
+    // );
   }
 }

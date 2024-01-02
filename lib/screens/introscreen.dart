@@ -1,9 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:intro_slider/intro_slider.dart';
-// import 'package:intro_slider/scrollbar_behavior_enum.dart';
-// import 'package:intro_slider/slide_object.dart';
-import 'package:passmanager/main.dart';
 import 'package:passmanager/screens/homepage.dart';
 
 class IntroScreen extends StatefulWidget {
@@ -14,14 +10,14 @@ class IntroScreen extends StatefulWidget {
 }
 
 class _IntroScreenState extends State<IntroScreen> {
-  List<Slide> slides = [];
+  List<ContentConfig> slides = [];
 
   @override
   void initState() {
     super.initState();
 
     slides.add(
-      Slide(
+      ContentConfig(
           title: "Your Security, Our Obligation",
           styleTitle: const TextStyle(
               color: Color.fromRGBO(22, 68, 62, 1), fontSize: 25),
@@ -33,7 +29,7 @@ class _IntroScreenState extends State<IntroScreen> {
           backgroundColor: Colors.white),
     );
     slides.add(
-      Slide(
+      ContentConfig(
           title: "Documents at a Single Click",
           description:
               "Easily store, share and organise all your documents at one place.",
@@ -44,7 +40,7 @@ class _IntroScreenState extends State<IntroScreen> {
               color: Color.fromRGBO(22, 68, 62, 1), fontSize: 18),
           backgroundColor: Colors.white),
     );
-    if (authorized == 'Authorized') FlutterNativeSplash.remove();
+    // if(authorized=='Authorized') FlutterNativeSplash.remove();
   }
 
   void onDonePress() {
@@ -53,7 +49,7 @@ class _IntroScreenState extends State<IntroScreen> {
   }
 
   Widget renderNextBtn() {
-    return Icon(
+    return const Icon(
       Icons.navigate_next,
       color: Color.fromRGBO(22, 68, 62, 1),
       size: 35.0,
@@ -61,14 +57,14 @@ class _IntroScreenState extends State<IntroScreen> {
   }
 
   Widget renderDoneBtn() {
-    return Icon(
+    return const Icon(
       Icons.done,
       color: Color.fromRGBO(22, 68, 62, 1),
     );
   }
 
   Widget renderSkipBtn() {
-    return Icon(
+    return const Icon(
       Icons.skip_next,
       color: Color.fromRGBO(22, 68, 62, 1),
     );
@@ -76,39 +72,40 @@ class _IntroScreenState extends State<IntroScreen> {
 
   ButtonStyle myButtonStyle() {
     return ButtonStyle(
-      shape: MaterialStateProperty.all<OutlinedBorder>(StadiumBorder()),
-      backgroundColor: MaterialStateProperty.all<Color>(Color(0x33F3B4BA)),
-      overlayColor: MaterialStateProperty.all<Color>(Color(0x33FFA8B0)),
+      shape: MaterialStateProperty.all<OutlinedBorder>(const StadiumBorder()),
+      backgroundColor:
+          MaterialStateProperty.all<Color>(const Color(0x33F3B4BA)),
+      overlayColor: MaterialStateProperty.all<Color>(const Color(0x33FFA8B0)),
     );
   }
 
   @override
   Widget build(BuildContext context) {
     return IntroSlider(
-      slides: this.slides,
-      onDonePress: this.onDonePress,
-      renderSkipBtn: this.renderSkipBtn(),
+      listContentConfig: slides,
+      onDonePress: onDonePress,
+      renderSkipBtn: renderSkipBtn(),
       skipButtonStyle: myButtonStyle(),
 
       // Next button
-      renderNextBtn: this.renderNextBtn(),
+      renderNextBtn: renderNextBtn(),
       nextButtonStyle: myButtonStyle(),
 
       // Done button
-      renderDoneBtn: this.renderDoneBtn(),
+      renderDoneBtn: renderDoneBtn(),
       doneButtonStyle: myButtonStyle(),
 
       // Dot indicator
-      // colorDot: Color.fromRGBO(22, 68, 62, 0.2),
-      // colorActiveDot: Color.fromRGBO(22, 68, 62, 1),
+      // colorDot: const Color.fromRGBO(22, 68, 62, 0.2),
+      // colorActiveDot: const Color.fromRGBO(22, 68, 62, 1),
       // sizeDot: 13.0,
 
-      // Show or hide status bar
-      // hideStatusBar: true,
+      // // Show or hide status bar
+      // // hideStatusBar: true,
       // hideStatusBar: false,
       // backgroundColorAllSlides: Colors.grey,
 
-      // Scrollbar
+      // // Scrollbar
       // verticalScrollbarBehavior: scrollbarBehavior.SHOW_ALWAYS,
     );
   }

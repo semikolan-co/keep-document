@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-// import 'package:share_plus/share_plus.dart';
+import 'package:share_plus/share_plus.dart';
 
 class ImageFullScreenWrapperWidget extends StatelessWidget {
   final Image child;
@@ -52,7 +52,7 @@ class _FullScreenPageState extends State<FullScreenPage> {
     var brightness = widget.dark ? Brightness.light : Brightness.dark;
     var color = widget.dark ? Colors.black12 : Colors.white70;
 
-    // SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.top]);
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: [SystemUiOverlay.top]);
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
       systemNavigationBarColor: color,
       statusBarColor: color,
@@ -66,7 +66,7 @@ class _FullScreenPageState extends State<FullScreenPage> {
 
   @override
   void dispose() {
-    // SystemChrome.setEnabledSystemUIOverlays(SystemUiOverlay.values);
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: SystemUiOverlay.values);
     SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
         // Restore your settings here...
         ));
@@ -138,8 +138,8 @@ class _FullScreenPageState extends State<FullScreenPage> {
                   borderRadius: BorderRadius.circular(100),
                 ),
                 onPressed: () async {
-                  // await Share.shareFiles([widget.path],
-                  //     text: 'Shared via Data Manager');
+                  await Share.shareFiles([widget.path],
+                      text: 'Shared via Data Manager');
                 },
               ),
             ),

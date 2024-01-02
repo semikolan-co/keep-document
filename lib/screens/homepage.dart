@@ -1,21 +1,17 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
-
 import 'dart:io';
-import 'package:facebook_audience_network/facebook_audience_network.dart';
+
+// import 'package:facebook_audience_network/facebook_audience_network.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
-import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:glassmorphism/glassmorphism.dart';
 import 'package:lottie/lottie.dart';
-import 'package:passmanager/utils/colors.dart';
-import 'package:passmanager/utils/storage.dart';
 import 'package:passmanager/models/additem.dart';
 import 'package:passmanager/models/dataitem.dart';
 import 'package:passmanager/models/sharedpref.dart';
-import 'package:passmanager/widgets/custom_alert.dart';
+import 'package:passmanager/utils/colors.dart';
+import 'package:passmanager/utils/storage.dart';
 import 'package:share_plus/share_plus.dart';
-import 'package:url_launcher/url_launcher.dart';
-
+import 'package:simple_speed_dial/simple_speed_dial.dart';
+// import 'package:applovin_max/applovin_max.dart';
 import '../widgets/deleteconfirmation.dart';
 import '../widgets/drawer.dart';
 import 'adddata.dart';
@@ -33,18 +29,15 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   List<DataItem> list = [];
   bool isChanging = false;
-  bool _speechEnabled = false;
   final TextEditingController _searchController = TextEditingController();
-  // final LocalStorage storage = LocalStorage(Storage.storageName);
 
   loadSharedPreferences() async {
     String? data = await SharedPref.read('data');
-    print("SHARED DATA $data");
     if (data == null) {
       return;
     } else {
       list = DataItem.decode(data);
-      print("Decoded lst $list");
+      // print("Decoded lst $list");
       Add.dataList = list;
     }
     // FlutterNativeSplash.remove();
@@ -57,9 +50,11 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         elevation: 0,
         backgroundColor: MyColors.primary,
+        iconTheme: IconThemeData(color: Colors.white),
         title: const Text(
           'Keep Document',
-          style: TextStyle(fontSize: 20, color: Colors.white),
+          style: TextStyle(
+              fontSize: 20, color: Colors.white, fontWeight: FontWeight.w600),
         ),
       ),
       drawer: const DrawerWidget(),
@@ -71,7 +66,6 @@ class _MyHomePageState extends State<MyHomePage> {
               children: [
                 Container(
                   height: mq.height * 0.4,
-                  width: mq.width,
                   child: Column(
                     children: [
                       const SizedBox(height: 10),
@@ -129,7 +123,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
                 Column(
                   children: [
-                    SizedBox(height: mq.height * 0.15),
+                    SizedBox(height: mq.height * 0.18),
                     Container(
                       // alignment: Alignment.bottomCenter,
 
@@ -331,16 +325,16 @@ class _MyHomePageState extends State<MyHomePage> {
                                                 },
                                               ),
                                               const Spacer(),
-                                              FacebookBannerAd(
-                                                placementId: Storage
-                                                    .facebookBannerPlacement,
-                                                bannerSize: BannerSize.STANDARD,
-                                              ),
-                                              FacebookBannerAd(
-                                                placementId: Storage
-                                                    .facebookBannerPlacement,
-                                                bannerSize: BannerSize.STANDARD,
-                                              )
+                                              // FacebookBannerAd(
+                                              //   placementId: Storage
+                                              //       .facebookBannerPlacement,
+                                              //   bannerSize: BannerSize.STANDARD,
+                                              // ),
+                                              // FacebookBannerAd(
+                                              //   placementId: Storage
+                                              //       .facebookBannerPlacement,
+                                              //   bannerSize: BannerSize.STANDARD,
+                                              // )
                                               // MaxAdView(
                                               //   adUnitId: Storage.banner,
                                               //   adFormat: AdFormat.banner,
@@ -452,10 +446,32 @@ class _MyHomePageState extends State<MyHomePage> {
       //   placementId: Storage.facebookBannerPlacement,
       //   bannerSize: BannerSize.STANDARD,
       // ),
-      bottomNavigationBar: FacebookBannerAd(
-        placementId: Storage.facebookBannerPlacement,
-        bannerSize: BannerSize.STANDARD,
+      // bottomNavigationBar: MaxAdView(
+      //   adUnitId: Storage.banner,
+      //   adFormat: AdFormat.banner,
+      // ),
+    );
+  }
+
+  Text headingText() {
+    return const Text(
+      'Manage Your document easy and safely at One Place',
+      textAlign: TextAlign.center,
+      overflow: TextOverflow.visible,
+      style: TextStyle(color: Colors.white, fontSize: 15),
+    );
+  }
+
+  InputDecoration searchFieldInputDecoration() {
+    return const InputDecoration(
+      border: InputBorder.none,
+      prefixIcon: Icon(
+        Icons.search,
+        color: Colors.white,
       ),
+      hintText: 'Search',
+      hintStyle: TextStyle(color: Colors.white),
+      // hintText: 'Search Docs',
     );
   }
 
@@ -470,26 +486,4 @@ class _MyHomePageState extends State<MyHomePage> {
     });
     await loadSharedPreferences();
   }
-}
-
-Text headingText() {
-  return const Text(
-    'Manage Your document easy and safely at One Place',
-    textAlign: TextAlign.center,
-    overflow: TextOverflow.visible,
-    style: TextStyle(color: Colors.white, fontSize: 15),
-  );
-}
-
-InputDecoration searchFieldInputDecoration() {
-  return const InputDecoration(
-    border: InputBorder.none,
-    prefixIcon: Icon(
-      Icons.search,
-      color: Colors.white,
-    ),
-    hintText: 'Search',
-    hintStyle: TextStyle(color: Colors.white),
-    // hintText: 'Search Docs',
-  );
 }

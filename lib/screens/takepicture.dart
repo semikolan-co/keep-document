@@ -1,12 +1,14 @@
 import 'dart:io';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:camera/camera.dart';
-import 'package:facebook_audience_network/facebook_audience_network.dart';
+// import 'package:applovin_max/applovin_max.dart';
 import 'package:flutter/material.dart';
 import 'package:passmanager/models/additem.dart';
 import 'package:passmanager/screens/adddata.dart';
 import 'package:passmanager/utils/colors.dart';
 import 'package:path_provider/path_provider.dart';
+
+import '../utils/storage.dart';
 
 class TakePictureScreen extends StatefulWidget {
   const TakePictureScreen({
@@ -50,7 +52,10 @@ class TakePictureScreenState extends State<TakePictureScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Take a picture'),backgroundColor: MyColors.primary,),
+      appBar: AppBar(
+        title: const Text('Take a picture'),
+        backgroundColor: MyColors.primary,
+      ),
       // You must wait until the controller is initialized before displaying the
       // camera preview. Use a FutureBuilder to display a loading spinner until the
       // controller has finished initializing.
@@ -84,42 +89,44 @@ class TakePictureScreenState extends State<TakePictureScreen> {
             // where it was saved.
             final image = await _controller.takePicture();
 
-            File? croppedFile = await ImageCropper().cropImage(
-                sourcePath: image.path,
-                aspectRatioPresets: [
-                  CropAspectRatioPreset.square,
-                  CropAspectRatioPreset.ratio3x2,
-                  CropAspectRatioPreset.original,
-                  CropAspectRatioPreset.ratio4x3,
-                  CropAspectRatioPreset.ratio16x9
-                ],
-                compressQuality: 80,
-                androidUiSettings: const AndroidUiSettings(
-                    toolbarTitle: 'Edit Image',
-                    activeControlsWidgetColor: MyColors.primary,
-                    // dimmedLayerColor: MyColors.primary,
-                    // toolbarColor: Colors.deepOrange,
-                    toolbarColor: MyColors.primary,
+            final croppedFile = await ImageCropper().cropImage(
+              sourcePath: image.path,
+              compressFormat: ImageCompressFormat.jpg,
+              compressQuality: 100,
+              uiSettings: [
+                AndroidUiSettings(
+                    toolbarTitle: 'Cropper',
+                    toolbarColor: Colors.deepOrange,
                     toolbarWidgetColor: Colors.white,
                     initAspectRatio: CropAspectRatioPreset.original,
-                    lockAspectRatio: false));
-            // If the picture was taken, display it on a new screen.
-            // await Navigator.of(context).push(
-            //   MaterialPageRoute(
-            //     builder: (context) => DisplayPictureScreen(
-            //       // Pass the automatically generated path to
-            //       // the DisplayPictureScreen widget.
-            //       imagePath: image.path,
-            //     ),
-            //   ),
-            // );
+                    lockAspectRatio: false),
+                IOSUiSettings(
+                  title: 'Cropper',
+                ),
+                WebUiSettings(
+                  context: context,
+                  presentStyle: CropperPresentStyle.dialog,
+                  boundary: const CroppieBoundary(
+                    width: 520,
+                    height: 520,
+                  ),
+                  viewPort: const CroppieViewPort(
+                      width: 480, height: 480, type: 'circle'),
+                  enableExif: true,
+                  enableZoom: true,
+                  showZoomer: true,
+                ),
+              ],
+            );
+
             if (croppedFile != null) {
               final date = DateTime.now().toUtc().toIso8601String();
-                    final directory = await getExternalStorageDirectory();
-                    print(directory!.path);
-                    Add.imgUrl.add(directory.path + '/$date.png');
-                    croppedFile.copy('${directory.path}/$date.png');
-                    Navigator.pushNamed(context, AddData.routeName);
+              final directory = await getExternalStorageDirectory();
+              print(directory!.path);
+              Add.imgUrl.add(directory.path + '/$date.png');
+              final File imageFile = File(croppedFile.path);
+              imageFile.copy('${directory.path}/$date.png');
+              Navigator.pushNamed(context, AddData.routeName);
             }
           } catch (e) {
             // If an error occurs, log the error to the console.
@@ -170,10 +177,10 @@ class DisplayPictureScreen extends StatelessWidget {
           )
         ],
       ),
-      bottomNavigationBar: FacebookBannerAd(
-        placementId: '328150579086879_328154279086509',
-        bannerSize: BannerSize.STANDARD,
-      ),
+      // bottomNavigationBar: MaxAdView(
+      //   adUnitId: Storage.banner,
+      //   adFormat: AdFormat.banner,
+      // ),
     );
   }
 }

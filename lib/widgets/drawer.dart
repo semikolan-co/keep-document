@@ -12,7 +12,7 @@ class DrawerWidget extends StatelessWidget {
     return Drawer(
       child: ListView(
         children: [
-         DrawerHeader(
+          DrawerHeader(
             child: Text(
               'Keep Document',
               style: TextStyle(fontSize: 20, color: Colors.white),
@@ -66,8 +66,7 @@ class DrawerWidget extends StatelessWidget {
           ListTile(
             title: Text('Ration Card Details'),
             onTap: () {
-              launch(
-                  'https://nfsa.gov.in/portal/ration_card_state_portals_aa');
+              launch('https://nfsa.gov.in/portal/ration_card_state_portals_aa');
             },
           ),
         ],

@@ -79,18 +79,16 @@ class PrimaryButton extends StatelessWidget {
       ),
       style: disabled == false
           ? ElevatedButton.styleFrom(
-              shadowColor: MyColors.primary,
+              backgroundColor: MyColors.primary,
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(5)),
               padding: const EdgeInsets.all(14),
               elevation: 0,
             )
           : ElevatedButton.styleFrom(
-              // backgroundColor: MyColors.primary,
+              backgroundColor: MyColors.primary,
               shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(5)),
-              // disabledForegroundColor: Colors.grey.withOpacity(0.38),
-              // disabledBackgroundColor: Colors.grey.withOpacity(0.12),
+                  borderRadius: BorderRadius.circular(5)), disabledForegroundColor: Colors.grey.withOpacity(0.38), disabledBackgroundColor: Colors.grey.withOpacity(0.12),
               padding: const EdgeInsets.all(14),
               elevation: 0,
               textStyle: const TextStyle(color: Colors.white)),
@@ -172,18 +170,16 @@ class SecondaryButton extends StatelessWidget {
       ),
       style: disabled == false
           ? ElevatedButton.styleFrom(
-              // backgroundColor: const Color(0xff9CA9B8),
+              backgroundColor: const Color(0xff9CA9B8),
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(25)),
               padding: const EdgeInsets.all(14),
               elevation: 0,
             )
           : ElevatedButton.styleFrom(
-              // backgroundColor: const Color(0xff9CA9B8),
+              backgroundColor: const Color(0xff9CA9B8),
               shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(25)),
-              // disabledForegroundColor: Colors.grey.withOpacity(0.38),
-              // disabledBackgroundColor: Colors.grey.withOpacity(0.12),
+                  borderRadius: BorderRadius.circular(25)), disabledForegroundColor: Colors.grey.withOpacity(0.38), disabledBackgroundColor: Colors.grey.withOpacity(0.12),
               padding: const EdgeInsets.all(14),
               elevation: 0,
               textStyle: const TextStyle(color: Colors.white)),
