@@ -50,7 +50,7 @@ dependencies:
   # facebook_audience_network: ^1.0.1
   local_auth: ^2.1.2
   image_cropper: ^5.0.1
-  # in_app_update: ^4.0.1
+  in_app_update: ^4.0.1
   # document_scanner_flutter: ^0.2.7
   simple_speed_dial: ^0.1.7
  

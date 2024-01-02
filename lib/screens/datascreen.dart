@@ -3,13 +3,11 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:open_file/open_file.dart';
 import 'package:passmanager/models/additem.dart';
 import 'package:passmanager/models/dataitem.dart';
 import 'package:passmanager/screens/homepage.dart';
 import 'package:passmanager/utils/storage.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 
 import '../utils/colors.dart';
@@ -40,6 +38,23 @@ class _DataScreenState extends State<DataScreen> {
             list.title,
             style: const TextStyle(fontSize: 20, color: Colors.white),
           ),
+          actions: [
+            IconButton(
+                onPressed: () {
+                  Add.date = list.date;
+                  Add.description = list.description;
+                  Add.id = list.id;
+                  // Add.imgUrl = list.imgUrl as List<String>;
+                  // Add.pdfUrl = list.pdfPath as List<String>;
+                  Add.title = list.title;
+                  Navigator.pushNamed(
+                    context,
+                    '/EditData',
+                    arguments: list,
+                  );
+                },
+                icon: Icon(Icons.edit))
+          ],
           backgroundColor: MyColors.primary,
           iconTheme: IconThemeData(color: Colors.white)
           // actions: [
@@ -58,6 +73,7 @@ class _DataScreenState extends State<DataScreen> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
+            SizedBox(height: MediaQuery.of(context).size.height * 0.01),
             Padding(
               padding:
                   const EdgeInsets.symmetric(horizontal: Storage.paddingSize),
@@ -86,6 +102,8 @@ class _DataScreenState extends State<DataScreen> {
             //     const Spacer(
             //       flex: 2,
             //     ),
+            SizedBox(height: MediaQuery.of(context).size.height * 0.01),
+
             Padding(
               padding:
                   const EdgeInsets.symmetric(horizontal: Storage.paddingSize),
@@ -185,6 +203,7 @@ class ImageGrid extends StatelessWidget {
                 : Container(),
           ],
         ),
+        SizedBox(height: mediaquery.height * 0.01),
         list.imgUrl.isNotEmpty
             ? Padding(
                 padding: const EdgeInsets.symmetric(
@@ -233,6 +252,7 @@ class ImageGrid extends StatelessWidget {
                 ),
               )
             : Container(),
+        SizedBox(height: mediaquery.height * 0.01),
         if (list.pdfPath != null)
           list.pdfPath == [] || list.pdfPath == [] || list.pdfPath!.isEmpty
               ? Container()
@@ -260,6 +280,7 @@ class ImageGrid extends StatelessWidget {
                     icon: const Icon(Icons.share),
                   ),
                 ]),
+        SizedBox(height: mediaquery.height * 0.01),
         list.pdfPath != null
             ? ListView.builder(
                 padding: const EdgeInsets.symmetric(
@@ -286,55 +307,8 @@ class ImageGrid extends StatelessWidget {
                         // subtitle:  tex,
                       ),
                     ))
-            // ? GridView.builder(
-            //     gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            //       crossAxisCount: 2,
-            //       // childAspectRatio: 3 / 2,
-            //       crossAxisSpacing: 10,
-            //       mainAxisSpacing: 10,
-            //     ),
-            //     physics: const NeverScrollableScrollPhysics(),
-            //     shrinkWrap: true,
-            //     itemBuilder: (context, index) {
-            //       return InkWell(
-            //         onLongPress: () =>
-            //             Share.shareFiles([list.pdfPath?[index]]),
-            //         onTap: () => OpenFile.open(list.pdfPath?[index]),
-            //         child: 1 == 1
-            //             ? Card(
-            //                 elevation: 5,
-            //                 child: Column(
-            //                   children: [
-            //                     const Icon(
-            //                       Icons.picture_as_pdf_rounded,
-            //                       size: 100,
-            //                       color: Colors.red,
-            //                     ),
-            //                     // const Expanded(
-            //                     //   child: SizedBox(),
-            //                     // ),
-            //                     Padding(
-            //                       padding: const EdgeInsets.all(8.0),
-            //                       child: Text(
-            //                         list.pdfPath?[index]
-            //                                 .toString()
-            //                                 .split('/')
-            //                                 .last
-            //                                 .toString() ??
-            //                             '',
-            //                         overflow: TextOverflow.ellipsis,
-            //                         style: const TextStyle(),
-            //                       ),
-            //                     ),
-            //                     //  SizedBox(height: mediaquery.height * 0.),
-            //                     // ListTile(
-            //                     //   title: Text(),
-            //                     //   // subtitle:  tex,
-            //                     // ),
-            //                   ],
-            //                 ),
-            //               )
             : Container(),
+        SizedBox(height: mediaquery.height * 0.02),
       ]),
     );
     // );

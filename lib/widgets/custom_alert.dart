@@ -24,14 +24,13 @@ class CustomAlertDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: title != null ? Text(title) : null,
-      content: message != null ? Text(message) : null,
+      title: Text(title),
+      content: Text(message),
       backgroundColor: bgColor,
       shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(circularBorderRadius)),
-
       actions: [
-        negativeBtnText != null
+        negativeBtnText.isEmpty
             ? TextButton(
                 child: Text(negativeBtnText),
                 onPressed: () {
@@ -40,7 +39,7 @@ class CustomAlertDialog extends StatelessWidget {
                 },
               )
             : Container(),
-        positiveBtnText != null
+        positiveBtnText.isEmpty
             ? TextButton(
                 child: Text(positiveBtnText),
                 onPressed: () {

@@ -1,11 +1,6 @@
 //list order by most recently added
 //edit option of added document
 //UI of adding as per figma
-// <uses-permission android:name="android.permission.INTERNET" />
-//     <uses-permission android:name="android.permission.CAMERA" />
-//     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-//     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-//     <uses-permission android:name="android.permission.USE_FINGERPRINT" />
 //after some time chages
 //dark mode
 //sort by option to user
@@ -18,6 +13,7 @@ import 'package:flutter/material.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:passmanager/models/dataitem.dart';
 import 'package:passmanager/screens/datascreen.dart';
+import 'package:passmanager/screens/edit_data.dart';
 import 'package:passmanager/screens/introscreen.dart';
 import 'package:passmanager/models/sharedpref.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -50,7 +46,7 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   bool authenticated = false;
   final LocalAuthentication auth = LocalAuthentication();
-  bool _isAuthenticating = false;
+  // bool _isAuthenticating = false;
   bool _canCheckBiometrics = true;
   String authorized = 'Not Authorized';
 
@@ -78,7 +74,7 @@ class _MyAppState extends State<MyApp> {
     bool authenticated = false;
     try {
       setState(() {
-        _isAuthenticating = true;
+        // _isAuthenticating = true;
         authorized = 'Authenticating';
       });
       authenticated = await auth.authenticate(
@@ -94,12 +90,12 @@ class _MyAppState extends State<MyApp> {
               stickyAuth: true,
               useErrorDialogs: true));
       setState(() {
-        _isAuthenticating = false;
+        // _isAuthenticating = false;
       });
     } on PlatformException catch (e) {
       // print(e);
       setState(() {
-        _isAuthenticating = false;
+        // _isAuthenticating = false;
         authorized = 'Error - ${e.message}';
       });
       return;
@@ -143,6 +139,15 @@ class _MyAppState extends State<MyApp> {
         AddData.routeName: (ctx) => const AddData(),
         // EditData.routeName: (ctx) =>  EditData(),
         MyHomePage.routeName: (ctx) => const MyHomePage(title: 'Keep Document'),
+        EditData.routeName: (ctx) => EditData(
+              item: DataItem(
+                  date: '',
+                  title: '',
+                  imgUrl: [],
+                  id: '',
+                  pdfPath: [],
+                  description: ''),
+            ),
       },
     );
   }

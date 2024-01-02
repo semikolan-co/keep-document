@@ -4,10 +4,8 @@ import 'package:camera/camera.dart';
 // import 'package:applovin_max/applovin_max.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:glassmorphism/glassmorphism.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:passmanager/utils/ads.dart';
-import 'package:passmanager/utils/storage.dart';
 import 'package:passmanager/models/additem.dart';
 import 'package:passmanager/models/dataitem.dart';
 import 'package:passmanager/screens/homepage.dart';
@@ -60,6 +58,7 @@ class _DataScreenState extends State<AddData> {
       Navigator.of(context).push(MaterialPageRoute(
           builder: (context) => TakePictureScreen(
                 camera: firstCamera,
+                index: 0,
               )));
     }
 
@@ -218,9 +217,10 @@ class _DataScreenState extends State<AddData> {
       appBar: AppBar(
         elevation: 0,
         title: const Text(
-          'Document Keeper',
+          'Add Document',
           style: TextStyle(fontSize: 20, color: Colors.white),
         ),
+        iconTheme: IconThemeData(color: Colors.white),
         backgroundColor: MyColors.primary,
         actions: [
           IconButton(
@@ -237,7 +237,6 @@ class _DataScreenState extends State<AddData> {
               )),
         ],
       ),
-
       body: Column(
         children: [
           Expanded(
@@ -276,7 +275,7 @@ class _DataScreenState extends State<AddData> {
                                             : null;
                                       }
                                       if (isExist) {
-                                        return 'Title Already Exist';
+                                        return 'A Document which this name already Exists!';
                                       }
                                     }
                                   } else {
@@ -423,38 +422,6 @@ class _DataScreenState extends State<AddData> {
           ),
         ],
       ),
-      // persistentFooterButtons: [
-      //   Center(
-      //     child: PrimaryButton(
-      //         onPressed: () {
-      //           // if(date=='') return;
-      //           if (_formKey.currentState!.validate()) {
-      //             Add.description = '';
-      //             Add.title = '';
-      //             Add.imgUrl = [];
-      //             Add.date = '';
-      //             Add.id = '';
-      //             addItem(titleController.text, descriptionController.text,
-      //                 idController.text, date);
-      //             Navigator.pushNamedAndRemoveUntil(
-      //                 context, MyHomePage.routeName, (route) => false);
-      //             FacebookInterstitialAd.loadInterstitialAd(
-      //               placementId: "328150579086879_328163679085569",
-      //               listener: (result, value) {
-      //                 if (result == InterstitialAdResult.LOADED) {
-      //                   FacebookInterstitialAd.showInterstitialAd();
-      //                 }
-      //               },
-      //             );
-      //           }
-      //         },
-      //         buttonText: "Save"),
-      //   ),
-      // ],
-      // bottomNavigationBar: MaxAdView(
-      //   adUnitId: Storage.banner,
-      //   adFormat: AdFormat.banner,
-      // ),
     );
   }
 

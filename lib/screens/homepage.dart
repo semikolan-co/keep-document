@@ -1,5 +1,5 @@
 import 'dart:io';
-
+import 'package:in_app_update/in_app_update.dart';
 // import 'package:facebook_audience_network/facebook_audience_network.dart';
 import 'package:flutter/material.dart';
 import 'package:glassmorphism/glassmorphism.dart';
@@ -7,14 +7,13 @@ import 'package:lottie/lottie.dart';
 import 'package:passmanager/models/additem.dart';
 import 'package:passmanager/models/dataitem.dart';
 import 'package:passmanager/models/sharedpref.dart';
+import 'package:passmanager/screens/edit_data.dart';
 import 'package:passmanager/utils/colors.dart';
-import 'package:passmanager/utils/storage.dart';
 import 'package:share_plus/share_plus.dart';
-import 'package:simple_speed_dial/simple_speed_dial.dart';
 // import 'package:applovin_max/applovin_max.dart';
 import '../widgets/deleteconfirmation.dart';
 import '../widgets/drawer.dart';
-import 'adddata.dart';
+import 'adddata.dart' as addDataWidget;
 import 'datascreen.dart';
 
 class MyHomePage extends StatefulWidget {
@@ -30,6 +29,29 @@ class _MyHomePageState extends State<MyHomePage> {
   List<DataItem> list = [];
   bool isChanging = false;
   final TextEditingController _searchController = TextEditingController();
+  AppUpdateInfo? _updateInfo;
+
+  GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey();
+
+  // bool _flexibleUpdateAvailable = false;
+
+  // Platform messages are asynchronous, so we initialize in an async method.
+  Future<void> checkForUpdate() async {
+    InAppUpdate.checkForUpdate().then((info) {
+      setState(() {
+        _updateInfo = info;
+      });
+    }).catchError((e) {
+      showSnack(e.toString());
+    });
+  }
+
+  void showSnack(String text) {
+    if (_scaffoldKey.currentContext != null) {
+      ScaffoldMessenger.of(_scaffoldKey.currentContext!)
+          .showSnackBar(SnackBar(content: Text(text)));
+    }
+  }
 
   loadSharedPreferences() async {
     String? data = await SharedPref.read('data');
@@ -41,6 +63,16 @@ class _MyHomePageState extends State<MyHomePage> {
       Add.dataList = list;
     }
     // FlutterNativeSplash.remove();
+  }
+
+  @override
+  initState() {
+    _updateInfo?.updateAvailability == UpdateAvailability.updateAvailable
+        ? () {
+            InAppUpdate.startFlexibleUpdate();
+          }
+        : null;
+    super.initState();
   }
 
   @override
@@ -66,6 +98,7 @@ class _MyHomePageState extends State<MyHomePage> {
               children: [
                 Container(
                   height: mq.height * 0.4,
+                  decoration: const BoxDecoration(color: MyColors.primary),
                   child: Column(
                     children: [
                       const SizedBox(height: 10),
@@ -119,7 +152,6 @@ class _MyHomePageState extends State<MyHomePage> {
                       ),
                     ],
                   ),
-                  decoration: const BoxDecoration(color: MyColors.primary),
                 ),
                 Column(
                   children: [
@@ -324,6 +356,38 @@ class _MyHomePageState extends State<MyHomePage> {
                                                   // await deleteItem(index);
                                                 },
                                               ),
+                                              ListTile(
+                                                title: const Text("Edit"),
+                                                trailing: const Icon(
+                                                  Icons.edit,
+                                                  color: Colors.green,
+                                                ),
+                                                onTap: () async {
+                                                  // await deleteItem(index);
+                                                  Add.id = list[index].id;
+                                                  Add.title = list[index].title;
+                                                  Add.description =
+                                                      list[index].description;
+                                                  Add.date = list[index].date;
+                                                  Add.imgUrl.clear();
+                                                  for (var img
+                                                      in list[index].imgUrl) {
+                                                    Add.imgUrl.add(img);
+                                                  }
+                                                  Add.pdfUrl.clear();
+                                                  if (list[index].pdfPath !=
+                                                      null) {
+                                                    for (var pdf in list[index]
+                                                            .pdfPath ??
+                                                        []) {
+                                                      Add.pdfUrl.add(pdf);
+                                                    }
+                                                  }
+                                                  Navigator.pushNamed(context,
+                                                      EditData.routeName,
+                                                      arguments: list[index]);
+                                                },
+                                              ),
                                               const Spacer(),
                                               // FacebookBannerAd(
                                               //   placementId: Storage
@@ -438,7 +502,12 @@ class _MyHomePageState extends State<MyHomePage> {
         onPressed: () {
           Add.imgUrl.clear();
           Add.pdfUrl.clear();
-          Navigator.pushNamed(context, AddData.routeName, arguments: list);
+          Add.description = '';
+          Add.title = '';
+          Add.date = '';
+          Add.id = '';
+          Navigator.pushNamed(context, addDataWidget.AddData.routeName,
+              arguments: list);
         },
       ),
 

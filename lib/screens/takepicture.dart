@@ -5,18 +5,16 @@ import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:passmanager/models/additem.dart';
 import 'package:passmanager/screens/adddata.dart';
+import 'package:passmanager/screens/edit_data.dart';
 import 'package:passmanager/utils/colors.dart';
 import 'package:path_provider/path_provider.dart';
 
-import '../utils/storage.dart';
-
 class TakePictureScreen extends StatefulWidget {
-  const TakePictureScreen({
-    Key? key,
-    required this.camera,
-  }) : super(key: key);
+  const TakePictureScreen({Key? key, required this.camera, required this.index})
+      : super(key: key);
 
   final CameraDescription camera;
+  final int index;
 
   @override
   TakePictureScreenState createState() => TakePictureScreenState();
@@ -53,7 +51,11 @@ class TakePictureScreenState extends State<TakePictureScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Take a picture'),
+        title: const Text(
+          'Take a picture',
+          style: TextStyle(fontSize: 20, color: Colors.white),
+        ),
+        iconTheme: IconThemeData(color: Colors.white),
         backgroundColor: MyColors.primary,
       ),
       // You must wait until the controller is initialized before displaying the
@@ -96,44 +98,45 @@ class TakePictureScreenState extends State<TakePictureScreen> {
               uiSettings: [
                 AndroidUiSettings(
                     toolbarTitle: 'Cropper',
-                    toolbarColor: Colors.deepOrange,
+                    toolbarColor: MyColors.primary,
+                    // cropGridColor: MyColors.primary,
+                    // cropFrameColor: MyColors.primary,
+                    statusBarColor: MyColors.primary,
+                    // dimmedLayerColor: MyColors.primary,
+                    activeControlsWidgetColor: MyColors.primary,
                     toolbarWidgetColor: Colors.white,
                     initAspectRatio: CropAspectRatioPreset.original,
                     lockAspectRatio: false),
-                IOSUiSettings(
-                  title: 'Cropper',
-                ),
-                WebUiSettings(
-                  context: context,
-                  presentStyle: CropperPresentStyle.dialog,
-                  boundary: const CroppieBoundary(
-                    width: 520,
-                    height: 520,
-                  ),
-                  viewPort: const CroppieViewPort(
-                      width: 480, height: 480, type: 'circle'),
-                  enableExif: true,
-                  enableZoom: true,
-                  showZoomer: true,
-                ),
               ],
             );
 
             if (croppedFile != null) {
+              print("INITT");
               final date = DateTime.now().toUtc().toIso8601String();
+              print("MID");
+
               final directory = await getExternalStorageDirectory();
               print(directory!.path);
-              Add.imgUrl.add(directory.path + '/$date.png');
+              print("MID1");
+
               final File imageFile = File(croppedFile.path);
               imageFile.copy('${directory.path}/$date.png');
-              Navigator.pushNamed(context, AddData.routeName);
+              Add.imgUrl.add(directory.path + '/$date.png');
+              print("MID2");
+
+              widget.index == 0
+                  ? Navigator.pushNamed(context, AddData.routeName)
+                  : Navigator.pushNamed(context, EditData.routeName);
             }
           } catch (e) {
             // If an error occurs, log the error to the console.
             print(e);
           }
         },
-        child: const Icon(Icons.camera_alt),
+        child: const Icon(
+          Icons.camera_alt,
+          color: Colors.white,
+        ),
       ),
     );
   }
