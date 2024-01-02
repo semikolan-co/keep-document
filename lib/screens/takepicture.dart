@@ -10,8 +10,8 @@ import 'package:passmanager/utils/colors.dart';
 import 'package:path_provider/path_provider.dart';
 
 class TakePictureScreen extends StatefulWidget {
-  const TakePictureScreen({Key? key, required this.camera, required this.index})
-      : super(key: key);
+  const TakePictureScreen(
+      {super.key, required this.camera, required this.index});
 
   final CameraDescription camera;
   final int index;
@@ -55,7 +55,7 @@ class TakePictureScreenState extends State<TakePictureScreen> {
           'Take a picture',
           style: TextStyle(fontSize: 20, color: Colors.white),
         ),
-        iconTheme: IconThemeData(color: Colors.white),
+        iconTheme: const IconThemeData(color: Colors.white),
         backgroundColor: MyColors.primary,
       ),
       // You must wait until the controller is initialized before displaying the
@@ -111,18 +111,13 @@ class TakePictureScreenState extends State<TakePictureScreen> {
             );
 
             if (croppedFile != null) {
-              print("INITT");
               final date = DateTime.now().toUtc().toIso8601String();
-              print("MID");
 
               final directory = await getExternalStorageDirectory();
-              print(directory!.path);
-              print("MID1");
 
               final File imageFile = File(croppedFile.path);
-              imageFile.copy('${directory.path}/$date.png');
-              Add.imgUrl.add(directory.path + '/$date.png');
-              print("MID2");
+              imageFile.copy('${directory!.path}/$date.png');
+              Add.imgUrl.add('${directory.path}/$date.png');
 
               widget.index == 0
                   ? Navigator.pushNamed(context, AddData.routeName)
@@ -130,7 +125,6 @@ class TakePictureScreenState extends State<TakePictureScreen> {
             }
           } catch (e) {
             // If an error occurs, log the error to the console.
-            print(e);
           }
         },
         child: const Icon(
@@ -146,8 +140,7 @@ class TakePictureScreenState extends State<TakePictureScreen> {
 class DisplayPictureScreen extends StatelessWidget {
   final String imagePath;
 
-  const DisplayPictureScreen({Key? key, required this.imagePath})
-      : super(key: key);
+  const DisplayPictureScreen({super.key, required this.imagePath});
 
   @override
   Widget build(BuildContext context) {
@@ -165,8 +158,7 @@ class DisplayPictureScreen extends StatelessWidget {
                   onPressed: () async {
                     final date = DateTime.now().toUtc().toIso8601String();
                     final directory = await getExternalStorageDirectory();
-                    print(directory!.path);
-                    Add.imgUrl.add(directory.path + '/$date.png');
+                    Add.imgUrl.add('${directory!.path}/$date.png');
                     File(imagePath).copy('${directory.path}/$date.png');
                     Navigator.pushNamed(context, AddData.routeName);
                   },

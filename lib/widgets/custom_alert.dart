@@ -24,13 +24,17 @@ class CustomAlertDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text(title),
-      content: Text(message),
+      // ignore: unnecessary_null_comparison
+      title: title != null ? Text(title) : null,
+
+      // ignore: unnecessary_null_comparison
+      content: message != null ? Text(message) : null,
       backgroundColor: bgColor,
       shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(circularBorderRadius)),
       actions: [
-        negativeBtnText.isEmpty
+        // ignore: unnecessary_null_comparison
+        negativeBtnText != null
             ? TextButton(
                 child: Text(negativeBtnText),
                 onPressed: () {
@@ -39,7 +43,8 @@ class CustomAlertDialog extends StatelessWidget {
                 },
               )
             : Container(),
-        positiveBtnText.isEmpty
+        // ignore: unnecessary_null_comparison
+        positiveBtnText != null
             ? TextButton(
                 child: Text(positiveBtnText),
                 onPressed: () {

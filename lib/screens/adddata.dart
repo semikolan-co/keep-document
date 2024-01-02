@@ -18,7 +18,7 @@ import '../utils/colors.dart';
 import 'takepicture.dart';
 
 class AddData extends StatefulWidget {
-  const AddData({Key? key}) : super(key: key);
+  const AddData({super.key});
   static const routeName = '/adddata';
 
   @override
@@ -46,20 +46,21 @@ class _DataScreenState extends State<AddData> {
     //     ModalRoute.of(context)!.settings.arguments as List<DataItem>;
     final List<DataItem> list = Add.dataList;
 
-    void _toCamera() async {
+    void toCamera() async {
       Add.description = descriptionController.text;
       Add.title = titleController.text;
       Add.id = idController.text;
       Add.imgUrl = imgPath;
       Add.pdfUrl = pdfPath;
       Add.dataList = list;
-      final cameras = await availableCameras();
-      final firstCamera = cameras.first;
-      Navigator.of(context).push(MaterialPageRoute(
-          builder: (context) => TakePictureScreen(
-                camera: firstCamera,
-                index: 0,
-              )));
+      await availableCameras().then((value) {
+        final firstCamera = value.first;
+        Navigator.of(context).push(MaterialPageRoute(
+            builder: (context) => TakePictureScreen(
+                  camera: firstCamera,
+                  index: 0,
+                )));
+      });
     }
 
     _saveToStorage() async {
@@ -76,7 +77,7 @@ class _DataScreenState extends State<AddData> {
             date: date,
             imgUrl: imgPath,
             pdfPath: pdfPath);
-        list.add(item);
+        list.insert(0, item);
         // print("LISIST: $list");
         _saveToStorage();
       });
@@ -93,7 +94,7 @@ class _DataScreenState extends State<AddData> {
           File file = File(result.files.single.path.toString());
           date = DateTime.now().toUtc().toIso8601String();
           final directory = await getExternalStorageDirectory();
-          pdfPath.add(directory!.path + '/${result.files.single.name}');
+          pdfPath.add('${directory!.path}/${result.files.single.name}');
           setState(() {});
           return File(file.path)
               .copy('${directory.path}/${result.files.single.name.toString()}');
@@ -120,9 +121,9 @@ class _DataScreenState extends State<AddData> {
         if (pickedImage == null) return null;
         date = DateTime.now().toUtc().toIso8601String();
         final directory = await getExternalStorageDirectory();
-        print(directory!.path);
+        // print(directory!.path);
         setState(() {});
-        imgPath.add(directory.path + '/$date.png');
+        imgPath.add('${directory!.path}/$date.png');
         return File(pickedImage.path).copy('${directory.path}/$date.png');
       } catch (e) {
         showSnackBar(context, Colors.red, 'Error: $e');
@@ -162,10 +163,10 @@ class _DataScreenState extends State<AddData> {
                           // leading: const Icon(Icons.photo_camera),
                           // title: const Text('Camera'),
                           onTap: () async {
-                            _toCamera();
+                            toCamera();
                           },
-                          child: Column(
-                            children: const [
+                          child: const Column(
+                            children: [
                               Padding(
                                   padding: EdgeInsets.all(8.0),
                                   child: Icon(
@@ -187,8 +188,8 @@ class _DataScreenState extends State<AddData> {
                             _saveImages(ImageSource.gallery);
                             Navigator.of(context).pop();
                           },
-                          child: Column(
-                            children: const [
+                          child: const Column(
+                            children: [
                               Padding(
                                   padding: EdgeInsets.all(15.0),
                                   child: Icon(
@@ -220,7 +221,7 @@ class _DataScreenState extends State<AddData> {
           'Add Document',
           style: TextStyle(fontSize: 20, color: Colors.white),
         ),
-        iconTheme: IconThemeData(color: Colors.white),
+        iconTheme: const IconThemeData(color: Colors.white),
         backgroundColor: MyColors.primary,
         actions: [
           IconButton(
@@ -528,7 +529,7 @@ class FileList extends StatelessWidget {
         child: Container(
             height: 50,
             child: ListTile(
-                leading: Icon(
+                leading: const Icon(
                   Icons.picture_as_pdf,
                   color: Colors.red,
                 ),

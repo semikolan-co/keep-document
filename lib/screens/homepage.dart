@@ -82,7 +82,7 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         elevation: 0,
         backgroundColor: MyColors.primary,
-        iconTheme: IconThemeData(color: Colors.white),
+        iconTheme: const IconThemeData(color: Colors.white),
         title: const Text(
           'Keep Document',
           style: TextStyle(
@@ -186,9 +186,9 @@ class _MyHomePageState extends State<MyHomePage> {
                                 background: Container(
                                   color: Colors.blueGrey,
                                   alignment: Alignment.centerRight,
-                                  child: Row(
+                                  child: const Row(
                                     mainAxisAlignment: MainAxisAlignment.end,
-                                    children: const [
+                                    children: [
                                       Text(
                                         'Delete',
                                         style: TextStyle(color: Colors.white),

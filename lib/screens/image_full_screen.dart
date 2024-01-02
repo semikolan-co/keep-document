@@ -8,7 +8,7 @@ class ImageFullScreenWrapperWidget extends StatelessWidget {
   final String path;
 
   const ImageFullScreenWrapperWidget(
-      {required this.child, this.dark = true, required this.path});
+      {super.key, required this.child, this.dark = true, required this.path});
 
   @override
   Widget build(BuildContext context) {
@@ -21,9 +21,9 @@ class ImageFullScreenWrapperWidget extends StatelessWidget {
             barrierColor: dark ? Colors.black : Colors.white,
             pageBuilder: (BuildContext context, _, __) {
               return FullScreenPage(
-                child: child,
                 dark: dark,
                 path: path,
+                child: child,
               );
             },
           ),
@@ -36,7 +36,7 @@ class ImageFullScreenWrapperWidget extends StatelessWidget {
 
 class FullScreenPage extends StatefulWidget {
   const FullScreenPage(
-      {required this.child, required this.dark, required this.path});
+      {super.key, required this.child, required this.dark, required this.path});
 
   final Image child;
   final String path;
@@ -103,11 +103,6 @@ class _FullScreenPageState extends State<FullScreenPage> {
               child: MaterialButton(
                 padding: const EdgeInsets.all(15),
                 elevation: 0,
-                child: Icon(
-                  Icons.arrow_back,
-                  color: widget.dark ? Colors.white : Colors.black,
-                  size: 25,
-                ),
                 color: widget.dark ? Colors.black12 : Colors.white70,
                 highlightElevation: 0,
                 minWidth: double.minPositive,
@@ -116,6 +111,11 @@ class _FullScreenPageState extends State<FullScreenPage> {
                   borderRadius: BorderRadius.circular(100),
                 ),
                 onPressed: () => Navigator.of(context).pop(),
+                child: Icon(
+                  Icons.arrow_back,
+                  color: widget.dark ? Colors.white : Colors.black,
+                  size: 25,
+                ),
               ),
             ),
           ),
@@ -125,11 +125,6 @@ class _FullScreenPageState extends State<FullScreenPage> {
               child: MaterialButton(
                 padding: const EdgeInsets.all(15),
                 elevation: 0,
-                child: Icon(
-                  Icons.share,
-                  color: widget.dark ? Colors.white : Colors.black,
-                  size: 25,
-                ),
                 color: widget.dark ? Colors.black12 : Colors.white70,
                 highlightElevation: 0,
                 minWidth: double.minPositive,
@@ -141,6 +136,11 @@ class _FullScreenPageState extends State<FullScreenPage> {
                   await Share.shareFiles([widget.path],
                       text: 'Shared via Data Manager');
                 },
+                child: Icon(
+                  Icons.share,
+                  color: widget.dark ? Colors.white : Colors.black,
+                  size: 25,
+                ),
               ),
             ),
           ),

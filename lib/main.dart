@@ -17,7 +17,6 @@ import 'package:passmanager/screens/edit_data.dart';
 import 'package:passmanager/screens/introscreen.dart';
 import 'package:passmanager/models/sharedpref.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:local_auth_android/local_auth_android.dart';
 import 'screens/adddata.dart';
 import 'screens/homepage.dart';
 import 'package:flutter/services.dart';
@@ -36,7 +35,7 @@ Future<void> main() async {
 }
 
 class MyApp extends StatefulWidget {
-  const MyApp({key, this.data}) : super(key: key);
+  const MyApp({super.key, this.data});
   final String? data;
 
   @override
@@ -54,9 +53,9 @@ class _MyAppState extends State<MyApp> {
     late bool canCheckBiometrics;
     try {
       canCheckBiometrics = await auth.canCheckBiometrics;
-    } on PlatformException catch (e) {
+    } on PlatformException catch (_) {
       canCheckBiometrics = false;
-      print(e);
+      // print(e);
     }
     if (!mounted) {
       return;

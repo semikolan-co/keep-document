@@ -4,69 +4,70 @@ import '../utils/colors.dart';
 
 class DrawerWidget extends StatelessWidget {
   const DrawerWidget({
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Drawer(
       child: ListView(
         children: [
-          DrawerHeader(
+          const DrawerHeader(
+            decoration: BoxDecoration(
+              color: MyColors.primary,
+            ),
             child: Text(
               'Keep Document',
               style: TextStyle(fontSize: 20, color: Colors.white),
             ),
-            decoration: BoxDecoration(
-              color: MyColors.primary,
-            ),
           ),
-          Padding(
-            padding: const EdgeInsets.all(10.0),
+          const Padding(
+            padding: EdgeInsets.all(10.0),
             child: Text('Helpful Resources:'),
           ),
           ListTile(
-            title: Text('Aadhar Details'),
+            title: const Text('Aadhar Details'),
             onTap: () {
-              launch('https://uidai.gov.in/');
+              launchUrl(Uri.parse('https://uidai.gov.in/'));
             },
           ),
           ListTile(
-            title: Text('Passport Details'),
+            title: const Text('Passport Details'),
             onTap: () {
-              launch('https://www.passportindia.gov.in/');
+              launchUrl(Uri.parse('https://www.passportindia.gov.in/'));
             },
           ),
           ListTile(
-            title: Text('Voter ID Details'),
+            title: const Text('Voter ID Details'),
             onTap: () {
-              launch('https://www.nvsp.in/');
+              launchUrl(Uri.parse('https://www.nvsp.in/'));
             },
           ),
           ListTile(
-            title: Text('Driving License'),
+            title: const Text('Driving License'),
             onTap: () {
-              launch(
-                  'https://parivahan.gov.in/parivahan/en/content/driving-licence-0');
+              launchUrl(Uri.parse(
+                  'https://parivahan.gov.in/parivahan/en/content/driving-licence-0'));
             },
           ),
           ListTile(
-            title: Text('Samagra ID Details'),
+            title: const Text('Samagra ID Details'),
             onTap: () {
-              launch('http://samagra.gov.in/');
+              launchUrl(Uri.parse('http://samagra.gov.in/'));
             },
           ),
           ListTile(
-            title: Text('PAN Details'),
+            title: const Text('PAN Details'),
             onTap: () {
-              launch(
-                  'https://www.onlineservices.nsdl.com/paam/endUserRegisterContact.html');
+              launchUrl(Uri.parse(
+                  'https://www.onlineservices.nsdl.com/paam/endUserRegisterContact.html'));
             },
           ),
           ListTile(
-            title: Text('Ration Card Details'),
+            title: const Text('Ration Card Details'),
             onTap: () {
-              launch('https://nfsa.gov.in/portal/ration_card_state_portals_aa');
+              launchUrl(Uri.parse(
+                  'https://nfsa.gov.in/portal/ration_card_state_portals_aa'));
             },
           ),
         ],

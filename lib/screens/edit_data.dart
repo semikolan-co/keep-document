@@ -184,8 +184,8 @@ class _DataScreenState extends State<EditData> {
                           onTap: () async {
                             _toCamera();
                           },
-                          child: Column(
-                            children: const [
+                          child: const Column(
+                            children: [
                               Padding(
                                   padding: EdgeInsets.all(8.0),
                                   child: Icon(
@@ -207,8 +207,8 @@ class _DataScreenState extends State<EditData> {
                             _saveImages(ImageSource.gallery);
                             Navigator.of(context).pop();
                           },
-                          child: Column(
-                            children: const [
+                          child: const Column(
+                            children: [
                               Padding(
                                   padding: EdgeInsets.all(15.0),
                                   child: Icon(
@@ -240,7 +240,7 @@ class _DataScreenState extends State<EditData> {
           'Edit Document',
           style: TextStyle(fontSize: 20, color: Colors.white),
         ),
-        iconTheme: IconThemeData(color: Colors.white),
+        iconTheme: const IconThemeData(color: Colors.white),
         backgroundColor: MyColors.primary,
         actions: [
           IconButton(
@@ -437,7 +437,7 @@ class ImageGrid extends StatelessWidget {
     //     .toList(growable: false);
     return GridView.builder(
       shrinkWrap: true,
-      physics: NeverScrollableScrollPhysics(),
+      physics: const NeverScrollableScrollPhysics(),
       itemCount: imgPath.length,
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2, childAspectRatio: 3.0 / 3.5),
@@ -475,7 +475,7 @@ class FileList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
-        physics: NeverScrollableScrollPhysics(),
+        physics: const NeverScrollableScrollPhysics(),
         shrinkWrap: true,
         itemCount: pdfPath.length,
         itemBuilder: (context, index) => Card(

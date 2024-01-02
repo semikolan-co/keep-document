@@ -53,10 +53,10 @@ class _DataScreenState extends State<DataScreen> {
                     arguments: list,
                   );
                 },
-                icon: Icon(Icons.edit))
+                icon: const Icon(Icons.edit))
           ],
           backgroundColor: MyColors.primary,
-          iconTheme: IconThemeData(color: Colors.white)
+          iconTheme: const IconThemeData(color: Colors.white)
           // actions: [
           //   IconButton(
           //       onPressed: () {
@@ -107,7 +107,8 @@ class _DataScreenState extends State<DataScreen> {
             Padding(
               padding:
                   const EdgeInsets.symmetric(horizontal: Storage.paddingSize),
-              child: Text(list.description, style: TextStyle(fontSize: 16)),
+              child:
+                  Text(list.description, style: const TextStyle(fontSize: 16)),
             ),
             //     const Spacer(
             //       flex: 1,
@@ -262,7 +263,7 @@ class ImageGrid extends StatelessWidget {
                         horizontal: Storage.paddingSize),
                     child: Text(
                       list.pdfPath!.length > 1 ? 'Documents:' : 'Document:',
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 18,
                         color: Colors.black,
                       ),
@@ -296,7 +297,7 @@ class ImageGrid extends StatelessWidget {
                         child: Container(
                             height: 50,
                             child: ListTile(
-                                leading: Icon(
+                                leading: const Icon(
                                   Icons.picture_as_pdf,
                                   color: Colors.red,
                                 ),
