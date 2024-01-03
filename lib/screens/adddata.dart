@@ -1,26 +1,24 @@
 import 'dart:io';
 
 import 'package:camera/camera.dart';
-import 'package:facebook_audience_network/facebook_audience_network.dart';
+// import 'package:applovin_max/applovin_max.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:glassmorphism/glassmorphism.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:passmanager/utils/storage.dart';
+import 'package:passmanager/utils/ads.dart';
 import 'package:passmanager/models/additem.dart';
 import 'package:passmanager/models/dataitem.dart';
 import 'package:passmanager/screens/homepage.dart';
 import 'package:passmanager/models/sharedpref.dart';
 import 'package:passmanager/widgets/primary_button.dart';
 import 'package:passmanager/widgets/snack_bar.dart';
-import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 
 import '../utils/colors.dart';
 import 'takepicture.dart';
 
 class AddData extends StatefulWidget {
-  const AddData({Key? key}) : super(key: key);
+  const AddData({super.key});
   static const routeName = '/adddata';
 
   @override
@@ -48,19 +46,21 @@ class _DataScreenState extends State<AddData> {
     //     ModalRoute.of(context)!.settings.arguments as List<DataItem>;
     final List<DataItem> list = Add.dataList;
 
-    void _toCamera() async {
+    void toCamera() async {
       Add.description = descriptionController.text;
       Add.title = titleController.text;
       Add.id = idController.text;
       Add.imgUrl = imgPath;
       Add.pdfUrl = pdfPath;
       Add.dataList = list;
-      final cameras = await availableCameras();
-      final firstCamera = cameras.first;
-      Navigator.of(context).push(MaterialPageRoute(
-          builder: (context) => TakePictureScreen(
-                camera: firstCamera,
-              )));
+      await availableCameras().then((value) {
+        final firstCamera = value.first;
+        Navigator.of(context).push(MaterialPageRoute(
+            builder: (context) => TakePictureScreen(
+                  camera: firstCamera,
+                  index: 0,
+                )));
+      });
     }
 
     _saveToStorage() async {
@@ -77,7 +77,7 @@ class _DataScreenState extends State<AddData> {
             date: date,
             imgUrl: imgPath,
             pdfPath: pdfPath);
-        list.add(item);
+        list.insert(0, item);
         // print("LISIST: $list");
         _saveToStorage();
       });
@@ -94,7 +94,7 @@ class _DataScreenState extends State<AddData> {
           File file = File(result.files.single.path.toString());
           date = DateTime.now().toUtc().toIso8601String();
           final directory = await getExternalStorageDirectory();
-          pdfPath.add(directory!.path + '/${result.files.single.name}');
+          pdfPath.add('${directory!.path}/${result.files.single.name}');
           setState(() {});
           return File(file.path)
               .copy('${directory.path}/${result.files.single.name.toString()}');
@@ -121,9 +121,9 @@ class _DataScreenState extends State<AddData> {
         if (pickedImage == null) return null;
         date = DateTime.now().toUtc().toIso8601String();
         final directory = await getExternalStorageDirectory();
-        print(directory!.path);
+        // print(directory!.path);
         setState(() {});
-        imgPath.add(directory.path + '/$date.png');
+        imgPath.add('${directory!.path}/$date.png');
         return File(pickedImage.path).copy('${directory.path}/$date.png');
       } catch (e) {
         showSnackBar(context, Colors.red, 'Error: $e');
@@ -163,10 +163,10 @@ class _DataScreenState extends State<AddData> {
                           // leading: const Icon(Icons.photo_camera),
                           // title: const Text('Camera'),
                           onTap: () async {
-                            _toCamera();
+                            toCamera();
                           },
-                          child: Column(
-                            children: const [
+                          child: const Column(
+                            children: [
                               Padding(
                                   padding: EdgeInsets.all(8.0),
                                   child: Icon(
@@ -188,8 +188,8 @@ class _DataScreenState extends State<AddData> {
                             _saveImages(ImageSource.gallery);
                             Navigator.of(context).pop();
                           },
-                          child: Column(
-                            children: const [
+                          child: const Column(
+                            children: [
                               Padding(
                                   padding: EdgeInsets.all(15.0),
                                   child: Icon(
@@ -218,9 +218,10 @@ class _DataScreenState extends State<AddData> {
       appBar: AppBar(
         elevation: 0,
         title: const Text(
-          'Document Keeper',
+          'Add Document',
           style: TextStyle(fontSize: 20, color: Colors.white),
         ),
+        iconTheme: const IconThemeData(color: Colors.white),
         backgroundColor: MyColors.primary,
         actions: [
           IconButton(
@@ -237,7 +238,6 @@ class _DataScreenState extends State<AddData> {
               )),
         ],
       ),
-      
       body: Column(
         children: [
           Expanded(
@@ -276,7 +276,7 @@ class _DataScreenState extends State<AddData> {
                                             : null;
                                       }
                                       if (isExist) {
-                                        return 'Title Already Exist';
+                                        return 'A Document which this name already Exists!';
                                       }
                                     }
                                   } else {
@@ -289,8 +289,9 @@ class _DataScreenState extends State<AddData> {
                                 decoration: const InputDecoration(
                                   border: InputBorder.none,
                                   labelText: 'Document Name',
-                                  labelStyle: TextStyle(color: MyColors.textColor, fontSize: 18),
-          
+                                  labelStyle: TextStyle(
+                                      color: MyColors.textColor, fontSize: 18),
+
                                   // prefixIcon: const Icon(Icons.arrow_forward_ios),
                                 ),
                               ),
@@ -310,7 +311,8 @@ class _DataScreenState extends State<AddData> {
                             // linearGradient: linearGradiend(),
                             // borderGradient: borderGradient1(),
                             child: Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 10),
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 10),
                               child: TextFormField(
                                 style: const TextStyle(fontSize: 17),
                                 // maxLines: 2,
@@ -345,22 +347,20 @@ class _DataScreenState extends State<AddData> {
                               decoration: const InputDecoration(
                                 border: InputBorder.none,
                                 // hintMaxLines: 5,
-                                hintStyle:
-                                    TextStyle(color: MyColors.textColor, fontSize: 16),
+                                hintStyle: TextStyle(
+                                    color: MyColors.textColor, fontSize: 16),
                                 hintText: 'Additional Note',
                               ),
                             ),
                           ),
                         ),
                         // SizedBox(height: mq.height * 0.05),
-          
                         // ElevatedButton(
                         //     style: ButtonStyle(
                         //         elevation: MaterialStateProperty.all(10),
                         //         backgroundColor:
                         //             MaterialStateProperty.all(MyColors.primary)),
                         //     onPressed: () {
-          
                         //     },
                         //     child: const Text('Save',
                         //         style: TextStyle(
@@ -382,7 +382,6 @@ class _DataScreenState extends State<AddData> {
                                 date: date,
                                 pdfPath: pdfPath,
                               ),
-                        
                       ],
                     ),
                   ),
@@ -393,65 +392,34 @@ class _DataScreenState extends State<AddData> {
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Center(
-            child: PrimaryButton(
-                onPressed: () {
-                  // if(date=='') return;
-                  if (_formKey.currentState!.validate()) {
-                    Add.description = '';
-                    Add.title = '';
-                    Add.imgUrl = [];
-                    Add.date = '';
-                    Add.id = '';
-                    addItem(titleController.text, descriptionController.text,
-                        idController.text, date);
-                    Navigator.pushNamedAndRemoveUntil(
-                        context, MyHomePage.routeName, (route) => false);
-                    FacebookInterstitialAd.loadInterstitialAd(
-                      placementId: "328150579086879_328163679085569",
-                      listener: (result, value) {
-                        if (result == InterstitialAdResult.LOADED) {
-                          FacebookInterstitialAd.showInterstitialAd();
-                        }
-                      },
-                    );
-                  }
-                },
-                buttonText: "Save"),
-        ),
+              child: PrimaryButton(
+                  onPressed: () {
+                    // if(date=='') return;
+                    if (_formKey.currentState!.validate()) {
+                      Add.description = '';
+                      Add.title = '';
+                      Add.imgUrl = [];
+                      Add.date = '';
+                      Add.id = '';
+                      addItem(titleController.text, descriptionController.text,
+                          idController.text, date);
+                      Navigator.pushNamedAndRemoveUntil(
+                          context, MyHomePage.routeName, (route) => false);
+                      // FacebookInterstitialAd.loadInterstitialAd(
+                      //   placementId: "328150579086879_328163679085569",
+                      //   listener: (result, value) {
+                      //     if (result == InterstitialAdResult.LOADED) {
+                      //       FacebookInterstitialAd.showInterstitialAd();
+                      //     }
+                      //   },
+                      // );
+                      loadInterstitial();
+                    }
+                  },
+                  buttonText: "Save"),
+            ),
           ),
         ],
-      ),
-      // persistentFooterButtons: [
-      //   Center(
-      //     child: PrimaryButton(
-      //         onPressed: () {
-      //           // if(date=='') return;
-      //           if (_formKey.currentState!.validate()) {
-      //             Add.description = '';
-      //             Add.title = '';
-      //             Add.imgUrl = [];
-      //             Add.date = '';
-      //             Add.id = '';
-      //             addItem(titleController.text, descriptionController.text,
-      //                 idController.text, date);
-      //             Navigator.pushNamedAndRemoveUntil(
-      //                 context, MyHomePage.routeName, (route) => false);
-      //             FacebookInterstitialAd.loadInterstitialAd(
-      //               placementId: "328150579086879_328163679085569",
-      //               listener: (result, value) {
-      //                 if (result == InterstitialAdResult.LOADED) {
-      //                   FacebookInterstitialAd.showInterstitialAd();
-      //                 }
-      //               },
-      //             );
-      //           }
-      //         },
-      //         buttonText: "Save"),
-      //   ),
-      // ],
-      bottomNavigationBar: FacebookBannerAd(
-        placementId: '328150579086879_328154279086509',
-        bannerSize: BannerSize.STANDARD,
       ),
     );
   }
@@ -559,7 +527,7 @@ class FileList extends StatelessWidget {
         child: Container(
             height: 50,
             child: ListTile(
-                leading: Icon(
+                leading: const Icon(
                   Icons.picture_as_pdf,
                   color: Colors.red,
                 ),

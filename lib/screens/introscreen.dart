@@ -3,7 +3,7 @@ import 'package:intro_slider/intro_slider.dart';
 import 'package:passmanager/screens/homepage.dart';
 
 class IntroScreen extends StatefulWidget {
-  const IntroScreen({Key? key}) : super(key: key);
+  const IntroScreen({super.key});
 
   @override
   _IntroScreenState createState() => _IntroScreenState();
@@ -17,11 +17,11 @@ class _IntroScreenState extends State<IntroScreen> {
     super.initState();
 
     slides.add(
-      ContentConfig(
+      const ContentConfig(
           title: "Your Security, Our Obligation",
-          styleTitle: const TextStyle(
+          styleTitle: TextStyle(
               color: Color.fromRGBO(22, 68, 62, 1), fontSize: 25),
-          styleDescription: const TextStyle(
+          styleDescription: TextStyle(
               color: Color.fromRGBO(22, 68, 62, 1), fontSize: 18),
           description:
               "Your Each and Every information is totally secure and stored only in your own device.",
@@ -29,14 +29,14 @@ class _IntroScreenState extends State<IntroScreen> {
           backgroundColor: Colors.white),
     );
     slides.add(
-      ContentConfig(
+      const ContentConfig(
           title: "Documents at a Single Click",
           description:
               "Easily store, share and organise all your documents at one place.",
           pathImage: "assets/intro2.png",
-          styleTitle: const TextStyle(
+          styleTitle: TextStyle(
               color: Color.fromRGBO(22, 68, 62, 1), fontSize: 25),
-          styleDescription: const TextStyle(
+          styleDescription: TextStyle(
               color: Color.fromRGBO(22, 68, 62, 1), fontSize: 18),
           backgroundColor: Colors.white),
     );

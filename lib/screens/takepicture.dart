@@ -1,21 +1,20 @@
 import 'dart:io';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:camera/camera.dart';
-import 'package:facebook_audience_network/facebook_audience_network.dart';
+// import 'package:applovin_max/applovin_max.dart';
 import 'package:flutter/material.dart';
-import 'package:image_cropper/image_cropper.dart';
 import 'package:passmanager/models/additem.dart';
 import 'package:passmanager/screens/adddata.dart';
+import 'package:passmanager/screens/edit_data.dart';
 import 'package:passmanager/utils/colors.dart';
 import 'package:path_provider/path_provider.dart';
 
 class TakePictureScreen extends StatefulWidget {
-  const TakePictureScreen({
-    Key? key,
-    required this.camera,
-  }) : super(key: key);
+  const TakePictureScreen(
+      {super.key, required this.camera, required this.index});
 
   final CameraDescription camera;
+  final int index;
 
   @override
   TakePictureScreenState createState() => TakePictureScreenState();
@@ -52,7 +51,11 @@ class TakePictureScreenState extends State<TakePictureScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Take a picture'),
+        title: const Text(
+          'Take a picture',
+          style: TextStyle(fontSize: 20, color: Colors.white),
+        ),
+        iconTheme: const IconThemeData(color: Colors.white),
         backgroundColor: MyColors.primary,
       ),
       // You must wait until the controller is initialized before displaying the
@@ -87,7 +90,6 @@ class TakePictureScreenState extends State<TakePictureScreen> {
             // Attempt to take a picture and get the file `image`
             // where it was saved.
             final image = await _controller.takePicture();
-            
             final croppedFile = await ImageCropper().cropImage(
               sourcePath: image.path,
               compressFormat: ImageCompressFormat.jpg,
@@ -95,44 +97,39 @@ class TakePictureScreenState extends State<TakePictureScreen> {
               uiSettings: [
                 AndroidUiSettings(
                     toolbarTitle: 'Cropper',
-                    toolbarColor: Colors.deepOrange,
+                    toolbarColor: MyColors.primary,
+                    // cropGridColor: MyColors.primary,
+                    // cropFrameColor: MyColors.primary,
+                    statusBarColor: MyColors.primary,
+                    // dimmedLayerColor: MyColors.primary,
+                    activeControlsWidgetColor: MyColors.primary,
                     toolbarWidgetColor: Colors.white,
                     initAspectRatio: CropAspectRatioPreset.original,
                     lockAspectRatio: false),
-                IOSUiSettings(
-                  title: 'Cropper',
-                ),
-                WebUiSettings(
-                  context: context,
-                  presentStyle: CropperPresentStyle.dialog,
-                  boundary: const CroppieBoundary(
-                    width: 520,
-                    height: 520,
-                  ),
-                  viewPort: const CroppieViewPort(
-                      width: 480, height: 480, type: 'circle'),
-                  enableExif: true,
-                  enableZoom: true,
-                  showZoomer: true,
-                ),
               ],
             );
 
             if (croppedFile != null) {
               final date = DateTime.now().toUtc().toIso8601String();
+
               final directory = await getExternalStorageDirectory();
-              print(directory!.path);
-              Add.imgUrl.add(directory.path + '/$date.png');
+
               final File imageFile = File(croppedFile.path);
-              imageFile.copy('${directory.path}/$date.png');
-              Navigator.pushNamed(context, AddData.routeName);
+              imageFile.copy('${directory!.path}/$date.png');
+              Add.imgUrl.add('${directory.path}/$date.png');
+
+              widget.index == 0
+                  ? Navigator.pushNamed(context, AddData.routeName)
+                  : Navigator.pushNamed(context, EditData.routeName);
             }
           } catch (e) {
             // If an error occurs, log the error to the console.
-            print(e);
           }
         },
-        child: const Icon(Icons.camera_alt),
+        child: const Icon(
+          Icons.camera_alt,
+          color: Colors.white,
+        ),
       ),
     );
   }
@@ -142,8 +139,7 @@ class TakePictureScreenState extends State<TakePictureScreen> {
 class DisplayPictureScreen extends StatelessWidget {
   final String imagePath;
 
-  const DisplayPictureScreen({Key? key, required this.imagePath})
-      : super(key: key);
+  const DisplayPictureScreen({super.key, required this.imagePath});
 
   @override
   Widget build(BuildContext context) {
@@ -161,8 +157,7 @@ class DisplayPictureScreen extends StatelessWidget {
                   onPressed: () async {
                     final date = DateTime.now().toUtc().toIso8601String();
                     final directory = await getExternalStorageDirectory();
-                    print(directory!.path);
-                    Add.imgUrl.add(directory.path + '/$date.png');
+                    Add.imgUrl.add('${directory!.path}/$date.png');
                     File(imagePath).copy('${directory.path}/$date.png');
                     Navigator.pushNamed(context, AddData.routeName);
                   },
@@ -176,10 +171,10 @@ class DisplayPictureScreen extends StatelessWidget {
           )
         ],
       ),
-      bottomNavigationBar: FacebookBannerAd(
-        placementId: '328150579086879_328154279086509',
-        bannerSize: BannerSize.STANDARD,
-      ),
+      // bottomNavigationBar: MaxAdView(
+      //   adUnitId: Storage.banner,
+      //   adFormat: AdFormat.banner,
+      // ),
     );
   }
 }

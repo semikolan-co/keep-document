@@ -1,20 +1,19 @@
 import 'dart:io';
-
-import 'package:facebook_audience_network/facebook_audience_network.dart';
+import 'package:in_app_update/in_app_update.dart';
+// import 'package:facebook_audience_network/facebook_audience_network.dart';
 import 'package:flutter/material.dart';
 import 'package:glassmorphism/glassmorphism.dart';
 import 'package:lottie/lottie.dart';
 import 'package:passmanager/models/additem.dart';
 import 'package:passmanager/models/dataitem.dart';
 import 'package:passmanager/models/sharedpref.dart';
+import 'package:passmanager/screens/edit_data.dart';
 import 'package:passmanager/utils/colors.dart';
-import 'package:passmanager/utils/storage.dart';
 import 'package:share_plus/share_plus.dart';
-import 'package:simple_speed_dial/simple_speed_dial.dart';
-
+// import 'package:applovin_max/applovin_max.dart';
 import '../widgets/deleteconfirmation.dart';
 import '../widgets/drawer.dart';
-import 'adddata.dart';
+import 'adddata.dart' as addDataWidget;
 import 'datascreen.dart';
 
 class MyHomePage extends StatefulWidget {
@@ -29,13 +28,33 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   List<DataItem> list = [];
   bool isChanging = false;
-  // final bool _speechEnabled = false;
   final TextEditingController _searchController = TextEditingController();
-  // final LocalStorage storage = LocalStorage(Storage.storageName);
+  AppUpdateInfo? _updateInfo;
+
+  GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey();
+
+  // bool _flexibleUpdateAvailable = false;
+
+  // Platform messages are asynchronous, so we initialize in an async method.
+  Future<void> checkForUpdate() async {
+    InAppUpdate.checkForUpdate().then((info) {
+      setState(() {
+        _updateInfo = info;
+      });
+    }).catchError((e) {
+      showSnack(e.toString());
+    });
+  }
+
+  void showSnack(String text) {
+    if (_scaffoldKey.currentContext != null) {
+      ScaffoldMessenger.of(_scaffoldKey.currentContext!)
+          .showSnackBar(SnackBar(content: Text(text)));
+    }
+  }
 
   loadSharedPreferences() async {
     String? data = await SharedPref.read('data');
-    // print("SHARED DATA $data");
     if (data == null) {
       return;
     } else {
@@ -47,15 +66,27 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   @override
+  initState() {
+    _updateInfo?.updateAvailability == UpdateAvailability.updateAvailable
+        ? () {
+            InAppUpdate.startFlexibleUpdate();
+          }
+        : null;
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final mq = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
         backgroundColor: MyColors.primary,
+        iconTheme: const IconThemeData(color: Colors.white),
         title: const Text(
           'Keep Document',
-          style: TextStyle(fontSize: 20, color: Colors.white),
+          style: TextStyle(
+              fontSize: 20, color: Colors.white, fontWeight: FontWeight.w600),
         ),
       ),
       drawer: const DrawerWidget(),
@@ -67,7 +98,7 @@ class _MyHomePageState extends State<MyHomePage> {
               children: [
                 Container(
                   height: mq.height * 0.4,
-                  width: mq.width,
+                  decoration: const BoxDecoration(color: MyColors.primary),
                   child: Column(
                     children: [
                       const SizedBox(height: 10),
@@ -121,11 +152,10 @@ class _MyHomePageState extends State<MyHomePage> {
                       ),
                     ],
                   ),
-                  decoration: const BoxDecoration(color: MyColors.primary),
                 ),
                 Column(
                   children: [
-                    SizedBox(height: mq.height * 0.15),
+                    SizedBox(height: mq.height * 0.18),
                     Container(
                       // alignment: Alignment.bottomCenter,
 
@@ -143,7 +173,7 @@ class _MyHomePageState extends State<MyHomePage> {
                               ? Lottie.asset('assets/emptyall.json')
                               : Lottie.asset('assets/emptysearch.json')
                           : ListView.builder(
-                            padding: const EdgeInsets.only(bottom: 50),
+                              padding: const EdgeInsets.only(bottom: 50),
                               itemBuilder: (ctx, index) => Dismissible(
                                 direction: DismissDirection.endToStart,
                                 onDismissed: (direction) {
@@ -156,7 +186,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                 background: Container(
                                   color: Colors.blueGrey,
                                   alignment: Alignment.centerRight,
-                                  child: Row(
+                                  child: const Row(
                                     mainAxisAlignment: MainAxisAlignment.end,
                                     children: const [
                                       Text(
@@ -326,17 +356,57 @@ class _MyHomePageState extends State<MyHomePage> {
                                                   // await deleteItem(index);
                                                 },
                                               ),
-                                              const Spacer(),
-                                              FacebookBannerAd(
-                                                placementId: Storage
-                                                    .facebookBannerPlacement,
-                                                bannerSize: BannerSize.STANDARD,
+                                              ListTile(
+                                                title: const Text("Edit"),
+                                                trailing: const Icon(
+                                                  Icons.edit,
+                                                  color: Colors.green,
+                                                ),
+                                                onTap: () async {
+                                                  // await deleteItem(index);
+                                                  Add.id = list[index].id;
+                                                  Add.title = list[index].title;
+                                                  Add.description =
+                                                      list[index].description;
+                                                  Add.date = list[index].date;
+                                                  Add.imgUrl.clear();
+                                                  for (var img
+                                                      in list[index].imgUrl) {
+                                                    Add.imgUrl.add(img);
+                                                  }
+                                                  Add.pdfUrl.clear();
+                                                  if (list[index].pdfPath !=
+                                                      null) {
+                                                    for (var pdf in list[index]
+                                                            .pdfPath ??
+                                                        []) {
+                                                      Add.pdfUrl.add(pdf);
+                                                    }
+                                                  }
+                                                  Navigator.pushNamed(context,
+                                                      EditData.routeName,
+                                                      arguments: list[index]);
+                                                },
                                               ),
-                                              FacebookBannerAd(
-                                                placementId: Storage
-                                                    .facebookBannerPlacement,
-                                                bannerSize: BannerSize.STANDARD,
-                                              )
+                                              const Spacer(),
+                                              // FacebookBannerAd(
+                                              //   placementId: Storage
+                                              //       .facebookBannerPlacement,
+                                              //   bannerSize: BannerSize.STANDARD,
+                                              // ),
+                                              // FacebookBannerAd(
+                                              //   placementId: Storage
+                                              //       .facebookBannerPlacement,
+                                              //   bannerSize: BannerSize.STANDARD,
+                                              // )
+                                              // MaxAdView(
+                                              //   adUnitId: Storage.banner,
+                                              //   adFormat: AdFormat.banner,
+                                              // ),
+                                              // MaxAdView(
+                                              //   adUnitId: Storage.banner,
+                                              //   adFormat: AdFormat.banner,
+                                              // ),
                                             ],
                                           ),
                                         ),
@@ -417,7 +487,7 @@ class _MyHomePageState extends State<MyHomePage> {
       // ]),
       floatingActionButton: FloatingActionButton(
         highlightElevation: 40,
-        shape:  RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         backgroundColor: Colors.white,
         // elevation: 20,
         // shape: RoundedRectangleBorder(
@@ -432,14 +502,23 @@ class _MyHomePageState extends State<MyHomePage> {
         onPressed: () {
           Add.imgUrl.clear();
           Add.pdfUrl.clear();
-          Navigator.pushNamed(context, AddData.routeName, arguments: list);
+          Add.description = '';
+          Add.title = '';
+          Add.date = '';
+          Add.id = '';
+          Navigator.pushNamed(context, addDataWidget.AddData.routeName,
+              arguments: list);
         },
       ),
 
-      bottomNavigationBar: FacebookBannerAd(
-        placementId: Storage.facebookBannerPlacement,
-        bannerSize: BannerSize.STANDARD,
-      ),
+      // bottomNavigationBar: FacebookBannerAd(
+      //   placementId: Storage.facebookBannerPlacement,
+      //   bannerSize: BannerSize.STANDARD,
+      // ),
+      // bottomNavigationBar: MaxAdView(
+      //   adUnitId: Storage.banner,
+      //   adFormat: AdFormat.banner,
+      // ),
     );
   }
 

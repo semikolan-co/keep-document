@@ -1,30 +1,25 @@
-import 'dart:ffi';
 import 'dart:io';
 
 import 'package:camera/camera.dart';
-import 'package:facebook_audience_network/facebook_audience_network.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:glassmorphism/glassmorphism.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:passmanager/utils/storage.dart';
 import 'package:passmanager/models/additem.dart';
 import 'package:passmanager/models/dataitem.dart';
 import 'package:passmanager/screens/homepage.dart';
 import 'package:passmanager/models/sharedpref.dart';
 import 'package:passmanager/widgets/snack_bar.dart';
-import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 
 import '../utils/colors.dart';
+import '../widgets/primary_button.dart';
 import 'takepicture.dart';
 
 class EditData extends StatefulWidget {
-  //  EditData({Key? key,required this.index) : super(key: key);
   static const routeName = '/EditData';
-  int index;
-  EditData({Key? key, required this.index}) : super(key: key);
-  int get getindex => index;
+  final DataItem item;
+  const EditData({super.key, required this.item});
+  DataItem get getindex => item;
   @override
   _DataScreenState createState() => _DataScreenState();
 }
@@ -48,7 +43,7 @@ class _DataScreenState extends State<EditData> {
   @override
   Widget build(BuildContext context) {
     // final List<DataItem> list =
-    //     ModalRoute.of(context)!.settings.arguments as List<DataItem>;
+    //     ModalRoute.of(context)!.settings.arguments as DataItem;
     final List<DataItem> list = Add.dataList;
 
     void _toCamera() async {
@@ -63,6 +58,7 @@ class _DataScreenState extends State<EditData> {
       Navigator.of(context).push(MaterialPageRoute(
           builder: (context) => TakePictureScreen(
                 camera: firstCamera,
+                index: 1,
               )));
     }
 
@@ -81,6 +77,22 @@ class _DataScreenState extends State<EditData> {
             imgUrl: imgPath,
             pdfPath: pdfPath);
         list.add(item);
+        // print("LISIST: $list");
+        _saveToStorage();
+      });
+    }
+
+    editItem(String title, String desc, String id, String date) async {
+      setState(() {
+        final item = DataItem(
+            title: title,
+            description: desc,
+            id: id,
+            date: date,
+            imgUrl: imgPath,
+            pdfPath: pdfPath);
+        list.removeWhere((element) => element.title == item.title);
+        list.insert(0, item);
         // print("LISIST: $list");
         _saveToStorage();
       });
@@ -110,7 +122,7 @@ class _DataScreenState extends State<EditData> {
           // ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           //   content: Text('Error: $e'),
           // ));
-           showSnackBar(context, Colors.red, 'Error: $e');
+          showSnackBar(context, Colors.red, 'Error: $e');
         }
       } else {
         // User canceled the picker
@@ -138,45 +150,80 @@ class _DataScreenState extends State<EditData> {
     }
 
     Future<void> _showChoiceDialog(BuildContext context) {
-      return showDialog(
+      return showModalBottomSheet(
           context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: const Text(
-                "Choose option",
-                style: TextStyle(color: Colors.blue),
-              ),
-              content: SingleChildScrollView(
-                child: ListBody(
+          // circular shape
+          shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(20),
+              topRight: Radius.circular(20),
+            ),
+          ),
+          builder: (context) {
+            return SafeArea(
+              child: SizedBox(
+                height: 200,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Divider(
-                      height: 1,
-                      color: Colors.blue,
-                    ),
-                    ListTile(
-                      onTap: () {
-                        _saveImages(ImageSource.gallery);
-                        Navigator.of(context).pop();
-                      },
-                      title: const Text("Gallery"),
-                      leading: const Icon(
-                        Icons.account_box,
-                        color: Colors.blue,
+                    const SizedBox(height: 10),
+                    const Text(
+                      'Choose Image Source',
+                      style: TextStyle(
+                        fontSize: 20,
+                        color: Colors.black,
                       ),
                     ),
-                    const Divider(
-                      height: 1,
-                      color: Colors.blue,
-                    ),
-                    ListTile(
-                      onTap: () {
-                        _toCamera();
-                      },
-                      title: const Text("Camera"),
-                      leading: const Icon(
-                        Icons.camera,
-                        color: Colors.blue,
-                      ),
+                    const SizedBox(height: 10),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        InkWell(
+                          // leading: const Icon(Icons.photo_camera),
+                          // title: const Text('Camera'),
+                          onTap: () async {
+                            _toCamera();
+                          },
+                          child: const Column(
+                            children: [
+                              Padding(
+                                  padding: EdgeInsets.all(8.0),
+                                  child: Icon(
+                                    Icons.camera,
+                                    color: MyColors.primary,
+                                    size: 50,
+                                  )),
+                              Text(
+                                'Camera',
+                                style: TextStyle(),
+                              ),
+                            ],
+                          ),
+                        ),
+                        InkWell(
+                          // leading: const Icon(Icons.photo_camera),
+                          // title: const Text('Camera'),
+                          onTap: () async {
+                            _saveImages(ImageSource.gallery);
+                            Navigator.of(context).pop();
+                          },
+                          child: const Column(
+                            children: [
+                              Padding(
+                                  padding: EdgeInsets.all(15.0),
+                                  child: Icon(
+                                    Icons.image,
+                                    color: MyColors.primary,
+                                    size: 50,
+                                  )),
+                              Text(
+                                'Gallery',
+                                style: TextStyle(),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 ),
@@ -190,9 +237,10 @@ class _DataScreenState extends State<EditData> {
       appBar: AppBar(
         elevation: 0,
         title: const Text(
-          'Document Keeper',
+          'Edit Document',
           style: TextStyle(fontSize: 20, color: Colors.white),
         ),
+        iconTheme: const IconThemeData(color: Colors.white),
         backgroundColor: MyColors.primary,
         actions: [
           IconButton(
@@ -216,137 +264,67 @@ class _DataScreenState extends State<EditData> {
             child: Form(
               key: _formKey,
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: GlassmorphicContainer(
-                      width: mediaquery.width * 0.9,
-                      height: 80,
-                      borderRadius: 10,
-                      blur: 10,
-                      border: 2,
-                      linearGradient: linearGradiend(),
-                      borderGradient: borderGradient1(),
-                      child: Padding(
-                        padding: padding(10),
-                        child: TextFormField(
-                          validator: (value) {
-                            if (value != null) {
-                              if (value.isEmpty) {
-                                return 'Please enter a title';
-                              } else {
-                                bool isExist = false;
-                                for (var element in list) {
-                                  element.title == value
-                                      ? isExist = true
-                                      : null;
-                                }
-                                if (isExist) {
-                                  return 'Title Already Exist';
-                                }
-                              }
-                            } else {
-                              return 'Please enter a title';
-                            }
-                            return null;
-                          },
-                          controller: titleController,
-                          decoration: const InputDecoration(
-                            border: InputBorder.none,
-                            labelText: 'Document Name',
-                            labelStyle: TextStyle(color: Colors.black),
+                    padding: padding(10),
+                    child: TextFormField(
+                      enabled: false,
+                      validator: (value) {
+                        if (value != null) {
+                          if (value.isEmpty) {
+                            return 'Please enter Document Name';
+                          }
+                        } else {
+                          return 'Please enter a title';
+                        }
+                        return null;
+                      },
+                      controller: titleController,
+                      style: const TextStyle(fontSize: 18),
+                      decoration: const InputDecoration(
+                        border: InputBorder.none,
+                        labelText: 'Document Name',
+                        labelStyle:
+                            TextStyle(color: MyColors.textColor, fontSize: 18),
 
-                            // prefixIcon: const Icon(Icons.arrow_forward_ios),
-                          ),
-                        ),
+                        // prefixIcon: const Icon(Icons.arrow_forward_ios),
                       ),
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: GlassmorphicContainer(
-                      //  width: 350,
-                      width: mediaquery.width * 0.9,
-                      height: 100,
-                      borderRadius: 10,
-                      blur: 10,
-                      // alignment: Alignment.,
-                      border: 2,
-                      linearGradient: linearGradiend(),
-                      borderGradient: borderGradient1(),
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 10),
-                        child: TextFormField(
-                          maxLines: 2,
-                          controller: idController,
-                          decoration: const InputDecoration(
-                            labelText: 'Document ID',
-                            labelStyle: TextStyle(color: Colors.black),
-                            border: InputBorder.none,
-                          ),
-                        ),
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                    child: TextFormField(
+                      style: const TextStyle(fontSize: 17),
+                      // maxLines: 2,
+                      controller: idController,
+                      decoration: const InputDecoration(
+                        labelText: 'Document ID',
+                        labelStyle:
+                            TextStyle(color: MyColors.textColor, fontSize: 17),
+                        border: InputBorder.none,
+                        focusColor: Colors.black,
                       ),
                     ),
                   ),
-                  GlassmorphicContainer(
-                    width: mediaquery.width * 0.9,
-                    height: mediaquery.height * 0.15,
-                    borderRadius: 10,
-                    blur: 10,
-                    // alignment: Alignment.,
-                    border: 2,
-                    linearGradient: linearGradiend(),
-                    borderGradient: borderGradient1(),
-                    child: Padding(
-                      padding: padding(10),
-                      child: TextFormField(
-                        maxLines: 4,
-                        controller: descriptionController,
-                        decoration: const InputDecoration(
-                          border: InputBorder.none,
-                          // hintMaxLines: 5,
-                          hintStyle: TextStyle(color: Colors.black),
-                          hintText: 'Additional Note',
-                        ),
+                  Padding(
+                    padding: padding(10),
+                    child: TextFormField(
+                      style: const TextStyle(fontSize: 16),
+                      minLines: 1,
+                      maxLines: 100,
+                      controller: descriptionController,
+                      decoration: const InputDecoration(
+                        border: InputBorder.none,
+                        // hintMaxLines: 5,
+                        hintStyle:
+                            TextStyle(color: MyColors.textColor, fontSize: 16),
+                        hintText: 'Additional Note',
                       ),
                     ),
                   ),
-                  SizedBox(height: mediaquery.height * 0.05),
-                  ElevatedButton(
-                      style: ButtonStyle(
-                          elevation: MaterialStateProperty.all(10),
-                          backgroundColor:
-                              MaterialStateProperty.all(MyColors.primary)),
-                      onPressed: () {
-                        // if(date=='') return;
-                        if (_formKey.currentState!.validate()) {
-                          Add.description = '';
-                          Add.title = '';
-                          Add.imgUrl = [];
-                          Add.date = '';
-                          Add.id = '';
-                          addItem(
-                              titleController.text,
-                              descriptionController.text,
-                              idController.text,
-                              date);
-                          Navigator.pushNamedAndRemoveUntil(
-                              context, MyHomePage.routeName, (route) => false);
-                          // FacebookInterstitialAd.loadInterstitialAd(
-                          //   placementId: "328150579086879_328163679085569",
-                          //   listener: (result, value) {
-                          //     if (result == InterstitialAdResult.LOADED) {
-                          //       FacebookInterstitialAd.showInterstitialAd();
-                          //     }
-                          //   },
-                          // );
-                        }
-                      },
-                      child: const Text('Save',
-                          style: TextStyle(
-                            fontSize: 20,
-                          ))),
+                  SizedBox(height: mediaquery.height * 0.03),
                   ImageGrid(
                     directory: _photoDir,
                     date: date,
@@ -357,16 +335,49 @@ class _DataScreenState extends State<EditData> {
                     date: date,
                     pdfPath: pdfPath,
                   ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Center(
+                      child: PrimaryButton(
+                          onPressed: () {
+                            // if(date=='') return;
+                            if (_formKey.currentState!.validate()) {
+                              Add.description = '';
+                              Add.title = '';
+                              Add.imgUrl = [];
+                              Add.date = '';
+                              Add.id = '';
+                              editItem(
+                                  titleController.text,
+                                  descriptionController.text,
+                                  idController.text,
+                                  date);
+                              Navigator.pushNamedAndRemoveUntil(context,
+                                  MyHomePage.routeName, (route) => false);
+                              // FacebookInterstitialAd.loadInterstitialAd(
+                              //   placementId: "328150579086879_328163679085569",
+                              //   listener: (result, value) {
+                              //     if (result == InterstitialAdResult.LOADED) {
+                              //       FacebookInterstitialAd.showInterstitialAd();
+                              //     }
+                              //   },
+                              // );
+                            }
+                          },
+                          buttonText: "Save"),
+                    ),
+                  ),
+                  SizedBox(height: mediaquery.height * 0.05),
                 ],
               ),
             ),
           ),
         ),
       ),
-      bottomNavigationBar: FacebookBannerAd(
-        placementId: '328150579086879_328154279086509',
-        bannerSize: BannerSize.STANDARD,
-      ),
+      // bottomNavigationBar: MaxAdView(
+      //   adUnitId: Storage.banner,
+      //   adFormat: AdFormat.banner,
+      // ),
     );
   }
 
@@ -426,10 +437,10 @@ class ImageGrid extends StatelessWidget {
     //     .toList(growable: false);
     return GridView.builder(
       shrinkWrap: true,
-      physics: NeverScrollableScrollPhysics(),
+      physics: const NeverScrollableScrollPhysics(),
       itemCount: imgPath.length,
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 3, childAspectRatio: 3.0 / 4.6),
+          crossAxisCount: 2, childAspectRatio: 3.0 / 3.5),
       itemBuilder: (context, index) {
         return Card(
           shape: RoundedRectangleBorder(
@@ -464,12 +475,19 @@ class FileList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
-        physics: NeverScrollableScrollPhysics(),
+        physics: const NeverScrollableScrollPhysics(),
         shrinkWrap: true,
         itemCount: pdfPath.length,
         itemBuilder: (context, index) => Card(
               child: ListTile(
-                title: Text(pdfPath[index].toString().split('/').last),
+                leading: const Icon(
+                  Icons.picture_as_pdf,
+                  color: Colors.red,
+                ),
+                title: Text(
+                  pdfPath[index].toString().split('/').last,
+                  overflow: TextOverflow.ellipsis,
+                ),
               ),
             ));
   }
