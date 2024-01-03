@@ -58,7 +58,6 @@ class DrawerWidget extends StatelessWidget {
           ),
           ListTile(
             title: const Text('PAN Details'),
-            
             onTap: () {
               launchUrl(Uri.parse(
                   'https://www.onlineservices.nsdl.com/paam/endUserRegisterContact.html'));
