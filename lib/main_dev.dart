@@ -1,37 +1,35 @@
-//list order by most recently added
-//edit option of added document
-//UI of adding as per figma
-//after some time chages
-//dark mode
-//sort by option to user
-//delete the image inside the add section
+import 'dart:async';
 
-import 'dart:io';
+import 'package:flutter/foundation.dart';
+// import 'package:facebook_audience_network/facebook_audience_network.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
+import 'package:local_auth/local_auth.dart';
 import 'package:passmanager/models/dataitem.dart';
-import 'package:passmanager/screens/datascreen.dart';
-import 'package:passmanager/screens/edit_data.dart';
-import 'package:passmanager/screens/introscreen.dart';
 import 'package:passmanager/models/sharedpref.dart';
+import 'package:passmanager/screens/datascreen.dart';
+import 'package:passmanager/screens/introscreen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
 import 'screens/adddata.dart';
 import 'screens/homepage.dart';
-import 'package:flutter/services.dart';
-import 'dart:async';
+
+/// This is only for development purpose.
+/// Run project using below command
+/// flutter run lib/main_dev.dart
 
 Future<void> main() async {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
   SharedPreferences.getInstance();
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
   // await FacebookAudienceNetwork.init();
-  // Map? sdkConfiguration = await AppLovinMAX.initialize(
-  //     'uicNLf8N8Z6CupLurBDKWofB95QiOgHRT8348DDPwnbdVrV7_Mkarhqlvl59N0mpghTD6pI6zHsrMvGCEWqdGX');
-  // AppLovinMAX.showMediationDebugger();
   final String? data = await SharedPref.read('data') ?? '';
   runApp(MyApp(data: data));
 }
 
 class MyApp extends StatefulWidget {
-  const MyApp({super.key, this.data});
+  const MyApp({key, this.data}) : super(key: key);
   final String? data;
 
   @override
@@ -41,7 +39,7 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   bool authenticated = false;
   final LocalAuthentication auth = LocalAuthentication();
-  // bool _isAuthenticating = false;
+  bool _isAuthenticating = false;
   bool _canCheckBiometrics = true;
   String authorized = 'Not Authorized';
 
@@ -49,9 +47,9 @@ class _MyAppState extends State<MyApp> {
     late bool canCheckBiometrics;
     try {
       canCheckBiometrics = await auth.canCheckBiometrics;
-    } on PlatformException catch (_) {
+    } on PlatformException catch (e) {
       canCheckBiometrics = false;
-      // print(e);
+      print(e);
     }
     if (!mounted) {
       return;
@@ -69,28 +67,29 @@ class _MyAppState extends State<MyApp> {
     bool authenticated = false;
     try {
       setState(() {
-        // _isAuthenticating = true;
+        _isAuthenticating = true;
         authorized = 'Authenticating';
       });
       authenticated = await auth.authenticate(
-          localizedReason: 'You need to authenticate to use this app!',
-          options: const AuthenticationOptions(
-              // cancelButton: 'Cancel',
-              // goToSettingsButton: 'Settings',
-              // goToSettingsDescription: 'Open settings to set up fingerprints',
-              // biometricHint: 'Place your finger or use password',
-              // biometricNotRecognized: 'Fingerprint not recognized',
-              // biometricSuccess: 'Fingerprint recognized',
-              // signInTitle: 'Authenticate',
-              stickyAuth: true,
-              useErrorDialogs: true));
+        localizedReason: 'Verify Login',
+        options: const AuthenticationOptions(
+            stickyAuth: true, useErrorDialogs: true
+            // cancelButton: 'Cancel',
+            // goToSettingsButton: 'Settings',
+            // goToSettingsDescription: 'Open settings to set up fingerprints',
+            // biometricHint: 'Place your finger or use password',
+            // biometricNotRecognized: 'Fingerprint not recognized',
+            // biometricSuccess: 'Fingerprint recognized',
+            // signInTitle: 'Authenticate',
+            ),
+      );
       setState(() {
-        // _isAuthenticating = false;
+        _isAuthenticating = false;
       });
     } on PlatformException catch (e) {
       // print(e);
       setState(() {
-        // _isAuthenticating = false;
+        _isAuthenticating = false;
         authorized = 'Error - ${e.message}';
       });
       return;
@@ -101,6 +100,7 @@ class _MyAppState extends State<MyApp> {
 
     setState(
         () => authorized = authenticated ? 'Authorized' : 'Not Authorized');
+
     if (authorized == 'Authorized') {
       FlutterNativeSplash.remove();
     }
@@ -109,8 +109,8 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
-    _checkBiometrics();
-    if (_canCheckBiometrics) _authenticate();
+
+    FlutterNativeSplash.remove();
   }
 
   @override
@@ -124,25 +124,14 @@ class _MyAppState extends State<MyApp> {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: (authorized == 'Not Authorized')
-          ? exit(0)
-          : dataList.isEmpty
-              ? const IntroScreen()
-              : const MyHomePage(title: 'Keep Document'),
+      home: dataList.isEmpty
+          ? const IntroScreen()
+          : const MyHomePage(title: 'Keep Document'),
       routes: {
         DataScreen.routeName: (ctx) => const DataScreen(),
         AddData.routeName: (ctx) => const AddData(),
         // EditData.routeName: (ctx) =>  EditData(),
         MyHomePage.routeName: (ctx) => const MyHomePage(title: 'Keep Document'),
-        EditData.routeName: (ctx) => EditData(
-              item: DataItem(
-                  date: '',
-                  title: '',
-                  imgUrl: [],
-                  id: '',
-                  pdfPath: [],
-                  description: ''),
-            ),
       },
     );
   }
