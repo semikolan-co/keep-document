@@ -3,7 +3,6 @@ import 'package:image_cropper/image_cropper.dart';
 import 'package:camera/camera.dart';
 // import 'package:applovin_max/applovin_max.dart';
 import 'package:flutter/material.dart';
-import 'package:image_cropper/image_cropper.dart';
 import 'package:passmanager/models/additem.dart';
 import 'package:passmanager/screens/adddata.dart';
 import 'package:passmanager/screens/edit_data.dart';
