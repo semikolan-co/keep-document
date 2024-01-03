@@ -7,6 +7,9 @@
 //delete the image inside the add section
 
 import 'dart:io';
+import 'package:flutter/material.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
+import 'package:local_auth/local_auth.dart';
 import 'package:passmanager/models/dataitem.dart';
 import 'package:passmanager/screens/datascreen.dart';
 import 'package:passmanager/screens/edit_data.dart';

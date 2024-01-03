@@ -544,28 +544,6 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  Text headingText() {
-    return const Text(
-      'Manage Your document easy and safely at One Place',
-      textAlign: TextAlign.center,
-      overflow: TextOverflow.visible,
-      style: TextStyle(color: Colors.white, fontSize: 15),
-    );
-  }
-
-  InputDecoration searchFieldInputDecoration() {
-    return const InputDecoration(
-      border: InputBorder.none,
-      prefixIcon: Icon(
-        Icons.search,
-        color: Colors.white,
-      ),
-      hintText: 'Search',
-      hintStyle: TextStyle(color: Colors.white),
-      // hintText: 'Search Docs',
-    );
-  }
-
   Future<void> deleteItem(int index) async {
     String data = await SharedPref.read('data');
     List<DataItem> newlist = DataItem.decode(data);
